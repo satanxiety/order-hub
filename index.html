@@ -660,9 +660,11 @@ const dayKey=d=>d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+S
 const monLabel=ym=>ym==='all'?'Tüm zamanlar':TRMON[+ym.slice(5)-1]+' '+ym.slice(0,4);
 async function getFx(){
   if(S.fx)return S.fx;
-  try{const r=await (await fetch('https://api.frankfurter.app/latest?from=USD&to=TRY,CNY,EUR')).json();
-    S.fx={USD:r.rates.TRY,CNY:r.rates.TRY/r.rates.CNY,EUR:r.rates.TRY/r.rates.EUR,TRY:1,date:r.date,live:true};}
-  catch(e){S.fx={USD:41,CNY:5.75,EUR:47.5,TRY:1,date:'',live:false};}
+  const mk=(r,date)=>({USD:r.TRY,CNY:r.TRY/r.CNY,EUR:r.TRY/r.EUR,TRY:1,date:date||'',live:true});
+  try{const r=await (await fetch('https://api.frankfurter.dev/v1/latest?base=USD&symbols=TRY,CNY,EUR')).json();S.fx=mk(r.rates,r.date);}
+  catch(e){try{const r=await (await fetch('https://open.er-api.com/v6/latest/USD')).json();S.fx=mk(r.rates,(r.time_last_update_utc||'').slice(5,16));}
+    catch(e2){S.fx={USD:50.5,CNY:7.55,EUR:55.5,TRY:1,date:'',live:false};}}
+  try{store.set('oh_fx',JSON.stringify(S.fx));}catch(e){}
   return S.fx;
 }
 const costTRY=(o,fx)=>{const c=(+o.costProduct||0)+(+o.costShip||0);return c>0?c*(fx[String(o.costCurrency||'USD').toUpperCase()]||fx.USD):0;};
