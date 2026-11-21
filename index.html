@@ -830,7 +830,8 @@ async function financeView(){
 }
 function requestFinance(){
   if(S.oldBookmark){render();toast('⚠️ Yer imin eski sürüm — yeniden sürükle');return;}
-  if(window.opener&&!window.opener.closed){try{window.opener.postMessage({type:'oh-req-finance'},'*');toast('🔄 Etsy’den isteniyor… (20–40 sn)');clearTimeout(S._finTO);S._finTO=setTimeout(()=>{if(!S._finGot){S.oldBookmark=true;if(S.view==='finance')render();}},90000);S._finGot=false;return;}catch(e){}}
+  const src=(S.etsySrc&&!S.etsySrc.closed)?S.etsySrc:window.opener;
+  if(src&&!src.closed){try{src.postMessage({type:'oh-req-finance'},'*');toast('🔄 Etsy’den isteniyor… (20–40 sn)');clearTimeout(S._finTO);S._finTO=setTimeout(()=>{if(!S._finGot){S.oldBookmark=true;if(S.view==='finance')render();}},90000);S._finGot=false;return;}catch(e){}}
   modal(`<h2>🔄 Güncelle</h2><p>Güncel veri Etsy sekmesinden gelir. Bu Order Hub penceresi Etsy’den açılmadığı için doğrudan isteyemiyorum.</p>
    <ol style="line-height:1.7"><li>Etsy’de Shop Manager’ı aç.</li><li>Yer imindeki <b>📦 Etsy → Order Hub</b>’a bas.</li><li>Açılan Order Hub penceresinde 📊 Finans’a gel; “🔄 Güncelle” artık her basışta doğrudan çalışır (ve saatte bir kendiliğinden yenilenir).</li></ol>
    <div class="kv" style="justify-content:flex-end"><button class="pri" id="mok">Tamam</button></div>`);
@@ -865,6 +866,11 @@ function showSync(){
   document.title=(S.newSince?`(+${S.newSince}) `:'')+HUB_TITLE;
 }
 window.addEventListener('focus',()=>{S.newSince=0;document.title=HUB_TITLE;});
+window.addEventListener('message',e=>{
+  const d=e.data||{};if(!/^https:\/\/([a-z]+\.)?etsy\.com$/.test(e.origin))return;
+  if(e.source)S.etsySrc=e.source;
+  if(d.type==='oh-hello'&&S.role==='admin'){try{e.source.postMessage({type:'oh-ready'},e.origin);}catch(x){}}
+});
 window.addEventListener('message',async e=>{
   const d=e.data||{};if(d.type!=='oh-etsy')return;
   if(!/^https:\/\/([a-z]+\.)?etsy\.com$/.test(e.origin))return;

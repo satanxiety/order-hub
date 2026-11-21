@@ -37,6 +37,10 @@
     }
   });
   const waitReady = () => ready ? Promise.resolve() : new Promise(r => waiters.push(r));
+  /* the hub may already be open (window.open then only changes the hash, no reload) -> ask it to say hello */
+  let helloTimer = null;
+  const startHello = () => { clearInterval(helloTimer); let n = 0; helloTimer = setInterval(() => { if (ready || ++n > 80) { clearInterval(helloTimer); return; } try { if (w && !w.closed) w.postMessage({ type: 'oh-hello' }, HUB_ORIGIN); } catch (e) {} }, 1500); };
+  startHello();
 
   /* ---------- read Etsy ---------- */
   const EU = ['Austria','Belgium','Bulgaria','Croatia','Cyprus','Czech Republic','Czechia','Denmark','Estonia','Finland','France','Germany','Greece','Hungary','Ireland','Italy','Latvia','Lithuania','Luxembourg','Malta','Netherlands','The Netherlands','Poland','Portugal','Romania','Slovakia','Slovenia','Spain','Sweden'];
@@ -169,7 +173,7 @@
     try {
       if (!w || w.closed) {
         w = manual ? window.open(HUB + '#etsy-sync', 'ohsync') : null;
-        ready = false;
+        ready = false; startHello();
         if (!w) { say('⚠ Order Hub window is closed — click “Sync now” to reopen it.'); return; }
       }
       say('reading Etsy…');
