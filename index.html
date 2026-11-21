@@ -2,7 +2,15 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#15122b">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Order Hub">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="icon-180.png">
+<link rel="icon" type="image/png" href="icon-192.png">
 <title>Order Hub</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
@@ -168,6 +176,74 @@ details summary{cursor:pointer;font-size:12px;font-weight:700;color:var(--soft)}
 .welcome .stat b{display:block;font-size:26px;font-weight:800}
 .welcome ol{padding-left:20px;line-height:1.7}
 .ft{width:100%;border-collapse:collapse;font-size:13px}.ft th{text-align:left;font-size:11px;color:var(--soft);text-transform:uppercase;letter-spacing:.4px;padding:6px 8px;border-bottom:2px solid var(--line)}.ft th:not(:first-child){text-align:right}.ft td{padding:6px 8px;border-bottom:1px solid var(--line2)}.ft tr:hover td{background:#fafbff}
+/* ---- catalog ---- */
+.chips{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:10px}
+.chips button{border-radius:20px;padding:6px 12px;font-size:13px}
+.chips button.on{background:var(--ink);color:#fff;border-color:var(--ink)}
+.cgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:12px}
+.citem{background:#fff;border-radius:var(--r);box-shadow:var(--sh);overflow:hidden;cursor:pointer;position:relative;border:2px solid transparent;display:flex;flex-direction:column}
+.citem.sel{border-color:var(--acc);box-shadow:0 0 0 3px var(--acc2)}
+.citem img{width:100%;aspect-ratio:1/1;object-fit:cover;background:var(--line2);display:block}
+.citem .cb{padding:9px 10px;display:flex;flex-direction:column;gap:4px}
+.citem .ct{font-weight:700;font-size:13px;line-height:1.3;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.citem .cm{font-size:12px;color:var(--soft);display:flex;gap:6px;align-items:center;flex-wrap:wrap}
+.b1688{font-size:11px;font-weight:800;color:#c2410c;background:#fff7ed;border:1px solid #fed7aa;border-radius:6px;padding:1px 6px}
+.b1688.no{color:var(--red);background:var(--red-bg);border-color:#fecaca}
+.selmark{position:absolute;top:8px;right:8px;width:28px;height:28px;border-radius:50%;background:#fff;border:2px solid var(--line);display:flex;align-items:center;justify-content:center;font-weight:800;color:#fff}
+.citem.sel .selmark{background:var(--acc);border-color:var(--acc)}
+.selbar{position:fixed;left:50%;transform:translateX(-50%);bottom:18px;z-index:45;background:var(--head);color:#fff;border-radius:16px;padding:10px 12px;display:flex;gap:8px;align-items:center;box-shadow:0 10px 30px #0005}
+.selbar button{border:0}
+.sharebox{white-space:pre-wrap;font:13px/1.5 ui-monospace,Consolas,monospace;background:#f8f9fc;border:1px solid var(--line);border-radius:10px;padding:10px;max-height:220px;overflow:auto}
+.bigbtns{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px}
+.bigbtns button,.bigbtns a{min-height:48px;border-radius:12px;font-size:15px;display:flex;align-items:center;justify-content:center;text-decoration:none;font-weight:700}
+.wa{background:#25d366;color:#fff;border:0}
+.fin2{display:grid;grid-template-columns:1.4fr 1fr;gap:14px}
+/* ---- phone tab bar (hidden on desktop) ---- */
+#tabbar{display:none}
+.a2hs{background:linear-gradient(135deg,#6d4aff,#9b7bff);color:#fff;border-radius:14px;padding:12px 14px;margin-bottom:12px;display:flex;gap:10px;align-items:center}
+.a2hs button{background:#ffffff33;color:#fff;border:0}
+@media(max-width:760px){
+  html,body{font-size:15px}
+  input,select,textarea{font-size:16px}
+  header{padding:calc(8px + env(safe-area-inset-top)) 14px 8px;gap:8px;flex-wrap:nowrap}
+  header .logo{font-size:16px}
+  header #trw,header #logout,header .sync{display:none!important}
+  header .lang button{padding:3px 7px}
+  nav.side{display:none!important}
+  .wrap{display:block;padding:12px 12px calc(84px + env(safe-area-inset-bottom))}
+  .cards{grid-template-columns:1fr 1fr!important;gap:8px}
+  .sc{padding:10px 12px}.sc .v{font-size:22px!important}
+  .vtitle{font-size:18px}
+  .tool{position:sticky;top:calc(52px + env(safe-area-inset-top));z-index:15;background:var(--bg);padding:6px 0}
+  .tool input{min-width:0;flex:1 1 100%}
+  .tool select{flex:1}
+  .oh{gap:10px;padding:10px 12px;align-items:flex-start}
+  .th{width:58px;height:58px}
+  .ot{white-space:normal;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;font-size:14px}
+  .os{white-space:normal}
+  .orr{position:static;flex-direction:row;flex-wrap:wrap;gap:6px;align-items:center;padding:0;margin-top:6px}
+  .oh{flex-wrap:wrap}.om{flex:1 1 calc(100% - 100px)}.orr{flex:1 1 100%;padding-left:68px}
+  .chev{display:none}
+  .ono{font-size:13px;padding:6px 8px}
+  .steps button{min-height:42px;font-size:14px}
+  .upd .pri,.upd button{min-height:44px}
+  .ob,.fin2{grid-template-columns:1fr!important}
+  .hcard{padding:14px;overflow-x:auto}
+  .ft{min-width:520px}
+  .modal{align-items:flex-end;padding:0}
+  .sheet{border-radius:20px 20px 0 0;max-height:92vh;overflow:auto;padding:18px 16px calc(18px + env(safe-area-inset-bottom));max-width:none}
+  .sheet::before{content:'';display:block;width:40px;height:5px;border-radius:3px;background:#d4d7e0;margin:-6px auto 12px}
+  .msheet .ob{display:grid;border-top:0;padding:0}
+  .cgrid{grid-template-columns:1fr 1fr;gap:10px}
+  .selbar{bottom:calc(76px + env(safe-area-inset-bottom));width:calc(100% - 24px);justify-content:space-between}
+  #tabbar{display:grid;grid-template-columns:repeat(5,1fr);position:fixed;left:0;right:0;bottom:0;z-index:40;background:#ffffffee;-webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px);border-top:1px solid var(--line);padding:6px 4px calc(6px + env(safe-area-inset-bottom))}
+  #tabbar button{border:0;background:transparent;display:flex;flex-direction:column;align-items:center;gap:2px;padding:4px 2px;font-size:10.5px;font-weight:700;color:var(--soft);position:relative;border-radius:10px}
+  #tabbar button .ic{font-size:22px;line-height:1}
+  #tabbar button.on{color:var(--acc)}
+  #tabbar button .bd{position:absolute;top:0;right:calc(50% - 22px);background:var(--red);color:#fff;border-radius:10px;font-size:10px;padding:0 5px;min-width:16px}
+  .morelist{display:flex;flex-direction:column;gap:4px}
+  .morelist .nv{padding:12px;font-size:15px}
+}
 @media(max-width:900px){
   .wrap{grid-template-columns:1fr;padding:12px}
   nav.side{position:static;flex-direction:row;overflow-x:auto;gap:8px}
@@ -193,6 +269,7 @@ details summary{cursor:pointer;font-size:12px;font-weight:700;color:var(--soft)}
   <button class="hb" id="logout" style="display:none" data-t="logout"></button>
 </header>
 <div id="app"></div>
+<nav id="tabbar"></nav>
 <div class="modal" id="modal"><div class="sheet" id="sheet"></div></div>
 <div id="toast"></div>
 <div id="zoom" onclick="this.style.display='none'"><img alt=""></div>
@@ -284,9 +361,13 @@ tr:[
  ['Renkler ne demek?','Aşağıdaki renk tablosuna bak.']]
 };
 const t=k=>(T[S.lang]&&T[S.lang][k])||T.en[k]||k;
+Object.assign(T.tr,{nav_ship:'Kargoda',nav_catalog:'Katalog',tab_todo:'Yapılacak',tab_ship:'Kargo',tab_cat:'Katalog',tab_fin:'Finans',tab_more:'Daha',tab_ordered:'Verildi',tab_help:'Yardım',more_t:'Menü',v_ship:'Kargoya verilmiş tüm siparişler.',a2hs:'📲 Uygulama gibi kullan: Safari’de <b>Paylaş ⬆︎</b> → <b>Ana Ekrana Ekle</b>.'});
+Object.assign(T.en,{nav_ship:'Shipped',nav_catalog:'Catalog',tab_todo:'To do',tab_ship:'Shipped',tab_cat:'Catalog',tab_fin:'Finance',tab_more:'More',tab_ordered:'Ordered',tab_help:'Help',more_t:'Menu',v_ship:'All shipped orders.',a2hs:'📲 Use it like an app: in Safari tap <b>Share ⬆︎</b> → <b>Add to Home Screen</b>.'});
+Object.assign(T.zh,{nav_ship:'已发货',nav_catalog:'产品目录',tab_todo:'待处理',tab_ship:'已发货',tab_cat:'目录',tab_fin:'财务',tab_more:'更多',tab_ordered:'已下单',tab_help:'帮助',more_t:'菜单',v_ship:'所有已发货的订单。',a2hs:'📲 像App一样使用：在Safari点 <b>分享 ⬆︎</b> → <b>添加到主屏幕</b>。'});
+const isMobile=()=>window.matchMedia('(max-width:760px)').matches;
 
 /* ================= state & utils ================= */
-const S={lang:'en',pass:'',role:'',stores:[],orders:[],statuses:[],store:'*',view:'todo',q:'',sort:'new',open:new Set(),tr:false,trCache:{},unread:0,msgs:[],fin:{},finStore:'Novelle',finMonth:null,fx:null,lastSync:null,newSince:0};
+const S={lang:'en',pass:'',role:'',stores:[],orders:[],statuses:[],store:'*',view:'todo',q:'',sort:'new',open:new Set(),tr:false,trCache:{},unread:0,msgs:[],fin:{},finStore:'Novelle',finMonth:null,fx:null,cat:null,catQ:'',catF:'active',catSel:false,sel:new Set(),lastSync:null,newSince:0};
 const store={get(k){try{return localStorage.getItem(k)}catch(e){return null}},set(k,v){try{localStorage.setItem(k,v)}catch(e){}},del(k){try{localStorage.removeItem(k)}catch(e){}}};
 const sess={get(k){try{return sessionStorage.getItem(k)}catch(e){return null}},set(k,v){try{sessionStorage.setItem(k,v)}catch(e){}},del(k){try{sessionStorage.removeItem(k)}catch(e){}}};
 const esc=s=>String(s==null?'':s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
@@ -315,11 +396,12 @@ const VIEWS={
   ordered:o=>o.status==='ordered',
   shippedDs:o=>o.status==='shipped'&&!etsyShip(o),
   shipped:o=>o.status==='shipped'&&etsyShip(o),
+  ship:o=>o.status==='shipped',
   delivered:o=>o.status==='delivered',
   cancelled:o=>o.status==='cancelled',
   all:o=>true
 };
-const VIEW_DOT={todo:'#6d4aff',urgent:'#dc2626',ordered:'#7c3aed',shippedDs:'#ea580c',shipped:'#0e9f8b',delivered:'#15803d',cancelled:'#8a90a0',all:'#141826'};
+const VIEW_DOT={ship:'#0e9f8b',todo:'#6d4aff',urgent:'#dc2626',ordered:'#7c3aed',shippedDs:'#ea580c',shipped:'#0e9f8b',delivered:'#15803d',cancelled:'#8a90a0',all:'#141826'};
 const FLAG={'United States':'US','United Kingdom':'GB','Germany':'DE','France':'FR','Austria':'AT','Canada':'CA','Australia':'AU','Netherlands':'NL','The Netherlands':'NL','Italy':'IT','Spain':'ES','Belgium':'BE','Ireland':'IE','Sweden':'SE','Denmark':'DK','Finland':'FI','Norway':'NO','Switzerland':'CH','Poland':'PL','Portugal':'PT','Czech Republic':'CZ','Czechia':'CZ','Greece':'GR','New Zealand':'NZ','Japan':'JP','Romania':'RO','Hungary':'HU','Slovakia':'SK','Slovenia':'SI','Croatia':'HR','Bulgaria':'BG','Luxembourg':'LU','Lithuania':'LT','Latvia':'LV','Estonia':'EE','Malta':'MT','Cyprus':'CY','Israel':'IL','Singapore':'SG','Mexico':'MX','Türkiye':'TR','Turkey':'TR'};
 const flag=c=>{const k=FLAG[c];return k?'<b title="'+esc(c)+'">'+k+'</b>':esc(c||'');};
 const inStore=o=>S.store==='*'||o.store===S.store;
@@ -388,16 +470,19 @@ async function render(){
     <div class="navbox"><h4>${t('h_orders')}</h4>${['todo','urgent','ordered','shippedDs','shipped','delivered','cancelled','all'].map(v=>navBtn(v,c)).join('')}</div>
     <div class="navbox"><h4>${t('h_more')}</h4>
       <button class="nv ${S.view==='help'?'on':''}" data-v="help"><span class="dot" style="background:#0ea5e9"></span>❓ ${t('nav_help')}${S.role==='agent'&&S.unread?`<span class="n alert">${S.unread}</span>`:''}</button>
+      ${S.role==='admin'?`<button class="nv ${S.view==='catalog'?'on':''}" data-v="catalog"><span class="dot" style="background:#c2410c"></span>📚 ${t('nav_catalog')}</button>`:''}
       ${S.role==='admin'?`<button class="nv ${S.view==='finance'?'on':''}" data-v="finance"><span class="dot" style="background:#0e9f8b"></span>📊 Finans</button><button class="nv ${S.view==='calendar'?'on':''}" data-v="calendar"><span class="dot" style="background:#ea580c"></span>📅 Takvim & kampanyalar${calendarItems(400).filter(e=>e.alert).length?`<span class="n alert">${calendarItems(400).filter(e=>e.alert).length}</span>`:''}</button>`:''}
       ${S.role==='admin'?`<button class="nv ${S.view==='msgs'?'on':''}" data-v="msgs"><span class="dot" style="background:#f59e0b"></span>💬 ${t('nav_msgs')}<span class="n ${S.unread?'alert':''}">${S.unread}</span></button>`:''}
     </div></nav>`;
   let main='';
-  if(S.view==='finance'&&S.role==='admin')main=await financeView();
+  if(S.view==='catalog'&&S.role==='admin')main=await catalogView();
+  else if(S.view==='finance'&&S.role==='admin')main=await financeView();
   else if(S.view==='calendar'&&S.role==='admin')main=`<div class="vtitle">📅 Takvim & kampanyalar</div><div class="vhint">Özel günler, hangi ürünlerin öne çıkarılacağı ve Etsy’de kurulu indirimler.</div>${alertsHTML(5)}${calendarHTML()}`;
   else if(S.view==='help')main=await helpView();
   else if(S.view==='msgs')main=await msgsView();
   else main=await ordersView(c);
-  $('#app').innerHTML=`<div class="wrap">${side}<main>${main}</main></div>`;
+  $('#app').innerHTML=`<div class="wrap">${side}<main>${a2hsHTML()}${main}</main></div>`;
+  renderTabbar(c);
   bind();
 }
 async function ordersView(c){
@@ -505,6 +590,7 @@ function bind(){
   $$('.ord').forEach(card=>{
     const o=S.orders.find(x=>x.id===card.dataset.id);if(!o)return;
     card.querySelector('[data-tog]').onclick=e=>{if(e.target.closest('a,button'))return;
+      if(isMobile()){openOrderSheet(o);return;}
       if(S.open.has(o.id)){S.open.delete(o.id);card.classList.remove('open');card.querySelector('.ob').outerHTML='<div class="ob"></div>';}
       else{S.open.add(o.id);card.classList.add('open');const tmp=document.createElement('div');tmp.innerHTML=body(o);card.querySelector('.ob').replaceWith(tmp.firstElementChild);bindCard(card,o);bindCommon(card);}};
     if(S.open.has(o.id))bindCard(card,o);
@@ -513,6 +599,7 @@ function bind(){
   if(S.view==='help')bindHelp();
   if(S.view==='msgs')bindMsgs();
   if(S.view==='finance')bindFinance();
+  if(S.view==='catalog')bindCatalog();
 }
 function bindCommon(root){
   root.querySelectorAll('[data-copy]').forEach(b=>b.onclick=e=>{e.stopPropagation();navigator.clipboard.writeText(b.dataset.copy).then(()=>toast(t('copied')+' ✓'));});
@@ -528,7 +615,7 @@ function bindCard(card,o){
   const ar=f.querySelector('[data-arch]');if(ar)ar.onclick=async()=>{if(confirm(t('archive')+'?'))await saveOrder({id:o.id,archived:'true'});};
 }
 async function saveOrder(u){
-  try{await api('saveOrder',S.pass,u);toast(t('saved'));await reload();}catch(e){alert(e.message||e);}
+  try{await api('saveOrder',S.pass,u);toast(t('saved'));if(document.querySelector('#sheet .msheet'))closeModal();await reload();}catch(e){alert(e.message||e);}
 }
 
 /* ================= photos ================= */
@@ -872,7 +959,7 @@ async function financeView(){
        ${kpi('Toplam',tl(bal.total),'blue','')}
        ${kpi('Önümüzdeki 14 gün',tl(cal.list.filter(r=>r.date>=now&&(r.date-now)<14*864e5).reduce((a,r)=>a+r.total,0)),'teal','serbest kalacak')}
      </div>
-     <div style="display:grid;grid-template-columns:1.4fr 1fr;gap:14px">
+     <div class="fin2">
        <div style="max-height:360px;overflow:auto"><table class="ft"><thead><tr><th>Tarih</th><th>Satış payı</th><th>%30 rezerv</th><th>Kümülatif</th></tr></thead><tbody>${calRows||'<tr><td colspan="4">Bekleyen ödeme yok</td></tr>'}</tbody></table></div>
        <div><div class="k">Haftalık</div><table class="ft">${Object.keys(cal.weeks).sort().map(k=>`<tr><td>${new Date(k).toLocaleDateString('tr-TR',{day:'numeric',month:'short'})} haftası</td><td style="text-align:right;font-weight:700">${tl(cal.weeks[k])}</td></tr>`).join('')}</table>
          <div class="k" style="margin-top:10px">Aylık</div><table class="ft">${Object.keys(cal.months).sort().map(k=>`<tr><td>${monLabel(k)}</td><td style="text-align:right;font-weight:700">${tl(cal.months[k])}</td></tr>`).join('')}</table>
@@ -945,6 +1032,133 @@ window.addEventListener('message',async e=>{
   }catch(err){reply({error:String(err.message||err)});toast('Etsy sync error: '+(err.message||err));}
 });
 document.addEventListener('paste',e=>{});
+/* ================= 📱 phone UI: tab bar, more sheet, order sheet, add-to-home hint ================= */
+function tabsFor(){
+  return S.role==='admin'
+    ? [['todo','⚡','tab_todo'],['ship','🚚','tab_ship'],['catalog','📚','tab_cat'],['finance','📊','tab_fin'],['more','☰','tab_more']]
+    : [['todo','⚡','tab_todo'],['ordered','🛒','tab_ordered'],['ship','🚚','tab_ship'],['help','❓','tab_help'],['more','☰','tab_more']];
+}
+function renderTabbar(c){
+  const tb=$('#tabbar');if(!tb)return;
+  const badge=v=>v==='todo'?c.todo:v==='ship'?(S.orders.filter(inStore).filter(VIEWS.shippedDs).length||0):v==='help'&&S.role==='agent'?S.unread:v==='more'?(S.role==='admin'?S.unread+calendarItems(400).filter(e=>e.alert).length:0):0;
+  tb.innerHTML=tabsFor().map(([v,ic,l])=>{const n=badge(v);const on=v==='more'?false:(S.view===v||(v==='ship'&&['shipped','shippedDs'].includes(S.view)));return `<button class="${on?'on':''}" data-tab="${v}"><span class="ic">${ic}</span>${t(l)}${n?`<span class="bd">${n}</span>`:''}</button>`;}).join('');
+  tb.querySelectorAll('[data-tab]').forEach(b=>b.onclick=()=>{const v=b.dataset.tab;if(v==='more'){moreSheet();return;}S.view=v;S.open.clear();render();window.scrollTo(0,0);});
+}
+function moreSheet(){
+  const c=counts();
+  const views=['urgent','todo','ordered','shippedDs','shipped','delivered','cancelled','all'];
+  const extra=S.role==='admin'
+    ?`<button class="nv" data-mv="catalog"><span class="dot" style="background:#c2410c"></span>📚 ${t('nav_catalog')}</button><button class="nv" data-mv="finance"><span class="dot" style="background:#0e9f8b"></span>📊 Finans</button><button class="nv" data-mv="calendar"><span class="dot" style="background:#ea580c"></span>📅 Takvim & kampanyalar</button><button class="nv" data-mv="msgs"><span class="dot" style="background:#f59e0b"></span>💬 ${t('nav_msgs')}${S.unread?`<span class="n alert">${S.unread}</span>`:''}</button>`
+    :`<button class="nv" data-mv="help"><span class="dot" style="background:#0ea5e9"></span>❓ ${t('nav_help')}</button>`;
+  modal(`<h2>${t('more_t')}</h2>
+   <div class="k">${t('h_stores')}</div><div class="storesel" style="padding:0 0 10px">${['*',...S.stores].map(s=>`<button class="${S.store===s?'on':''}" data-ms="${esc(s)}">${s==='*'?t('all'):esc(s)}</button>`).join('')}</div>
+   <div class="k">${t('h_orders')}</div><div class="morelist">${views.map(v=>`<button class="nv ${S.view===v?'on':''}" data-mv="${v}"><span class="dot" style="background:${VIEW_DOT[v]}"></span>${t('nav_'+v)}<span class="n ${v==='urgent'&&c[v]?'alert':''}">${c[v]}</span></button>`).join('')}</div>
+   <div class="k" style="margin-top:10px">${t('h_more')}</div><div class="morelist">${extra}</div>
+   <div class="kv" style="margin-top:14px;justify-content:space-between">
+     <span class="lang" style="display:flex;gap:4px">${['tr','en','zh'].map(l=>`<button class="${S.lang===l?'pri':''}" data-ml="${l}">${l==='zh'?'中文':l.toUpperCase()}</button>`).join('')}</span>
+     <label class="chk"><input type="checkbox" id="mtr" ${S.tr?'checked':''}> ${t('translate')}</label></div>
+   <div class="kv" style="margin-top:12px">${S.role==='admin'?`<button id="mesy">${t('etsySync')}</button>`:''}<button id="mlo" style="margin-left:auto">${t('logout')}</button><button class="pri" id="mcl">${t('close')}</button></div>`);
+  $$('#sheet [data-mv]').forEach(b=>b.onclick=()=>{S.view=b.dataset.mv;S.open.clear();closeModal();render();window.scrollTo(0,0);});
+  $$('#sheet [data-ms]').forEach(b=>b.onclick=()=>{S.store=b.dataset.ms;closeModal();render();});
+  $$('#sheet [data-ml]').forEach(b=>b.onclick=()=>{S.lang=b.dataset.ml;store.set('oh_lang',S.lang);applyLang();closeModal();render();});
+  $('#mtr').onchange=e=>{S.tr=e.target.checked;closeModal();render();};
+  $('#mlo').onclick=()=>{forget();location.reload();};
+  $('#mcl').onclick=closeModal;
+  if($('#mesy'))$('#mesy').onclick=()=>{closeModal();syncModal();};
+}
+function openOrderSheet(o){
+  modal(`<div class="msheet"><div class="kv" style="justify-content:space-between;align-items:flex-start;margin-bottom:8px"><div><div style="font-weight:800;font-size:16px;line-height:1.3">${esc(TX(o.productName))}</div><div class="os" style="margin-top:4px">${o.variant?`<b>${esc(TX(o.variant))}</b> · `:''}×${esc(o.qty||1)} · ${flag(o.country)} · ${esc(o.store)}</div></div><button id="mx" class="sm">✕</button></div>
+   <div class="kv" style="margin-bottom:10px"><span class="pill p-${esc(o.status||'new')}">${t('st_'+(o.status||'new'))}</span>${dueBadge(o)}${o.etsyOrderId?`<button class="ono" data-copy="${esc(o.etsyOrderId)}">#${esc(o.etsyOrderId)} 📋</button>`:''}</div>
+   ${body(o)}</div>`);
+  $('#mx').onclick=closeModal;
+  bindCard($('#sheet'),o);bindCommon($('#sheet'));
+}
+function a2hsHTML(){
+  const ios=/iPhone|iPad|iPod/.test(navigator.userAgent);const standalone=window.navigator.standalone||window.matchMedia('(display-mode: standalone)').matches;
+  if(!ios||standalone||store.get('oh_a2hs')==='1')return '';
+  return `<div class="a2hs"><div style="flex:1">${t('a2hs')}</div><button class="sm" onclick="store.set('oh_a2hs','1');this.parentNode.remove()">✕</button></div>`;
+}
+
+/* ================= 📚 Catalog (admin): 1688 links -> share to agent ================= */
+async function loadCatalog(force){
+  if(S.cat&&!force)return S.cat;
+  try{S.cat=await api('getCatalog',S.pass,S.store==='*'?'':S.store);}catch(e){S.cat=[];toast('Katalog: '+(e.message||e));}
+  return S.cat;
+}
+const offerId=u=>(String(u).match(/offer\/(\d+)/)||String(u).match(/offerId=(\d+)/)||[])[1]||'';
+function catFiltered(){
+  let L=(S.cat||[]).filter(x=>S.store==='*'||!x.store||x.store===S.store);
+  if(S.catF==='active')L=L.filter(x=>x.state==='active'||!x.state);
+  else if(S.catF==='draft')L=L.filter(x=>x.state==='draft');
+  else if(S.catF==='nolink')L=L.filter(x=>!x.links1688);
+  const q=S.catQ.trim().toLowerCase();
+  if(q)L=L.filter(x=>[x.title,x.sku,x.listingId,x.links1688].some(v=>String(v||'').toLowerCase().includes(q)));
+  return L.sort((a,b)=>String(b.listingId).localeCompare(String(a.listingId)));
+}
+async function catalogView(){
+  await loadCatalog();
+  const all=(S.cat||[]),L=catFiltered();
+  const cnt=f=>f==='active'?all.filter(x=>x.state==='active'||!x.state).length:f==='draft'?all.filter(x=>x.state==='draft').length:f==='nolink'?all.filter(x=>!x.links1688).length:all.length;
+  const chip=(f,l)=>`<button class="${S.catF===f?'on':''}" data-cf="${f}">${l} · ${cnt(f)}</button>`;
+  const items=L.map(x=>{const n=String(x.links1688||'').split('\n').filter(Boolean).length;const sel=S.sel.has(x.listingId);
+    return `<div class="citem ${sel?'sel':''}" data-cid="${esc(x.listingId)}">${S.catSel?`<span class="selmark">${sel?'✓':''}</span>`:''}${x.image?`<img src="${esc(x.image)}" alt="" loading="lazy">`:'<img alt="">'}<div class="cb"><div class="ct">${esc(x.title||x.listingId)}</div><div class="cm">${x.price?`<b style="color:var(--ink)">${esc(x.price)}</b>`:''}${x.sku?`<span>${esc(x.sku)}</span>`:''}</div><div class="cm">${n?`<span class="b1688">1688 ×${n}</span>`:'<span class="b1688 no">1688 yok</span>'}${x.state&&x.state!=='active'?`<span>${esc(x.state)}</span>`:''}</div></div></div>`;}).join('');
+  return `<div class="vtitle">📚 ${t('nav_catalog')} <span style="color:var(--soft);font-weight:600;font-size:15px">· ${L.length}</span></div>
+   <div class="vhint">Ürüne dokun → 1688 linki + foto + SKU’yu WhatsApp’tan Ivy’ye gönder ya da kopyala. Çoklu seçim için “Seç”.</div>
+   <div class="tool"><input id="cq" placeholder="Ara: ürün, SKU, urun no, 1688 ID…" value="${esc(S.catQ)}"><button id="csel" class="${S.catSel?'pri':''}">${S.catSel?'✓ Seçim modu':'☑︎ Seç'}</button><button id="cref" title="Yenile">🔄</button></div>
+   <div class="chips">${chip('active','Aktif')}${chip('draft','Taslak')}${chip('all','Hepsi')}${chip('nolink','1688 linki eksik')}</div>
+   ${all.length?'':`<div class="empty">Katalog boş. Etsy sekmesinde 📦 yer imine bas (saatte bir kendiliğinden güncellenir).</div>`}
+   <div class="cgrid">${items}</div>
+   ${S.catSel&&S.sel.size?`<div class="selbar"><b>${S.sel.size} seçili</b><button class="pri" id="sshare">📤 Paylaş</button><button id="scopy">📋</button><button id="sclear">✕</button></div>`:''}`;
+}
+function shareText(items,ex){
+  ex=ex||{};
+  const one=x=>{const L=String(x.links1688||'').split('\n').filter(Boolean);
+    return [`【${x.sku?'SKU '+x.sku:'Etsy '+x.listingId}】${x.title||''}`,
+      ...(L.length?L.map((u,i)=>`1688${L.length>1?' '+(i+1):''}: ${u}`):['1688: (no link / 无链接)']),
+      x.image?`图片 / Photo: ${x.image}`:'',
+      ex.variant?`颜色/尺码 Color/Size: ${ex.variant}`:'', ex.qty?`数量 Qty: ${ex.qty}`:'', ex.note?`备注 Note: ${ex.note}`:''].filter(Boolean).join('\n');};
+  return items.map(one).join('\n\n');
+}
+async function doShare(text,title){
+  if(navigator.share){try{await navigator.share({title:title||'Order Hub',text});return;}catch(e){if(e&&e.name==='AbortError')return;}}
+  try{await navigator.clipboard.writeText(text);toast(t('copied')+' ✓');}catch(e){prompt('Copy:',text);}
+}
+function productSheet(x){
+  const L=String(x.links1688||'').split('\n').filter(Boolean);
+  modal(`<div class="kv" style="justify-content:space-between;align-items:flex-start"><div style="font-weight:800;font-size:16px;line-height:1.3;flex:1">${esc(x.title||'')}</div><button id="px" class="sm">✕</button></div>
+   ${x.image?`<img src="${esc(x.image)}" alt="" style="width:100%;max-height:340px;object-fit:contain;border-radius:12px;background:var(--line2);margin:10px 0">`:''}
+   <div class="kv" style="margin-bottom:8px">${x.sku?`<span class="b1688" style="color:var(--ink);background:var(--line2);border-color:var(--line)">SKU ${esc(x.sku)}</span>`:''}${x.price?`<b>${esc(x.price)}</b>`:''}${x.state?`<span style="color:var(--soft)">${esc(x.state)}</span>`:''}</div>
+   <div class="lk" style="margin-bottom:10px">${L.map((u,i)=>`<a class="l1688" href="${esc(u)}" target="_blank">1688${L.length>1?' '+(i+1):''} ↗ ${esc(offerId(u))}</a>`).join('')||'<span class="b1688 no">1688 linki yok</span>'}${x.url?`<a href="${esc(x.url)}" target="_blank">Etsy ↗</a>`:''}</div>
+   <div class="g2"><label><div class="k">Renk / beden (isteğe bağlı)</div><input id="pv" placeholder="ör. Black / M"></label><label><div class="k">Adet</div><input id="pq" type="number" min="1" placeholder="1"></label></div>
+   <label><div class="k" style="margin-top:8px">Not (isteğe bağlı)</div><input id="pn" placeholder="ör. stoğu kontrol et / fiyat sor"></label>
+   <div class="k" style="margin-top:10px">Gidecek mesaj</div><div class="sharebox" id="pt"></div>
+   <div class="bigbtns" style="margin-top:12px"><button class="pri" id="psh">📤 Paylaş</button><a class="wa" id="pwa" target="_blank">WhatsApp</a><button id="pcp">📋 Kopyala</button></div>`);
+  const upd=()=>{const tx=shareText([x],{variant:$('#pv').value.trim(),qty:$('#pq').value.trim(),note:$('#pn').value.trim()});$('#pt').textContent=tx;$('#pwa').href='https://wa.me/?text='+encodeURIComponent(tx);return tx;};
+  ['#pv','#pq','#pn'].forEach(id=>$(id).oninput=upd);upd();
+  $('#px').onclick=closeModal;
+  $('#psh').onclick=()=>doShare(upd(),x.title);
+  $('#pcp').onclick=()=>{navigator.clipboard.writeText(upd()).then(()=>toast(t('copied')+' ✓'));};
+}
+function bindCatalog(){
+  if($('#cq'))$('#cq').oninput=e=>{S.catQ=e.target.value;clearTimeout(S._cq);S._cq=setTimeout(()=>render().then(()=>{const q=$('#cq');q.focus();q.setSelectionRange(q.value.length,q.value.length);}),300);};
+  $$('[data-cf]').forEach(b=>b.onclick=()=>{S.catF=b.dataset.cf;render();});
+  if($('#csel'))$('#csel').onclick=()=>{S.catSel=!S.catSel;if(!S.catSel)S.sel.clear();render();};
+  if($('#cref'))$('#cref').onclick=async()=>{await loadCatalog(true);render();};
+  $$('.citem').forEach(el=>el.onclick=()=>{const x=(S.cat||[]).find(r=>r.listingId===el.dataset.cid);if(!x)return;
+    if(S.catSel){S.sel.has(x.listingId)?S.sel.delete(x.listingId):S.sel.add(x.listingId);render();return;}productSheet(x);});
+  const selItems=()=>(S.cat||[]).filter(r=>S.sel.has(r.listingId));
+  if($('#sshare'))$('#sshare').onclick=()=>doShare(shareText(selItems()),'Order Hub');
+  if($('#scopy'))$('#scopy').onclick=()=>navigator.clipboard.writeText(shareText(selItems())).then(()=>toast(t('copied')+' ✓'));
+  if($('#sclear'))$('#sclear').onclick=()=>{S.sel.clear();render();};
+}
+window.addEventListener('message',async e=>{
+  const d=e.data||{};if(d.type!=='oh-listings')return;
+  if(!/^https:\/\/([a-z]+\.)?etsy\.com$/.test(e.origin))return;
+  if(S.role!=='admin')return;
+  try{const r=await api('upsertListings',S.pass,d.store||'Novelle',d.rows||[]);S.cat=null;toast('📚 Katalog: '+r.total+(r.added?' · +'+r.added+' yeni':''));if(S.view==='catalog')render();}
+  catch(err){toast('Katalog kaydedilemedi: '+(err.message||err));}
+});
+
 boot();
 </script>
 </body>

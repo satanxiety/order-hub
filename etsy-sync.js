@@ -148,6 +148,26 @@
     out.traffic = [].concat(((tb.etsy_traffic || {}).traffic_sources) || [], ((tb.user_traffic || {}).traffic_sources) || []).map(x => [x.short_key || x.source_key, x.visits]);
     return out;
   }
+  async function readListings() {
+    const out = [];
+    for (const st of ['active', 'draft', 'inactive', 'sold_out', 'expired']) {
+      let off = 0;
+      while (true) {
+        const r = await fetch('/api/v3/ajax/shop/' + shop + '/listings/search?limit=100&offset=' + off + '&sort_field=ending_date&sort_order=descending&state=' + st + '&language_id=0');
+        if (!r.ok) break;
+        const j = await r.json(); const arr = Array.isArray(j) ? j : [];
+        arr.forEach(x => {
+          const im = (x.images && x.images[0]) || (x.listing_images && x.listing_images[0]) || '';
+          const u = typeof im === 'string' ? im : ((JSON.stringify(im).match(/https[^"]+/) || [])[0] || '');
+          out.push({ listingId: String(x.listing_id), title: dec(x.title), sku: (x.product_identifiers || []).join('/'),
+            image: String(u).replace(/il_[^.]+\./, 'il_570xN.'), price: x.price ? (x.currency_code === 'USD' ? '$' : '') + x.price + (x.currency_code && x.currency_code !== 'USD' ? ' ' + x.currency_code : '') : '',
+            state: st, url: 'https://www.etsy.com/listing/' + x.listing_id });
+        });
+        if (arr.length < 100) break; off += 100;
+      }
+    }
+    return out;
+  }
   let finBusy = false;
   async function financeRound() {
     if (finBusy) return; finBusy = true;
@@ -157,7 +177,9 @@
       const [ledger, pending, balance, stats] = [await ledgerTab('all'), await ledgerTab('pending'), await readBalance().catch(() => null), await readStats().catch(() => null)];
       await waitReady();
       w.postMessage({ type: 'oh-finance', store, shopId: shop, at: Date.now(), ledger, pending, balance, stats }, HUB_ORIGIN);
-      say('💰 finances sent (' + ledger.length + ' ledger rows) · ' + hhmm(new Date()));
+      say('💰 finances sent (' + ledger.length + ' ledger rows) · reading listings…');
+      try { const listings = await readListings(); w.postMessage({ type: 'oh-listings', store, rows: listings }, HUB_ORIGIN); } catch (e) {}
+      say('💰 finances + 📚 catalog sent · ' + hhmm(new Date()));
     } catch (err) { say('⚠ finance: ' + (err.message || err)); }
     finally { finBusy = false; }
   }
