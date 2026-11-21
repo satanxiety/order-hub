@@ -324,6 +324,24 @@ header .bell{position:relative;font-size:15px;padding:3px 9px}
 .resl{display:flex;flex-direction:column;gap:2px;text-decoration:none;padding:9px 0;border-bottom:1px solid var(--line2)}
 .resl span{font-size:12.5px;color:var(--soft)}
 @media(max-width:760px){.audrow{grid-template-columns:1fr 70px}.audrow input{grid-column:1/-1}.scorebar{grid-template-columns:1fr 80px 22px}#banners{top:calc(56px + env(safe-area-inset-top))}}
+
+.earn{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:10px 0}.earn b{font-size:20px}
+.badges{display:grid;grid-template-columns:repeat(auto-fill,minmax(92px,1fr));gap:8px}
+.badge{border:1px dashed var(--line);border-radius:12px;padding:8px 6px;text-align:center;opacity:.45;filter:grayscale(1);display:flex;flex-direction:column;align-items:center;gap:3px}
+.badge span{font-size:24px}.badge small{font-size:11px;font-weight:700;color:var(--ink2);line-height:1.2}
+.badge.on{opacity:1;filter:none;border:1px solid #f5d27a;background:linear-gradient(180deg,#fffaf0,#fff)}
+.badge button{font-size:10.5px;padding:2px 7px}
+.grid label.chk{flex-direction:row;color:var(--ink2)}
+.timer{text-align:center}.tclock{font:800 34px/1.2 ui-monospace,Consolas,monospace;margin:10px 0;color:var(--ink)}
+.coach{border-left:6px solid var(--teal)}.tip{display:flex;gap:10px;align-items:center;padding:9px 0;border-bottom:1px solid var(--line2)}.tip:last-child{border-bottom:0}.tipi{font-size:22px}
+.endb{border-left:6px solid var(--amber);background:linear-gradient(90deg,#fff8e8,#fff 60%)}
+.item.ann.pin{border-color:#f5d27a;background:#fffdf5}
+.react{border-radius:20px;padding:3px 10px;font-size:14px}.react.on{background:var(--acc2);border-color:var(--acc)}
+.slotday{margin-bottom:8px}.slot{border-radius:10px;padding:7px 12px;font-weight:700;font-variant-numeric:tabular-nums}.slot:hover{background:var(--acc2);border-color:var(--acc)}
+.calcres .big{font-size:40px;font-weight:800;color:var(--green);line-height:1.1;margin:4px 0}.calcres.low .big{color:var(--amber)}.calcres.neg .big{color:var(--red)}
+.segbar{display:flex;height:14px;border-radius:8px;overflow:hidden;margin-top:12px;background:var(--line2)}.segbar i{display:block;height:100%}
+.seglg{display:flex;flex-wrap:wrap;gap:4px 12px;margin-top:8px;font-size:12px;color:var(--ink2)}.seglg i{display:inline-block;width:10px;height:10px;border-radius:3px;margin-right:4px;vertical-align:-1px}
+@media(max-width:760px){.earn b{font-size:17px}.calcres .big{font-size:32px}}
 </style>
 </head>
 <body>
@@ -547,11 +565,12 @@ async function render(){
       <button class="nv ${S.view==='help'?'on':''}" data-v="help"><span class="dot" style="background:#0ea5e9"></span>❓ ${t('nav_help')}${S.role==='agent'&&S.unread?`<span class="n alert">${S.unread}</span>`:''}</button>
       ${S.role==='admin'?`<button class="nv ${S.view==='catalog'?'on':''}" data-v="catalog"><span class="dot" style="background:#c2410c"></span>📚 ${t('nav_catalog')}</button>`:''}
       ${S.role==='admin'?`<button class="nv ${S.view==='finance'?'on':''}" data-v="finance"><span class="dot" style="background:#0e9f8b"></span>📊 Finans</button><button class="nv ${S.view==='calendar'?'on':''}" data-v="calendar"><span class="dot" style="background:#ea580c"></span>📅 Takvim & kampanyalar${calendarItems(400).filter(e=>e.alert).length?`<span class="n alert">${calendarItems(400).filter(e=>e.alert).length}</span>`:''}</button>`:''}
-      ${S.role==='admin'?`<button class="nv ${S.view==='mentor'?'on':''}" data-v="mentor"><span class="dot" style="background:#7c3aed"></span>🎓 Mentörlük<span class="n ${mentorBadge()?'alert':''}">${mentorBadge()}</span></button>`:''}
+      ${S.role==='admin'?`<button class="nv ${S.view==='mentor'?'on':''}" data-v="mentor"><span class="dot" style="background:#7c3aed"></span>🎓 Mentörlük<span class="n ${mentorBadge()?'alert':''}">${mentorBadge()}</span></button><button class="nv ${S.view==='calc'?'on':''}" data-v="calc"><span class="dot" style="background:#15803d"></span>💰 Kâr hesaplama</button>`:''}
       ${S.role==='admin'?`<button class="nv ${S.view==='msgs'?'on':''}" data-v="msgs"><span class="dot" style="background:#f59e0b"></span>💬 ${t('nav_msgs')}<span class="n ${S.unread?'alert':''}">${S.unread}</span></button>`:''}
     </div></nav>`;
   let main='';
   if(S.view==='mentor'&&S.role==='admin')main=await mentorAdminView();
+  else if(S.view==='calc'&&S.role==='admin')main=calcHTML();
   else if(STU_VIEWS.includes(S.view)&&S.role==='student')main=await studentView();
   else if(S.view==='catalog'&&S.role==='admin')main=await catalogView();
   else if(S.view==='finance'&&S.role==='admin')main=await financeView();
@@ -561,6 +580,7 @@ async function render(){
   else main=await ordersView(c);
   $('#app').innerHTML=`<div class="wrap">${side}<main>${a2hsHTML()}${main}</main></div>`;
   renderTabbar(c);
+  {const mb=$('.nv[data-v=mentor] .n');if(mb){const n=mentorBadge();mb.textContent=n;mb.className='n'+(n?' alert':'');}}
   bind();
 }
 async function ordersView(c){
@@ -655,7 +675,9 @@ T.tr.ordDate='Sipariş ';T.en.ordDate='Ordered ';T.zh.ordDate='下单 ';
 
 /* ================= bindings ================= */
 function bind(){
-  const mv=S.view==='mentor'||STU_VIEWS.includes(S.view);$('#app').onclick=mv?mentorClick:null;$('#app').onchange=mv?mentorChange:null;
+  const mv=S.view==='mentor'||STU_VIEWS.includes(S.view);$('#app').onclick=mv?mentorClick:null;$('#app').onchange=mv?mentorChange:null;$('#app').oninput=null;
+  if(S.view==='calc'||S.view==='sCalc')bindCalc();
+  if(S.view==='sHome')tickTimer();
   $$('.nv[data-v],.sc[data-v]').forEach(b=>b.onclick=()=>{if(b.dataset.v==='mentor')S.mSid=null;S.view=b.dataset.v;if(b.dataset.sort)S.sort=b.dataset.sort;S.open.clear();render();window.scrollTo(0,0);});
   $$('.storesel button[data-s]').forEach(b=>b.onclick=()=>{S.store=b.dataset.s;render();});
   if($('#as'))$('#as').onclick=async()=>{const n=prompt(t('newStore'));if(n){await api('addStore',S.pass,n);await reload();}};
@@ -1134,7 +1156,7 @@ function moreSheet(){
   const extra=S.role==='student'
     ?STU_VIEWS.map(v=>`<button class="nv ${S.view===v?'on':''}" data-mv="${v}"><span class="dot" style="background:#7c3aed"></span>${STU_NAV[v][0]} ${STU_NAV[v][1]}${sb[v]?`<span class="n alert">${sb[v]}</span>`:''}</button>`).join('')+`<button class="nv" id="mbell"><span class="dot" style="background:#f59e0b"></span>🔔 Bildirimler & ayarlar</button>`
     :S.role==='admin'
-    ?`<button class="nv" data-mv="mentor"><span class="dot" style="background:#7c3aed"></span>🎓 Mentörlük${mentorBadge()?`<span class="n alert">${mentorBadge()}</span>`:''}</button><button class="nv" id="mbell"><span class="dot" style="background:#f59e0b"></span>🔔 Bildirimler & ayarlar</button><button class="nv" data-mv="catalog"><span class="dot" style="background:#c2410c"></span>📚 ${t('nav_catalog')}</button><button class="nv" data-mv="finance"><span class="dot" style="background:#0e9f8b"></span>📊 Finans</button><button class="nv" data-mv="calendar"><span class="dot" style="background:#ea580c"></span>📅 Takvim & kampanyalar</button><button class="nv" data-mv="msgs"><span class="dot" style="background:#f59e0b"></span>💬 ${t('nav_msgs')}${S.unread?`<span class="n alert">${S.unread}</span>`:''}</button>`
+    ?`<button class="nv" data-mv="mentor"><span class="dot" style="background:#7c3aed"></span>🎓 Mentörlük${mentorBadge()?`<span class="n alert">${mentorBadge()}</span>`:''}</button><button class="nv" id="mbell"><span class="dot" style="background:#f59e0b"></span>🔔 Bildirimler & ayarlar</button><button class="nv" data-mv="calc"><span class="dot" style="background:#15803d"></span>💰 Kâr hesaplama</button><button class="nv" data-mv="catalog"><span class="dot" style="background:#c2410c"></span>📚 ${t('nav_catalog')}</button><button class="nv" data-mv="finance"><span class="dot" style="background:#0e9f8b"></span>📊 Finans</button><button class="nv" data-mv="calendar"><span class="dot" style="background:#ea580c"></span>📅 Takvim & kampanyalar</button><button class="nv" data-mv="msgs"><span class="dot" style="background:#f59e0b"></span>💬 ${t('nav_msgs')}${S.unread?`<span class="n alert">${S.unread}</span>`:''}</button>`
     :`<button class="nv" data-mv="help"><span class="dot" style="background:#0ea5e9"></span>❓ ${t('nav_help')}</button><button class="nv" id="mbell"><span class="dot" style="background:#f59e0b"></span>🔔 ${nt('title')}</button>`;
   modal(`<h2>${t('more_t')}</h2>
    ${S.role==='student'?`<div class="k">🎓 Koçluk</div><div class="morelist">${extra}</div><div class="k" style="margin-top:10px">📦 Siparişlerim</div>`:`<div class="k">${t('h_stores')}</div>`}<div class="storesel" style="padding:0 0 10px;${S.role==='student'?'display:none':''}">${['*',...S.stores].map(s=>`<button class="${S.store===s?'on':''}" data-ms="${esc(s)}">${s==='*'?t('all'):esc(s)}</button>`).join('')}</div>
@@ -1325,9 +1347,9 @@ function sysNotify(evs){
 }
 function goView(v){
   if(!v)return;closeModal();
-  if(v.indexOf('mentor:')===0){if(S.role!=='admin')return;S.view='mentor';S.mSid=v.slice(7);S.mTab='gen';}
+  if(v.indexOf('mentor:')===0){if(S.role!=='admin')return;S.view='mentor';S.mPanel=null;S.mSid=v.slice(7);S.mTab='gen';}
   else if(v==='sOrders')S.view='all';
-  else if(VIEWS[v]||['help','msgs','finance','catalog','calendar','mentor'].includes(v)||STU_VIEWS.includes(v))S.view=v;
+  else if(VIEWS[v]||['help','msgs','finance','catalog','calendar','mentor','calc'].includes(v)||STU_VIEWS.includes(v))S.view=v;
   S.open.clear();render();window.scrollTo(0,0);
 }
 function ntfySend(topic,title,body,view,type){
@@ -1375,8 +1397,8 @@ function drawNotifSettings(){
 }
 
 /* ================= 🎓 Mentorship (admin ⇄ students) ================= */
-const STU_VIEWS=['sHome','sRoad','sHw','sCheck','sSessions','sAudit','sQa','sRes'];
-const STU_NAV={sHome:['🏠','Panom'],sRoad:['🗺️','Yol haritası'],sHw:['📝','Ödevler'],sCheck:['📈','Haftalık rapor'],sSessions:['📅','Görüşmeler'],sAudit:['🔍','Mağaza denetimi'],sQa:['💬','Soru-cevap'],sRes:['📎','Kaynaklar']};
+const STU_VIEWS=['sHome','sRoad','sHw','sCheck','sSessions','sAnn','sWins','sAudit','sQa','sCalc','sRes'];
+const STU_NAV={sHome:['🏠','Panom'],sRoad:['🗺️','Yol haritası'],sHw:['📝','Ödevler'],sCheck:['📈','Haftalık rapor'],sSessions:['📅','Görüşme & randevu'],sAnn:['📢','Duyurular'],sWins:['🏆','Başarı duvarı'],sCalc:['💰','Kâr hesaplama'],sAudit:['🔍','Mağaza denetimi'],sQa:['💬','Soru-cevap'],sRes:['📎','Kaynaklar']};
 const STATUS_TR={active:'Aktif',paused:'Durduruldu',archived:'Arşiv'};
 const AUDIT_CATS=[['thumb','📸 Kapak fotoğrafı & görseller'],['title','🔤 Başlıklar & anahtar kelimeler'],['tags','🏷️ 13 etiket & özellikler'],['desc','📝 Açıklama & ölçü tablosu'],['price','💰 Fiyat & kâr marjı'],['brand','🎨 Vitrin: logo, banner, About'],['policy','📦 Kargo, işlem süresi, politikalar'],['reviews','⭐ Yorumlar & müşteri iletişimi'],['ads','📣 Reklam & ROAS'],['range','🧺 Ürün çeşitliliği & ilan sayısı']];
 const DEFAULT_CUR_TEXT=`# 🚀 Başlangıç & mağaza kurulumu
@@ -1518,7 +1540,7 @@ function allTasks(){const out=[];cur().forEach(m=>m.lessons.forEach(l=>l.tasks.f
 function progressOf(s){const T=allTasks(),P=(s&&s.progress)||{};const d=T.filter(x=>P[x.key]).length;return {done:d,total:T.length,pct:T.length?Math.round(d*100/T.length):0,next:T.find(x=>!P[x.key])};}
 function isoWeek(d){d=new Date(Date.UTC(d.getFullYear(),d.getMonth(),d.getDate()));const day=d.getUTCDay()||7;d.setUTCDate(d.getUTCDate()+4-day);const y=new Date(Date.UTC(d.getUTCFullYear(),0,1));return d.getUTCFullYear()+'-W'+String(Math.ceil(((d-y)/864e5+1)/7)).padStart(2,'0');}
 const money=v=>v===''||v==null||isNaN(+v)?'—':'$'+(+v).toLocaleString('en-US',{maximumFractionDigits:0});
-const fmtDT=iso=>{const d=new Date(iso);return isNaN(d)?String(iso||''):d.toLocaleString('tr-TR',{weekday:'short',day:'numeric',month:'short',hour:'2-digit',minute:'2-digit'});};
+const fmtDT=iso=>{const d=new Date(trTime(iso));return isNaN(d)?String(iso||''):d.toLocaleString('tr-TR',{weekday:'short',day:'numeric',month:'short',hour:'2-digit',minute:'2-digit'});};
 const pbar=(p,color)=>`<div class="pbar"><i style="width:${Math.max(0,Math.min(100,p))}%;${color?'background:'+color:''}"></i></div>`;
 const lastAudit=s=>((s&&s.audits)||[]).slice().sort((a,b)=>String(b.at).localeCompare(String(a.at)))[0];
 function auditAvg(a){const v=Object.values((a&&a.scores)||{}).map(Number).filter(x=>x>0);return v.length?v.reduce((x,y)=>x+y,0)/v.length:0;}
@@ -1529,9 +1551,10 @@ function stuFlags(s){
   const days=lastC?Math.floor((Date.now()-new Date(lastC.at))/864e5):null;
   const since=Math.floor((Date.now()-new Date(s.createdAt||Date.now()))/864e5);
   const late=(s.status||'active')==='active'&&(days==null?since>7:days>8);
-  return {hw,q,late,days,lastC};
+  const bk=(s.bookings||[]).filter(b=>b.status==='pending').length,end=s.endDate?daysTo(s.endDate):null;
+  return {hw,q,late,days,lastC,bk,end};
 }
-function mentorBadge(){if(!S.mentor||!S.mentor.students)return 0;return S.mentor.students.filter(s=>s.status!=='archived').reduce((a,s)=>{const f=stuFlags(s);return a+f.hw+f.q;},0);}
+function mentorBadge(){if(!S.mentor||!S.mentor.students)return 0;return S.mentor.students.filter(s=>s.status!=='archived').reduce((a,s)=>{const f=stuFlags(s);return a+f.hw+f.q+f.bk;},0);}
 const seenKey=v=>'oh_seen_'+((me()||{}).id||'')+'_'+v;
 const seenAt=v=>store.get(seenKey(v))||'';
 function stuBadges(){
@@ -1541,7 +1564,9 @@ function stuBadges(){
     sQa:(s.questions||[]).filter(q=>q.answeredAt&&q.answeredAt>seenAt('sQa')).length,
     sCheck:(s.checkins||[]).filter(c=>c.commentAt&&c.commentAt>seenAt('sCheck')).length+(((dow===0||dow>=5)&&!(s.checkins||[]).some(c=>c.week===wk))?1:0),
     sSessions:(s.sessions||[]).filter(x=>x.createdAt>seenAt('sSessions')).length,
-    sAudit:(s.audits||[]).filter(x=>x.at>seenAt('sAudit')).length};
+    sAudit:(s.audits||[]).filter(x=>x.at>seenAt('sAudit')).length,
+    sAnn:((S.mentor&&S.mentor.announcements)||[]).filter(a=>a.at>seenAt('sAnn')).length,
+    sSessions2:0};
 }
 function svgWeeks(C){
   C=(C||[]).slice(-12);if(!C.length)return '';
@@ -1654,16 +1679,18 @@ function resHTML(){
 async function mentorAdminView(){
   await loadMentor();
   if(S.mSid){const s=curStu();if(s)return studentDetailAdmin(s);S.mSid=null;}
+  if(S.mPanel==='ann')return `<button class="sm" data-act="mBack">← Öğrenciler</button><div class="vtitle" style="margin-top:10px">📢 Duyuru odası</div><div class="vhint">Tüm aktif öğrencilere duyuru gönder.</div>${annHTML(true)}`;
+  if(S.mPanel==='wins')return `<button class="sm" data-act="mBack">← Öğrenciler</button><div class="vtitle" style="margin-top:10px">🏆 Başarı duvarı</div><div class="vhint">Öğrencilerin paylaştığı başarılar. Alkışla; uygunsuz paylaşımı sil.</div>${winsHTML(true)}`;
   const all=S.mentor.students||[],L=all.filter(s=>S.mShowArch||s.status!=='archived'),act=all.filter(s=>(s.status||'active')==='active');
   const F=act.map(stuFlags),pend=F.reduce((a,f)=>a+f.hw,0),qs=F.reduce((a,f)=>a+f.q,0),late=F.filter(f=>f.late).length;
   const grid=L.map(s=>{const p=progressOf(s),f=stuFlags(s),ords=S.orders.filter(o=>o.store===s.store),open=ords.filter(VIEWS.todo).length;
     return `<div class="stu" data-sid="${esc(s.id)}"><div class="kv" style="justify-content:space-between;align-items:flex-start"><div><div class="stn">${esc(s.name)}</div><div class="sts">${esc(s.store)}${s.plan?' · '+esc(s.plan):''}</div></div><span class="stbadge st-${esc(s.status||'active')}">${STATUS_TR[s.status||'active']}</span></div>
       <div class="k" style="margin-top:10px">Yol haritası · %${p.pct}</div>${pbar(p.pct)}
-      <div class="stmeta"><span>📈 ${f.lastC?esc(f.lastC.week)+' · '+money(f.lastC.revenue):'rapor yok'}</span><span>📦 ${ords.length} sipariş${open?` · ${open} açık`:''}</span>${s.nextCall?`<span>📅 ${esc(fmtDT(s.nextCall))}</span>`:''}</div>
-      <div class="kv" style="margin-top:8px">${f.hw?`<span class="chip o">📝 ${f.hw} ödev bekliyor</span>`:''}${f.q?`<span class="chip r">❓ ${f.q} soru</span>`:''}${f.late?`<span class="chip y">⏰ ${f.days==null?'hiç rapor yok':f.days+' gündür rapor yok'}</span>`:''}${!f.hw&&!f.q&&!f.late?'<span class="chip g">✓ her şey yolunda</span>':''}</div></div>`;}).join('');
+      <div class="stmeta"><span>📈 ${f.lastC?esc(f.lastC.week)+' · '+money(f.lastC.revenue):'rapor yok'}</span><span>📦 ${ords.length} sipariş${open?` · ${open} açık`:''}</span><span>⏱ ${fmtMin(weekMinutes(s))} bu hafta</span>${s.nextCall?`<span>📅 ${esc(fmtDT(s.nextCall))}</span>`:''}</div>
+      <div class="kv" style="margin-top:8px">${f.hw?`<span class="chip o">📝 ${f.hw} ödev bekliyor</span>`:''}${f.q?`<span class="chip r">❓ ${f.q} soru</span>`:''}${f.late?`<span class="chip y">⏰ ${f.days==null?'hiç rapor yok':f.days+' gündür rapor yok'}</span>`:''}${f.bk?`<span class="chip b">📅 ${f.bk} randevu talebi</span>`:''}${f.end!=null&&f.end>=0&&f.end<=14?`<span class="chip y">⏳ ${f.end} gün kaldı</span>`:''}${!f.hw&&!f.q&&!f.late&&!f.bk?'<span class="chip g">✓ her şey yolunda</span>':''}</div></div>`;}).join('');
   return `<div class="vtitle">🎓 Mentörlük</div><div class="vhint">Öğrencilerin: yol haritası, ödevler, haftalık raporlar, görüşmeler, mağaza denetimi ve soruları. Siparişlerini Ivy hazırlar.</div>
    <div class="cards"><div class="sc blue"><span class="v">${act.length}</span><span class="l">🎓 Aktif öğrenci</span></div><div class="sc orange"><span class="v">${pend}</span><span class="l">📝 Onay bekleyen ödev</span></div><div class="sc red"><span class="v">${qs}</span><span class="l">❓ Cevapsız soru</span></div><div class="sc teal"><span class="v">${late}</span><span class="l">⏰ Rapor vermeyen (8+ gün)</span></div></div>
-   <div class="tool"><button class="pri" data-act="mAdd">＋ Öğrenci ekle</button><button data-act="mCur">📘 Müfredat</button><button data-act="mRes">📎 Kaynaklar</button><label class="chk" style="margin-left:auto"><input type="checkbox" id="mArch" ${S.mShowArch?'checked':''}> Arşivi göster</label></div>
+   <div class="tool"><button class="pri" data-act="mAdd">＋ Öğrenci ekle</button><button data-act="mPanel" data-p="ann">📢 Duyurular</button><button data-act="mPanel" data-p="wins">🏆 Başarı duvarı</button><button data-act="mSlots">📅 Müsait saatlerim</button><button data-act="mCur">📘 Müfredat</button><button data-act="mRes">📎 Kaynaklar</button><label class="chk" style="margin-left:auto"><input type="checkbox" id="mArch" ${S.mShowArch?'checked':''}> Arşivi göster</label></div>
    ${L.length?`<div class="stgrid">${grid}</div>`:`<div class="empty">Henüz öğrenci yok. “＋ Öğrenci ekle” ile başla: ad, mağaza adı ve öğrencinin şifresini sen belirlersin.</div>`}
    <div class="hcard" style="margin-top:14px"><h3>ℹ️ Sistem nasıl çalışır?</h3><ol style="margin:0;padding-left:20px;line-height:1.7;color:var(--ink2)">
     <li><b>Öğrenci ekle</b> → ona ayrı bir mağaza adı ve şifre ver. “📤 Davet mesajı” ile linki gönder, şifreyi kendin ilet.</li>
@@ -1674,8 +1701,8 @@ async function mentorAdminView(){
 }
 function studentDetailAdmin(s){
   const f=stuFlags(s),p=progressOf(s),T=S.mTab||'gen';
-  const tabs=[['gen','👤 Genel',0],['road','🗺️ Yol haritası',0],['hw','📝 Ödevler',f.hw],['chk','📈 Raporlar',f.late?1:0],['ses','📅 Görüşmeler',0],['aud','🔍 Denetim',0],['qa','❓ Sorular',f.q]];
-  const body=T==='road'?roadHTML(s):T==='hw'?hwHTML(s,true):T==='chk'?chkHTML(s,true):T==='ses'?sesHTML(s,true):T==='aud'?audHTML(s,true):T==='qa'?qaHTML(s,true):genHTML(s);
+  const tabs=[['gen','👤 Genel',0],['road','🗺️ Yol haritası',0],['hw','📝 Ödevler',f.hw],['chk','📈 Raporlar',f.late?1:0],['ses','📅 Görüşmeler',f.bk],['aud','🔍 Denetim',0],['qa','❓ Sorular',f.q]];
+  const body=T==='road'?roadHTML(s):T==='hw'?hwHTML(s,true):T==='chk'?chkHTML(s,true):T==='ses'?bookHTML(s,true)+sesHTML(s,true):T==='aud'?audHTML(s,true):T==='qa'?qaHTML(s,true):genHTML(s);
   return `<button class="sm" data-act="mBack">← Öğrenciler</button>
    <div class="kv" style="justify-content:space-between;margin-top:10px;align-items:flex-start"><div><div class="vtitle" style="margin:0">${esc(s.name)} <span class="stbadge st-${esc(s.status||'active')}">${STATUS_TR[s.status||'active']}</span></div><div class="vhint" style="margin:2px 0 0">${esc(s.store)}${s.plan?' · '+esc(s.plan):''}${s.shopUrl?` · <a href="${esc(s.shopUrl)}" target="_blank">Etsy mağazası ↗</a>`:''}</div></div>
     <div class="kv"><button data-act="stuEdit">✏️ Düzenle</button><button data-act="stuInvite">📤 Davet mesajı</button><button data-act="stuOrders">📦 Siparişleri</button></div></div>
@@ -1689,6 +1716,8 @@ function genHTML(s){
   const f=stuFlags(s),todo=[];
   if(f.hw)todo.push(['hw',`📝 ${f.hw} teslim edilmiş ödevi incele`]);
   if(f.q)todo.push(['qa',`❓ ${f.q} soruyu cevapla`]);
+  if(f.bk)todo.push(['ses',`📅 ${f.bk} randevu talebini yanıtla`]);
+  if(f.end!=null&&f.end>=0&&f.end<=7)todo.push(['edit',`⏳ Program ${f.end} gün sonra bitiyor — devamını konuş`]);
   const lc=f.lastC;if(lc&&!lc.comment)todo.push(['chk',`💬 ${lc.week} raporuna yorum yaz`]);
   if(f.late)todo.push(['chk',`⏰ Rapor gelmiyor — öğrenciye hatırlat`]);
   if(!s.nextCall||new Date(s.nextCall)<new Date())todo.push(['edit','📅 Sonraki görüşmeyi planla']);
@@ -1701,6 +1730,8 @@ function genHTML(s){
      <div class="sc orange"><span class="v">${ords.filter(VIEWS.todo).length} / ${ords.length}</span><span class="l">📦 Ivy: açık / toplam sipariş</span></div>
      <div class="sc"><span class="v">${la?auditAvg(la).toFixed(1):'—'}</span><span class="l">🔍 Son denetim /5</span></div></div>
     ${C.length?`<div class="hcard"><h3>📊 Haftalık ciro</h3>${svgWeeks(C)}</div>`:''}
+    <div class="hcard"><h3>⏱ Çalışma</h3><div class="kvrow"><span>Bu hafta</span><b>${fmtMin(weekMinutes(s))} / ${fmtMin((+s.weeklyHours||10)*60)}</b></div><div class="kvrow"><span>Çalıştığı gün</span><b>${weekDays(s)}/7</b></div><div class="kvrow"><span>Toplam</span><b>${fmtMin(Object.values(s.study||{}).reduce((a,v)=>a+(+v||0),0))}</b></div></div>
+    ${badgesHTML(s,false)}
     <div class="hcard"><h3>🔒 Özel notların <span class="hint">(öğrenci görmez)</span></h3><div style="white-space:pre-wrap;color:var(--ink2)">${esc(s.notes||'—')}</div></div></div>
    <div><div class="hcard"><h3>✅ Senin yapacakların</h3>${todo.length?todo.map(([tab,l])=>`<button class="todo-a" data-act="${tab==='edit'?'stuEdit':'mTab'}" data-t="${tab}">${l} →</button>`).join(''):'<div class="hint">Her şey güncel 👌</div>'}</div>
     <div class="hcard"><h3>👤 Profil</h3>${kv('Program',esc(s.plan))}${kv('Odak',esc(s.focus))}${kv('İletişim',esc(s.contact))}${kv('Başlangıç',esc(s.startDate))}${kv('Bitiş',esc(s.endDate))}${kv('Aylık hedef',s.goalMonthly?money(s.goalMonthly):'')}${kv('Sonraki görüşme',s.nextCall?esc(fmtDT(s.nextCall))+(s.callLink?` · <a href="${esc(s.callLink)}" target="_blank">Katıl ↗</a>`:''):'')}${kv('Giriş',s.hasPass?'✓ şifre tanımlı':'⚠️ şifre yok')}${kv('Telefon bildirimi',s.topic?'✓ açık':'kapalı')}</div></div></div>`;
@@ -1711,7 +1742,7 @@ function studentForm(s){
   modal(`<h2>${isNew?'＋ Yeni öğrenci':'✏️ '+esc(s.name)}</h2>
    <div class="grid">${f('name','Ad soyad *')}${f('store','Mağaza adı * (Order Hub’da bu adla görünür)','text','ör. AylinStudio')}
     ${f('shopUrl','Etsy mağaza linki','url','https://www.etsy.com/shop/...')}${f('contact','İletişim (tel / e-posta / IG)')}
-    ${f('plan','Program','text','ör. 3 ay birebir koçluk')}${f('goalMonthly','Aylık ciro hedefi ($)','number')}
+    ${f('plan','Program','text','ör. 3 ay birebir koçluk')}${f('goalMonthly','Aylık ciro hedefi ($)','number')}${f('weeklyHours','Haftalık çalışma hedefi (saat)','number','10')}
     ${f('startDate','Başlangıç','date')}${f('endDate','Bitiş','date')}
     ${f('nextCall','Sonraki görüşme','datetime-local')}${f('callLink','Görüşme linki (Zoom / Meet)','url','https://')}
     <label class="full">Odak / niş<input data-sf="focus" value="${esc(s.focus||'')}" placeholder="ör. Y2K giyim, takı"></label>
@@ -1765,11 +1796,14 @@ async function studentView(){
   await loadMentor();const s=me();
   if(!s)return '<div class="empty">Profil yüklenemedi. Çıkış yapıp tekrar dene.</div>';
   const v=S.view,head=(ic,ti,hi)=>`<div class="vtitle">${ic} ${ti}</div><div class="vhint">${hi}</div>`;
-  if(['sQa','sCheck','sSessions','sAudit'].includes(v))setTimeout(()=>{store.set(seenKey(v),new Date().toISOString());renderTabbar(counts());},1200);
+  if(['sQa','sCheck','sSessions','sAudit','sAnn'].includes(v))setTimeout(()=>{store.set(seenKey(v),new Date().toISOString());renderTabbar(counts());},1200);
   if(v==='sRoad'){const p=progressOf(s);return head('🗺️','Yol haritası','Adım adım ilerle: dersi oku, görevleri bitirdikçe işaretle. İlerlemen mentörüne görünür.')+`<div class="hcard" style="padding:12px 16px"><div class="kv" style="justify-content:space-between"><b>Toplam ilerleme</b><b>%${p.pct}</b></div>${pbar(p.pct)}</div>`+roadHTML(s);}
   if(v==='sHw')return head('📝','Ödevler','Mentörünün verdiği ödevler. Teslim et → mentörün onaylar ya da düzeltme ister.')+hwHTML(s,false);
   if(v==='sCheck')return head('📈','Haftalık rapor','Hesap verebilirlik: rakamlarını her hafta gir, gidişatı birlikte izleyelim.')+chkHTML(s,false);
-  if(v==='sSessions')return head('📅','Görüşmeler','Birebir görüşme notların ve aksiyon listen.')+sesHTML(s,false);
+  if(v==='sSessions')return head('📅','Görüşme & randevu','Mentorunun müsait saatlerinden randevu iste; görüşme notların ve aksiyonların burada.')+bookHTML(s,false)+sesHTML(s,false);
+  if(v==='sAnn')return head('📢','Duyurular','Mentorundan tüm öğrencilere duyurular.')+annHTML(false);
+  if(v==='sWins')return head('🏆','Başarı duvarı','Öğrencilerin başarıları — alkışla, motive ol, kendininkini paylaş.')+winsHTML(false);
+  if(v==='sCalc')return calcHTML();
   if(v==='sAudit')return head('🔍','Mağaza denetimi','Mentörünün mağazan için puan kartı ve öncelikli düzeltmeler.')+audHTML(s,false);
   if(v==='sQa')return head('💬','Soru-cevap','Takıldığın her şeyi sor; cevap gelince bildirim alırsın.')+qaHTML(s,false);
   if(v==='sRes')return head('📎','Kaynaklar','İşine yarayacak araçlar ve rehberler.')+resHTML();
@@ -1786,21 +1820,25 @@ function sHomeHTML(s){
     ...(s.sessions||[]).map(x=>({at:x.createdAt,ic:'📅',tx:'Görüşme: '+x.title,v:'sSessions'})),
     ...(s.audits||[]).map(a=>({at:a.at,ic:'🔍',tx:'Mağaza denetimi: '+auditAvg(a).toFixed(1)+'/5',v:'sAudit'}))].sort((a,b)=>String(b.at).localeCompare(String(a.at))).slice(0,5);
   const nx=p.next;
-  return `<div class="vtitle">👋 Merhaba ${esc(String(s.name||'').split(' ')[0])}</div><div class="vhint">${esc(s.store)}${s.plan?' · '+esc(s.plan):''}</div>
+  const la=annList()[0],laNew=la&&(Date.now()-new Date(la.at))<7*864e5;
+  return `<div class="vtitle">👋 Merhaba ${esc(String(s.name||'').split(' ')[0])}</div><div class="vhint">${esc(s.store)}${s.plan?' · '+esc(s.plan):''}</div>${endBanner(s)}${laNew?`<div class="hcard" style="border-left:6px solid var(--purple)"><div class="k">📢 Duyuru · ${esc(fmtDate(la.at))}</div><b>${esc(la.title||'')}</b><div style="white-space:pre-wrap;color:var(--ink2);margin-top:4px">${esc(String(la.text).slice(0,260))}</div><button class="sm" style="margin-top:8px" data-v="sAnn">Tüm duyurular →</button></div>`:''}
    <div class="cards">
     <button class="sc blue" data-v="sRoad"><span class="v">%${p.pct}</span><span class="l">🗺️ Yol haritası · ${p.done}/${p.total}</span></button>
     <button class="sc orange" data-v="sHw"><span class="v">${hwOpen.length}</span><span class="l">📝 Yapılacak ödev</span></button>
     <button class="sc teal" data-v="sCheck"><span class="v">${goal?Math.round(rev*100/goal)+'%':money(rev)}</span><span class="l">🎯 Bu ay ${goal?'hedef '+money(goal):'ciro'}</span></button>
     <button class="sc ${open?'red':'blue'}" data-v="all"><span class="v">${O.length}</span><span class="l">📦 Sipariş · ${open} hazırlanıyor</span></button></div>
    <div class="fin2"><div>
+    ${coachHTML(s)}
     ${nx?`<div class="hcard nextstep"><div class="k">👉 Sıradaki adımın</div><b style="font-size:16px">${esc(nx.t.t)}</b><div class="hint">${esc(nx.m.icon+' '+nx.m.title+' › '+nx.l.title)}</div><button class="pri" style="margin-top:10px" data-act="goLesson" data-l="${esc(nx.l.id)}">Derse git →</button></div>`:`<div class="hcard nextstep"><b>🏆 Yol haritasını bitirdin!</b></div>`}
     ${!done?`<div class="hcard warnc"><b>📈 Bu haftanın raporu eksik (${wk})</b><div class="hint">2 dakika sürer: ciro, sipariş, ziyaret, kazanımlar.</div><button style="margin-top:8px" data-v="sCheck" class="sc-like">Raporu doldur →</button></div>`:''}
     ${hwOpen.length?`<div class="hcard"><h3>📝 Ödevlerin</h3>${hwOpen.slice(0,4).map(h=>{const d=h.due?daysTo(h.due):null;return `<div class="kvrow"><span>${h.status==='revise'?'✏️ ':''}${esc(h.title)}</span>${d!=null?`<span class="chip ${d<0?'r':d<=2?'o':'b'}">${d<0?(-d)+' gün geçti':d===0?'bugün':d+' gün'}</span>`:''}</div>`;}).join('')}<button class="sm" style="margin-top:8px" data-v="sHw">Ödevlere git →</button></div>`:''}
     ${shipNE?`<div class="hcard"><b>🚚 ${shipNE} sipariş kargoda ama Etsy’de “shipped” değil</b><div class="hint">Takip no’yu kopyala → Etsy’de “Mark as shipped”.</div><button class="sm" style="margin-top:8px" data-v="shippedDs">Göster →</button></div>`:''}
+    ${badgesHTML(s,true)}
    </div><div>
+    ${timerHTML(s)}
     ${s.nextCall?`<div class="hcard nextcall"><div><div class="k">📅 Sonraki görüşme</div><b style="font-size:17px">${esc(fmtDT(s.nextCall))}</b></div>${s.callLink?`<a class="btnlink" href="${esc(s.callLink)}" target="_blank">🎥 Katıl</a>`:''}</div>`:''}
     <div class="hcard"><h3>🔔 Son geri bildirimler</h3>${feed.length?feed.map(x=>`<button class="todo-a" data-v="${x.v}">${x.ic} ${esc(String(x.tx).slice(0,90))} <span class="hint">· ${esc(ago(x.at))}</span></button>`).join(''):'<div class="hint">Henüz yok.</div>'}</div>
-    <div class="hcard"><h3>🎯 Hedefim</h3><div class="g2"><label><div class="k">Aylık ciro hedefi ($)</div><input id="p_goal" type="number" value="${esc(s.goalMonthly||'')}"></label><label><div class="k">Etsy mağaza linkim</div><input id="p_shop" value="${esc(s.shopUrl||'')}" placeholder="https://www.etsy.com/shop/..."></label></div>${goal?`<div style="margin-top:8px">${pbar(rev*100/goal,'var(--teal)')}<div class="hint">${money(rev)} / ${money(goal)} (haftalık raporlarından)</div></div>`:''}<button class="sm" style="margin-top:8px" data-act="profSave">💾 Kaydet</button></div>
+    <div class="hcard"><h3>🎯 Hedefim</h3><div class="g2"><label><div class="k">Aylık ciro hedefi ($)</div><input id="p_goal" type="number" value="${esc(s.goalMonthly||'')}"></label><label><div class="k">Etsy mağaza linkim</div><input id="p_shop" value="${esc(s.shopUrl||'')}" placeholder="https://www.etsy.com/shop/..."></label></div>${goal?`<div style="margin-top:8px">${pbar(rev*100/goal,'var(--teal)')}<div class="hint">${money(rev)} / ${money(goal)} (haftalık raporlarından)</div></div>`:''}<label style="display:block;margin-top:8px"><div class="k">Haftalık çalışma hedefi (saat)</div><input id="p_wk" type="number" value="${esc(s.weeklyHours||10)}"></label><button class="sm" style="margin-top:8px" data-act="profSave">💾 Kaydet</button></div>
     <div class="hcard"><h3>❓ Nasıl kullanılır?</h3><ol style="margin:0;padding-left:18px;line-height:1.7;color:var(--ink2)"><li><b>Yol haritası</b>: dersleri sırayla bitir, görevleri işaretle.</li><li><b>Ödevler</b>: teslim et, geri bildirim al.</li><li><b>Haftalık rapor</b>: her Pazar rakamlarını gir.</li><li><b>Siparişlerim</b>: “🔗 Etsy senkron” ile Etsy siparişlerin buraya gelir, Ivy hazırlar; takip no gelince Etsy’de “shipped” yap.</li><li>🔔 <b>Zil</b>: telefon bildirimlerini aç.</li></ol></div>
    </div></div>`;
 }
@@ -1821,8 +1859,9 @@ async function mentorClick(e){
   const a=b.dataset.act,id=b.dataset.id||'',sid=S.mSid||'';
   const val=sel=>{const x=document.querySelector(sel);return x?String(x.value).trim():'';};
   const go=async(act,p)=>{b.disabled=true;const ok=await mSave(act,Object.assign({sid},p||{}));b.disabled=false;if(ok){toast('✓');render();}return ok;};
+  if(await mentorClick2(a,b,id,sid,val,go))return;
   switch(a){
-    case 'mBack':S.mSid=null;render();break;
+    case 'mBack':S.mSid=null;S.mPanel=null;render();break;
     case 'mTab':S.mTab=b.dataset.t;S.sesEdit=null;render();break;
     case 'mAdd':studentForm(null);break;
     case 'mCur':curEditor();break;
@@ -1848,7 +1887,7 @@ async function mentorClick(e){
     case 'audSave':case 'audUpd':{const scores={},notes={};AUDIT_CATS.forEach(([k])=>{scores[k]=val('#a_'+k);notes[k]=val('#an_'+k);});const la=lastAudit(curStu());await go('audit.save',{id:a==='audUpd'&&la?la.id:'',scores,notes,summary:val('#a_sum')});break;}
     case 'qAsk':{const tx=val('#q_text');if(!tx){toast('Sorunu yaz');return;}await go('q.ask',{text:tx,link:val('#q_link')});break;}
     case 'qAns':{const tx=val(`[data-qa="${id}"]`);if(!tx){toast('Cevap yaz');return;}await go('q.answer',{id,text:tx});break;}
-    case 'profSave':await go('profile',{goalMonthly:val('#p_goal'),shopUrl:val('#p_shop')});break;
+    case 'profSave':await go('profile',{goalMonthly:val('#p_goal'),shopUrl:val('#p_shop'),weeklyHours:val('#p_wk')});break;
   }
 }
 async function mentorChange(e){
@@ -1876,6 +1915,169 @@ function stuOrderInfo(o){
    ${(+o.costProduct||+o.costShip)?`<div><div class="k">Maliyet</div>${esc(o.costProduct||0)} + ${esc(o.costShip||0)} kargo · ${esc(o.costCurrency||'CNY')}</div>`:''}
    ${ap.length?`<div><div class="k">📷 Ivy’nin fotoğrafları</div><div class="ph">${ap.map(u=>`<img src="${esc(u)}" data-z="${esc(u)}" alt="">`).join('')}</div></div>`:''}
    <div class="kv"><button class="sm" data-sedit="${esc(o.id)}">✏️ Sipariş bilgisini düzenle</button></div></div>`;
+}
+
+/* ================= 🎓 Mentorship v2: study timer, badges, coach tips, announcements, wins wall, booking, profit calculator ================= */
+const trToday=()=>new Date().toLocaleDateString('sv-SE',{timeZone:'Europe/Istanbul'});
+const fmtMin=m=>{m=Math.round(m||0);const h=Math.floor(m/60),r=m%60;return h?`${h} sa${r?' '+r+' dk':''}`:`${r} dk`;};
+function weekMinutes(s){const wk=isoWeek(new Date());return Object.entries((s&&s.study)||{}).filter(([d])=>isoWeek(new Date(d+'T12:00:00'))===wk).reduce((a,[,v])=>a+(+v||0),0);}
+function weekDays(s){const wk=isoWeek(new Date());return Object.entries((s&&s.study)||{}).filter(([d,v])=>v>0&&isoWeek(new Date(d+'T12:00:00'))===wk).length;}
+const endIn=s=>s&&s.endDate?daysTo(s.endDate):null;
+function streakOf(s){const W=new Set((s.checkins||[]).map(c=>c.week));let n=0,d=new Date();if(!W.has(isoWeek(d)))d=new Date(Date.now()-7*864e5);while(W.has(isoWeek(d))){n++;d=new Date(d.getTime()-7*864e5);}return n;}
+function badgesOf(s){
+  const C=s.checkins||[],rev=C.reduce((a,c)=>a+(+c.revenue||0),0);
+  const hub=S.role==='student'?S.orders.length:S.orders.filter(o=>o.store===s.store).length;
+  const ord=Math.max(hub,C.reduce((a,c)=>a+(+c.orders||0),0)),streak=streakOf(s),p=progressOf(s).pct,wm=weekMinutes(s);
+  const B=[['first','🥇','İlk satış',ord>=1],['o10','🔟','10 sipariş',ord>=10],['o50','🚀','50 sipariş',ord>=50],['o100','💯','100 sipariş',ord>=100],
+    ['r1k','💵','$1.000 ciro',rev>=1000],['r5k','💰','$5.000 ciro',rev>=5000],['r10k','🏆','$10.000 ciro',rev>=10000],
+    ['st4','🔥','4 hafta üst üste rapor',streak>=4],['road50','🧭','Yol haritası %50',p>=50],['road100','🎓','Yol haritası tamam',p>=100],['h10','⏱','Bir haftada 10 saat',wm>=600]];
+  return {rev,ord,streak,list:B.map(([k,ic,l,on])=>({k,ic,l,on}))};
+}
+function badgesHTML(s,canShare){
+  const b=badgesOf(s),shared=new Set(((S.mentor&&S.mentor.wins)||[]).filter(w=>w.mine).map(w=>w.kind));
+  return `<div class="hcard"><div class="kv" style="justify-content:space-between"><h3 style="margin:0">🏅 Kazancım & rozetler</h3><span class="hint">raporlar + Order Hub</span></div>
+   <div class="earn"><div><div class="k">Toplam ciro</div><b>${money(b.rev)}</b></div><div><div class="k">Toplam sipariş</div><b>${b.ord}</b></div><div><div class="k">Rapor serisi</div><b>${b.streak} hf 🔥</b></div></div>
+   <div class="badges">${b.list.map(x=>`<div class="badge ${x.on?'on':''}" title="${esc(x.l)}"><span>${x.ic}</span><small>${esc(x.l)}</small>${x.on&&canShare&&!shared.has(x.k)?`<button class="sm" data-act="winBadge" data-k="${x.k}" data-t="${esc(x.ic+' '+x.l)}">Paylaş</button>`:''}</div>`).join('')}</div></div>`;
+}
+/* study timer */
+const tKey=()=>'oh_timer_'+((me()||{}).id||'');
+function timerHTML(s){
+  const st=+store.get(tKey())||0,wm=weekMinutes(s),goal=(+s.weeklyHours||10)*60,today=(s.study||{})[trToday()]||0;
+  return `<div class="hcard timer"><div class="kv" style="justify-content:space-between"><h3 style="margin:0">⏱ Çalışma</h3><span class="chip ${wm>=goal?'g':'b'}">${Math.min(100,Math.round(wm*100/goal))}%</span></div>
+   <div class="tclock" id="tclock">${st?'00:00:00':fmtMin(today)+' bugün'}</div>
+   <div class="kv" style="justify-content:center">${st?`<button class="pri" data-act="timerStop">⏹ Bitir & kaydet</button><button data-act="timerReset">✕</button>`:`<button class="pri" data-act="timerStart">▶ Başlat</button>`}</div>
+   ${pbar(wm*100/goal,'var(--teal)')}<div class="hint" style="margin-top:4px">Bu hafta ${fmtMin(wm)} / hedef ${fmtMin(goal)} · ${weekDays(s)}/7 gün çalıştın</div></div>`;
+}
+function tickTimer(){clearInterval(S._tick);const st=+store.get(tKey())||0;if(!st||!$('#tclock'))return;
+  const f=()=>{const el=$('#tclock');if(!el){clearInterval(S._tick);return;}const sec=Math.floor((Date.now()-st)/1000);el.textContent=[Math.floor(sec/3600),Math.floor(sec/60)%60,sec%60].map(x=>String(x).padStart(2,'0')).join(':');};
+  f();S._tick=setInterval(f,1000);}
+/* coach tips */
+function coachTips(s){
+  const T=[],e=endIn(s),wm=weekMinutes(s),goal=(+s.weeklyHours||10)*60,dow=new Date().getDay();
+  if(e!=null&&e>=0&&e<=7)T.push(['⏳',`Programının bitmesine ${e} gün kaldı`,'Kalan günlerde görüşmeni planla; devam etmek istersen mentoruna yaz.','sQa','Mentoruna yaz']);
+  if(!((s.study||{})[trToday()]))T.push(['⏱','Bugün henüz çalışma kaydın yok',`Bu hafta ${fmtMin(wm)} / ${fmtMin(goal)}. 25 dakikalık kısa bir oturum bile ritmi korur.`,'timerStart','Başlat']);
+  (s.homework||[]).filter(h=>(h.status==='open'||h.status==='revise')&&h.due&&daysTo(h.due)<=2).slice(0,2).forEach(h=>{const d=daysTo(h.due);T.push(['📝',`“${h.title}” ${d<0?'gecikti':d===0?'bugün bitiyor':d+' gün kaldı'}`,'Teslim et ki mentorun geri bildirim versin.','sHw','Ödeve git']);});
+  if((dow===0||dow>=5)&&!(s.checkins||[]).some(c=>c.week===isoWeek(new Date())))T.push(['📈','Bu haftanın raporu eksik','2 dakika: ciro, sipariş, ziyaret, kazanımlar.','sCheck','Raporu doldur']);
+  const hasCall=s.nextCall&&new Date(trTime(s.nextCall))>new Date(),pend=(s.bookings||[]).some(b=>b.status==='pending');
+  if(!hasCall&&!pend&&S.mentor&&S.mentor.slots)T.push(['📅','Planlanmış görüşmen yok','Mentorunun müsait saatlerinden birini seçip randevu iste.','sSessions','Randevu al']);
+  return T;
+}
+const trTime=v=>/^\d{4}-\d\d-\d\dT\d\d:\d\d$/.test(String(v||''))?v+':00+03:00':v;
+function coachHTML(s){const T=coachTips(s);if(!T.length)return '';
+  return `<div class="hcard coach"><h3>🧭 Koç önerileri <span class="hint">${T.length} öneri</span></h3>${T.map(([ic,ti,tx,act,bl])=>`<div class="tip"><span class="tipi">${ic}</span><div style="flex:1"><b>${esc(ti)}</b>${tx?`<div class="hint">${esc(tx)}</div>`:''}</div><button class="sm" ${act==='timerStart'?'data-act="timerStart"':`data-v="${act}"`}>${esc(bl)}</button></div>`).join('')}</div>`;}
+function endBanner(s){const e=endIn(s);if(e==null||e<0||e>14)return '';
+  return `<div class="hcard endb"><b>⏳ Programının bitmesine ${e===0?'bugün son gün':e+' gün'} kaldı</b><div class="hint">Bitiş: ${esc(s.endDate)}. Kazandığın ivmeyi kaybetmemek için devam seçeneklerini mentoruna sorabilirsin.</div><button class="sm" style="margin-top:8px" data-v="sQa">💬 Mentoruna yaz</button></div>`;}
+/* announcements */
+function annList(){return ((S.mentor&&S.mentor.announcements)||[]).slice().sort((a,b)=>(b.pin?1:0)-(a.pin?1:0)||String(b.at).localeCompare(String(a.at)));}
+function annHTML(admin){
+  const L=annList();
+  const form=admin?`<div class="hcard"><h3>📢 Yeni duyuru</h3><input id="an_t" placeholder="Başlık (ör. Cuma 20:00 canlı soru-cevap)"><textarea id="an_x" rows="4" style="margin-top:8px" placeholder="Duyuru metni"></textarea><div class="kv" style="margin-top:8px;justify-content:space-between"><label class="chk"><input type="checkbox" id="an_p"> 📌 Sabitle</label><button class="pri" data-act="annPost">Tüm öğrencilere gönder</button></div><div class="hint">Aktif öğrencilerin hepsine 🔔 bildirim gider.</div></div>`:'';
+  return form+(L.map(a=>`<div class="item ann ${a.pin?'pin':''}"><div class="kv" style="justify-content:space-between"><b>${a.pin?'📌 ':''}${esc(a.title||'Duyuru')}</b><span class="meta" style="margin:0">${esc(fmtDate(a.at))}</span></div><div style="white-space:pre-wrap;margin-top:6px">${esc(a.text)}</div>${admin?`<div class="kv" style="justify-content:flex-end"><button class="sm ghost" data-act="annDel" data-id="${esc(a.id)}">🗑</button></div>`:''}</div>`).join('')||`<div class="empty">Henüz duyuru yok.</div>`);
+}
+/* wins wall */
+const EMO=['👏','🎉','🔥','💪','🚀'];
+function winsNorm(){return ((S.mentor&&S.mentor.wins)||[]).map(w=>{if(S.role!=='admin')return w;const r={},my={};Object.keys(w.reacts||{}).forEach(e=>{r[e]=w.reacts[e].length;my[e]=w.reacts[e].includes('admin');});return Object.assign({},w,{reacts:r,my,mine:false});}).sort((a,b)=>String(b.at).localeCompare(String(a.at)));}
+function winsHTML(admin){
+  const L=winsNorm();
+  const form=!admin?`<div class="hcard"><h3>🏆 Başarını paylaş</h3><div class="kv"><select id="w_k" style="width:auto"><option value="sale">🛒 Satış</option><option value="rev">💵 Ciro</option><option value="launch">🚀 Mağaza / ürün</option><option value="other">✨ Diğer</option></select><input id="w_t" style="flex:1;min-width:200px" placeholder="ör. İlk satışım geldi! 🎉"><button class="pri" data-act="winPost">Paylaş</button></div><div class="hint" style="margin-top:6px">Tüm öğrenciler görür (sadece adın görünür). Küçük adımlar da kutlanır!</div></div>`:'';
+  return form+(L.map(w=>`<div class="item win"><div class="kv" style="justify-content:space-between"><b>${{sale:'🛒',rev:'💵',launch:'🚀'}[w.kind]||'✨'} ${esc(w.name)}</b><span class="meta" style="margin:0">${esc(ago(w.at))}</span></div><div style="font-size:15px;margin:6px 0">${esc(w.text)}</div>
+    <div class="kv">${EMO.map(e=>`<button class="react ${w.my&&w.my[e]?'on':''}" data-act="winReact" data-id="${esc(w.id)}" data-e="${e}">${e}${(w.reacts||{})[e]?' '+w.reacts[e]:''}</button>`).join('')}${admin||w.mine?`<button class="sm ghost" style="margin-left:auto" data-act="winDel" data-id="${esc(w.id)}">🗑</button>`:''}</div></div>`).join('')||`<div class="empty">Henüz paylaşım yok — ilk başarıyı sen paylaş!</div>`);
+}
+/* booking */
+const WD=['Paz','Pzt','Sal','Çar','Per','Cum','Cmt'];
+function slotList(){
+  const cfg=S.mentor&&S.mentor.slots;if(!cfg||!(cfg.times||[]).length||!(cfg.days||[]).length)return [];
+  const taken=new Set(S.mentor.taken||[]),[y,mo,d]=trToday().split('-').map(Number),out=[];
+  for(let i=0;i<(cfg.weeks||2)*7;i++){const dt=new Date(Date.UTC(y,mo-1,d+i));if(!cfg.days.includes(dt.getUTCDay()))continue;const ds=dt.toISOString().slice(0,10);
+    cfg.times.forEach(t=>{const sl=ds+'T'+t;if(taken.has(sl)||new Date(trTime(sl))<new Date(Date.now()+2*36e5))return;out.push(sl);});}
+  return out;
+}
+const slotLabel=sl=>{const [d,t]=sl.split('T');const dt=new Date(d+'T12:00:00Z');return `${dt.getUTCDate()} ${['Oca','Şub','Mar','Nis','May','Haz','Tem','Ağu','Eyl','Eki','Kas','Ara'][dt.getUTCMonth()]} ${WD[dt.getUTCDay()]} ${t}`;};
+const BST={pending:['Onay bekliyor','o'],approved:['Onaylandı','g'],declined:['Uygun değil','r'],cancelled:['İptal','y']};
+function bookHTML(s,admin){
+  const B=(s.bookings||[]).slice().sort((a,b)=>String(b.slot).localeCompare(String(a.slot))).filter(b=>admin||b.status!=='cancelled'||new Date(trTime(b.slot))>new Date());
+  const mine=B.map(b=>{const [l,c]=BST[b.status]||BST.pending;const fut=new Date(trTime(b.slot))>new Date();
+    return `<div class="kvrow"><span>📅 <b>${esc(slotLabel(b.slot))}</b>${b.note?` <span class="hint">· ${esc(b.note)}</span>`:''}${b.reply?` <span class="hint">· ${esc(b.reply)}</span>`:''}</span><span class="kv"><span class="chip ${c}">${l}</span>
+     ${admin&&b.status==='pending'?`<input data-bl="${esc(b.id)}" placeholder="Görüşme linki (isteğe bağlı)" value="${esc(s.callLink||'')}" style="width:200px"><button class="sm pri" data-act="bookOk" data-id="${esc(b.id)}">✅ Onayla</button><button class="sm" data-act="bookNo" data-id="${esc(b.id)}">Uygun değil</button>`:''}
+     ${!admin&&fut&&(b.status==='pending'||b.status==='approved')?`<button class="sm ghost" data-act="bookCancel" data-id="${esc(b.id)}">İptal</button>`:''}</span></div>`;}).join('');
+  if(admin)return B.length?`<div class="hcard"><h3>📅 Randevu talepleri</h3>${mine}</div>`:'';
+  const sl=slotList(),byDay={};sl.forEach(x=>(byDay[x.slice(0,10)]=byDay[x.slice(0,10)]||[]).push(x));
+  const cfg=S.mentor&&S.mentor.slots;
+  return `<div class="hcard"><h3>📅 Randevu al</h3>${mine?`<div style="margin-bottom:10px">${mine}</div>`:''}
+    ${sl.length?`<div class="hint" style="margin-bottom:8px">Bir saat seç → mentorun onaylayınca kesinleşir. Saatler TR saatidir${cfg&&cfg.len?` · ${cfg.len} dk`:''}.${cfg&&cfg.note?' '+esc(cfg.note):''}</div>
+      ${Object.keys(byDay).map(d=>`<div class="slotday"><div class="k">${esc(slotLabel(d+'T').replace(/ $/,''))}</div><div class="kv">${byDay[d].map(x=>`<button class="slot" data-act="bookPick" data-slot="${x}">${x.slice(11)}</button>`).join('')}</div></div>`).join('')}`
+      :`<div class="hint">Mentorun henüz müsait saat açmadı. Soru-cevap’tan yazabilirsin.</div>`}</div>`;
+}
+function slotsEditor(){
+  const c=(S.mentor&&S.mentor.slots)||{days:[1,2,3,4],times:['10:00','14:00','19:00'],weeks:2,len:45,note:''};
+  modal(`<h2>📅 Müsait saatlerim</h2><div class="hint">Öğrenciler bu saatlerden randevu ister; sen onaylarsın. TR saati.</div>
+   <div class="k" style="margin-top:12px">Günler</div><div class="kv">${[1,2,3,4,5,6,0].map(d=>`<label class="chk tyc"><input type="checkbox" data-sd="${d}" ${c.days.includes(d)?'checked':''}> ${WD[d]}</label>`).join('')}</div>
+   <div class="grid" style="margin-top:10px"><label>Saatler (virgülle)<input id="sl_t" value="${esc(c.times.join(', '))}" placeholder="10:00, 14:00, 19:00"></label><label>Görüşme süresi (dk)<input id="sl_l" type="number" value="${esc(c.len)}"></label>
+    <label>Kaç hafta ileri<input id="sl_w" type="number" min="1" max="6" value="${esc(c.weeks)}"></label><label>Not (öğrenci görür)<input id="sl_n" value="${esc(c.note||'')}" placeholder="ör. Google Meet linki onayda gelir"></label></div>
+   <div class="kv" style="justify-content:flex-end;margin-top:12px"><button id="slc">Vazgeç</button><button class="pri" id="sls">💾 Kaydet</button></div>`);
+  $('#slc').onclick=closeModal;
+  $('#sls').onclick=async()=>{const days=$$('#sheet [data-sd]').filter(x=>x.checked).map(x=>+x.dataset.sd);const times=$('#sl_t').value.split(/[,\s]+/).map(x=>x.trim()).filter(x=>/^\d{1,2}:\d\d$/.test(x)).map(x=>x.padStart(5,'0'));
+    if(await mSave('slots.save',{days,times,weeks:$('#sl_w').value,len:$('#sl_l').value,note:$('#sl_n').value.trim()})){closeModal();toast('✓ Müsaitlik kaydedildi');render();}};
+}
+/* profit calculator */
+const CALC_DEF={price:49.99,disc:35,shipC:0,cost:9,ship:7,ads:2,qty:30,target:10,offsite:false,listing:0.20,tx:6.5,pay:4,payFix:0.30,conv:0,other:0,fx:42};
+function calcState(){let c={};try{c=JSON.parse(store.get('oh_calc')||'{}');}catch(e){}return Object.assign({},CALC_DEF,c);}
+function calcRun(c){
+  const n=k=>+c[k]||0,d=Math.min(95,n('disc'))/100,k=(n('tx')+n('pay')+n('conv')+n('other')+(c.offsite?15:0))/100;
+  const sale=n('price')*(1-d),R=sale+n('shipC'),fees=n('listing')+n('payFix')+R*k,profit=R-fees-n('cost')-n('ship')-n('ads');
+  const fixed=n('listing')+n('payFix')+n('cost')+n('ship')+n('ads');
+  const priceFor=t=>Math.max(0,((t+fixed)/(1-k)-n('shipC'))/(1-d));
+  return {sale,R,fees,profit,margin:R?profit/R*100:0,month:profit*n('qty'),need:priceFor(n('target')),be:priceFor(0),k};
+}
+function calcHTML(){
+  const c=calcState(),r=calcRun(c),u=v=>'$'+(+v).toFixed(2),f=(k,l,step,hint)=>`<label>${l}<input data-ck="${k}" type="number" step="${step||'0.01'}" value="${esc(c[k])}">${hint?`<span class="hint">${hint}</span>`:''}</label>`;
+  const seg=[['Kâr',Math.max(0,r.profit),'var(--green)'],['Ürün',+c.cost||0,'var(--blue)'],['Kargo',+c.ship||0,'var(--purple)'],['Etsy',r.fees,'var(--orange)'],['Reklam',+c.ads||0,'var(--amber)']],tot=seg.reduce((a,x)=>a+x[1],0)||1;
+  return `<div class="vtitle">💰 Kâr hesaplama</div><div class="vhint">Fiyatını doğru koy, kârını baştan gör. Değerler bu cihazda saklanır.</div>
+   <div class="fin2"><div class="hcard"><h3>Satış bilgileri (USD)</h3><div class="grid">
+     ${f('price','Liste fiyatı')}${f('disc','Sürekli indirim %','1','müşteri indirimli fiyatı öder')}
+     ${f('shipC','Müşteriden alınan kargo')}${f('cost','Ürün maliyeti')}
+     ${f('ship','Gerçek kargo maliyeti')}${f('ads','Reklam payı / sipariş')}
+     ${f('qty','Aylık satış tahmini','1')}${f('target','Hedef net kâr / sipariş')}
+     <label class="full chk"><input type="checkbox" data-ck="offsite" ${c.offsite?'checked':''}> Offsite Ads ile gelen satış (+%15)</label></div>
+     <details style="margin-top:10px"><summary>⚙️ Etsy kesinti oranları (ülkene göre değişir)</summary><div class="grid" style="margin-top:8px">${f('listing','İlan ücreti $')}${f('tx','İşlem ücreti %','0.1')}${f('pay','Ödeme işleme %','0.1','Etsy → Finans → ödeme ayarlarındaki oran')}${f('payFix','Ödeme sabit $')}${f('conv','Kur dönüşüm %','0.1')}${f('other','Diğer kesinti % (KDV / regülasyon)','0.1')}${f('fx','USD → TL kuru','0.01')}</div></details></div>
+    <div><div class="hcard calcres ${r.profit<0?'neg':r.profit<(+c.target||0)?'low':''}"><div class="k">Net kâr · satış başına</div><div class="big">${u(r.profit)}</div>
+      <div class="hint">≈ ₺${Math.round(r.profit*(+c.fx||0)).toLocaleString('tr-TR')} · marj %${r.margin.toFixed(1)} · müşteri ${u(r.R)} öder · ayda ${c.qty} satışta <b>${u(r.month)}</b></div>
+      <div class="segbar">${seg.map(([l,v,col])=>`<i style="width:${v/tot*100}%;background:${col}" title="${l}: $${v.toFixed(2)}"></i>`).join('')}</div>
+      <div class="seglg">${seg.map(([l,v,col])=>`<span><i style="background:${col}"></i>${l} $${v.toFixed(2)}</span>`).join('')}</div></div>
+     <div class="hcard"><h3>🎯 Fiyat önerileri</h3>
+      <div class="kvrow"><span>Hedef kâr (${u(+c.target||0)}) için liste fiyatı</span><b>${u(r.need)}</b></div>
+      <div class="kvrow"><span>Başa baş (0 kâr) liste fiyatı</span><b>${u(r.be)}</b></div>
+      <div class="kvrow"><span>Toplam Etsy kesintisi</span><b>${u(r.fees)} · %${(r.R?r.fees/r.R*100:0).toFixed(1)}</b></div>
+      <div class="hint" style="margin-top:8px">Sürekli %${c.disc} indirim kullanıyorsan: liste fiyatı = istediğin satış fiyatı ÷ ${(1-(+c.disc||0)/100).toFixed(2)}. Ek kampanyalar (sepet / favori teklifleri) indirimin üstüne biner; kârı yeniden kontrol et.</div></div></div></div>`;
+}
+function bindCalc(){
+  const app=$('#app');app.oninput=e=>{const x=e.target;if(!x.dataset||!x.dataset.ck)return;const c=calcState();c[x.dataset.ck]=x.type==='checkbox'?x.checked:x.value;store.set('oh_calc',JSON.stringify(c));
+    const pos=x.selectionStart;const id=x.dataset.ck;render().then(()=>{const y=document.querySelector(`[data-ck="${id}"]`);if(y&&y.type!=='checkbox'){y.focus();try{y.setSelectionRange(pos,pos);}catch(er){}}});};
+  app.onchange=e=>{const x=e.target;if(x.dataset&&x.dataset.ck==='offsite')app.oninput(e);};
+}
+/* extra click actions (called from mentorClick) */
+async function mentorClick2(a,b,id,sid,val,go){
+  switch(a){
+    case 'timerStart':store.set(tKey(),String(Date.now()));if(S.view!=='sHome'){S.view='sHome';}render();return true;
+    case 'timerReset':if(confirm('Kronometre sıfırlansın mı? (kaydedilmez)')){store.del(tKey());render();}return true;
+    case 'timerStop':{const st=+store.get(tKey())||0;const mins=st?Math.round((Date.now()-st)/60000):0;store.del(tKey());clearInterval(S._tick);
+      if(mins<1){toast('1 dakikadan kısa — kaydedilmedi');render();return true;}await go('study.log',{date:trToday(),minutes:mins});toast('⏱ '+fmtMin(mins)+' kaydedildi');return true;}
+    case 'winBadge':await go('win.post',{text:b.dataset.t+'! 🎉',kind:b.dataset.k});return true;
+    case 'winPost':{const tx=val('#w_t');if(!tx){toast('Bir şey yaz');return true;}await go('win.post',{text:tx,kind:val('#w_k')});return true;}
+    case 'winReact':await go('win.react',{id,emoji:b.dataset.e});return true;
+    case 'winDel':if(confirm('Paylaşım silinsin mi?'))await go('win.delete',{id});return true;
+    case 'annPost':{const ti=val('#an_t'),tx=val('#an_x');if(!ti&&!tx){toast('Duyuru boş');return true;}if(!confirm('Tüm aktif öğrencilere gönderilsin mi?'))return true;await go('ann.post',{title:ti,text:tx,pin:$('#an_p').checked});return true;}
+    case 'annDel':if(confirm('Duyuru silinsin mi?'))await go('ann.delete',{id});return true;
+    case 'mPanel':S.mPanel=b.dataset.p||null;S.mSid=null;render();window.scrollTo(0,0);return true;
+    case 'mSlots':slotsEditor();return true;
+    case 'bookPick':{const sl=b.dataset.slot;modal(`<h2>📅 Randevu iste</h2><div style="font-size:17px;font-weight:800;margin:8px 0">${esc(slotLabel(sl))} <span class="hint">(TR saati)</span></div><textarea id="bk_n" rows="3" placeholder="Neyi konuşmak istiyorsun? (isteğe bağlı)"></textarea><div class="kv" style="justify-content:flex-end;margin-top:10px"><button id="bkc">Vazgeç</button><button class="pri" id="bks">Talep gönder</button></div>`);
+      $('#bkc').onclick=closeModal;$('#bks').onclick=async()=>{$('#bks').disabled=true;if(await mSave('book.request',{slot:sl,note:$('#bk_n').value.trim()})){closeModal();toast('✓ Talep gönderildi');render();}else{S.mentor=null;closeModal();render();}};return true;}
+    case 'bookCancel':if(confirm('Randevu iptal edilsin mi?'))await go('book.cancel',{id});return true;
+    case 'bookOk':await go('book.decide',{id,status:'approved',link:val(`[data-bl="${id}"]`)});return true;
+    case 'bookNo':await go('book.decide',{id,status:'declined',reply:''});return true;
+    case 'wkSave':await go('profile',{weeklyHours:val('#p_wk')});return true;
+  }
+  return false;
 }
 
 boot();
