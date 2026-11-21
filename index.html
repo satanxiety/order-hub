@@ -1,440 +1,677 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-<base target="_top">
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Order Hub</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
-:root{--bg:#f6f4f1;--card:#fff;--ink:#22201e;--soft:#6f6a65;--line:#e5e0da;--acc:#7c4dff;--red:#d93838;--green:#1f9d55;--amber:#d98b00;--blue:#2b6cd9}
+:root{
+  --bg:#f3f4f8;--panel:#fff;--ink:#141826;--ink2:#4b5163;--soft:#7d8396;--line:#e3e6ee;--line2:#eef0f5;
+  --acc:#6d4aff;--acc2:#efeaff;--head:#15122b;
+  --blue:#2563eb;--blue-bg:#eef4ff;
+  --teal:#0e9f8b;--teal-bg:#e7f8f4;--green:#15803d;--green-bg:#e9f8ee;
+  --amber:#d97706;--amber-bg:#fff6e5;--orange:#ea580c;--orange-bg:#fff0e6;--red:#dc2626;--red-bg:#fff0f0;
+  --purple:#7c3aed;--purple-bg:#f3edff;--gray:#8a90a0;--gray-bg:#f1f2f5;
+  --r:14px;--sh:0 1px 2px #1018280d,0 4px 14px #1018280f;
+}
 *{box-sizing:border-box}
-body{margin:0;font:14px/1.45 -apple-system,Segoe UI,Roboto,"PingFang SC","Microsoft YaHei",sans-serif;background:var(--bg);color:var(--ink)}
-header{position:sticky;top:0;z-index:5;background:#1f1b2e;color:#fff;padding:10px 14px;display:flex;gap:10px;align-items:center;flex-wrap:wrap}
-header h1{font-size:17px;margin:0 8px 0 0;letter-spacing:.3px}
-header .sp{flex:1}
-button,select,input,textarea{font:inherit}
-button{cursor:pointer;border:1px solid var(--line);background:#fff;border-radius:8px;padding:6px 12px}
+html,body{margin:0;background:var(--bg);color:var(--ink);font:14px/1.45 Inter,-apple-system,"Segoe UI",Roboto,"PingFang SC","Microsoft YaHei",sans-serif}
+button,input,select,textarea{font:inherit;color:inherit}
+button{cursor:pointer;border:1px solid var(--line);background:#fff;border-radius:10px;padding:7px 13px;font-weight:600}
+button:hover{border-color:#c9cdd8}
 button.pri{background:var(--acc);border-color:var(--acc);color:#fff}
-button.sm{padding:3px 8px;font-size:12px}
-.lang button{background:transparent;color:#fff;border-color:#4b4466;padding:4px 9px}
-.lang button.on{background:#fff;color:#1f1b2e}
-.tabs{display:flex;gap:6px;padding:10px 14px 0;flex-wrap:wrap}
-.tab{border:1px solid var(--line);background:#fff;border-radius:20px;padding:6px 14px}
-.tab.on{background:#1f1b2e;color:#fff;border-color:#1f1b2e}
-.tab .n{opacity:.65;margin-left:4px}
-.bar{display:flex;gap:8px;padding:10px 14px;flex-wrap:wrap;align-items:center}
-.bar input,.bar select{border:1px solid var(--line);border-radius:8px;padding:6px 10px;background:#fff}
-.bar input{flex:1;min-width:180px}
-#list{padding:0 14px 40px;display:grid;gap:12px;grid-template-columns:repeat(auto-fill,minmax(360px,1fr))}
-.card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:12px;display:flex;flex-direction:column;gap:8px}
-.card.over{border-color:var(--red);box-shadow:0 0 0 2px #d9383822}
-.row{display:flex;gap:6px;align-items:center;flex-wrap:wrap}
-.chip{font-size:11px;padding:2px 8px;border-radius:12px;background:#eee;white-space:nowrap}
-.st{font-weight:600;color:#fff}
-.st-new{background:var(--blue)}.st-ordered{background:#6b5bd2}.st-warehouse{background:var(--amber)}.st-shipped{background:var(--green)}
-.st-delayed{background:#e0662b}.st-outofstock{background:var(--red)}.st-problem{background:#9b1c1c}.st-cancelled{background:#888}.st-delivered{background:#1f7a4d}
-.gift{background:#ffe3ef;color:#b0105a;font-weight:600}
-.due{background:#fff1d6;color:#8a5a00}.due.late{background:#ffdede;color:var(--red);font-weight:700}
-.title{font-weight:650;font-size:15px}
-.k{color:var(--soft);font-size:11px;text-transform:uppercase;letter-spacing:.4px}
-.box{background:#faf8f6;border:1px solid var(--line);border-radius:8px;padding:8px;white-space:pre-wrap;word-break:break-word}
-.links a{display:block;color:var(--blue);word-break:break-all;font-size:12px}
+button.pri:hover{filter:brightness(1.07)}
+button.sm{padding:4px 9px;font-size:12px;border-radius:8px}
+button.ghost{background:transparent;border-color:transparent}
+input,select,textarea{border:1px solid var(--line);border-radius:10px;padding:8px 10px;background:#fff;width:100%}
+input:focus,select:focus,textarea:focus{outline:2px solid var(--acc2);border-color:var(--acc)}
+a{color:var(--blue)}
+/* header */
+header{position:sticky;top:0;z-index:20;background:var(--head);color:#fff;display:flex;align-items:center;gap:12px;padding:10px 18px;box-shadow:0 2px 10px #0003}
+header .logo{font-weight:800;font-size:17px;letter-spacing:.2px;display:flex;align-items:center;gap:8px}
+header .role{font-size:11px;font-weight:700;background:#ffffff1f;border-radius:20px;padding:2px 9px;text-transform:uppercase;letter-spacing:.6px}
+header .sp{flex:1}
+header .sync{font-size:12px;background:#ffffff14;border:1px solid #ffffff22;border-radius:20px;padding:4px 10px;color:#d9d4ff;display:none}
+header .sync.on{display:inline-block}
+header .lang{display:flex;gap:3px}
+header .lang button,header .hb{background:transparent;color:#cfcbe6;border-color:#ffffff2a;padding:4px 10px;border-radius:8px;font-size:12px}
+header .lang button.on{background:#fff;color:var(--head)}
+header label.tr{font-size:12px;color:#cfcbe6;display:flex;gap:5px;align-items:center;white-space:nowrap}
+header label.tr input{width:auto}
+/* layout */
+.wrap{display:grid;grid-template-columns:240px 1fr;gap:18px;max-width:1280px;margin:0 auto;padding:18px}
+nav.side{position:sticky;top:70px;align-self:start;display:flex;flex-direction:column;gap:14px}
+.navbox{background:var(--panel);border-radius:var(--r);box-shadow:var(--sh);padding:8px}
+.navbox h4{margin:6px 10px 6px;font-size:11px;color:var(--soft);text-transform:uppercase;letter-spacing:.7px}
+.nv{display:flex;align-items:center;gap:9px;width:100%;text-align:left;border:0;background:transparent;border-radius:10px;padding:9px 10px;font-weight:600;color:var(--ink2)}
+.nv:hover{background:var(--line2)}
+.nv.on{background:var(--acc2);color:var(--acc)}
+.nv .dot{width:10px;height:10px;border-radius:50%;flex:none}
+.nv .n{margin-left:auto;font-size:12px;background:var(--line2);color:var(--ink2);border-radius:20px;padding:1px 8px;min-width:24px;text-align:center}
+.nv.on .n{background:var(--acc);color:#fff}
+.nv .n.alert{background:var(--red);color:#fff}
+.storesel{display:flex;flex-wrap:wrap;gap:6px;padding:4px 6px 6px}
+.storesel button{font-size:12px;padding:4px 10px;border-radius:20px}
+.storesel button.on{background:var(--head);color:#fff;border-color:var(--head)}
+main{min-width:0}
+/* summary */
+.cards{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:14px}
+.sc{background:var(--panel);border-radius:var(--r);box-shadow:var(--sh);padding:14px 16px;border:0;text-align:left;display:flex;flex-direction:column;gap:2px;border-top:4px solid var(--blue)}
+.sc .v{font-size:28px;font-weight:800;line-height:1.1}
+.sc .l{font-size:12px;color:var(--soft);font-weight:600}
+.sc.red{border-top-color:var(--red)}.sc.red .v{color:var(--red)}
+.sc.orange{border-top-color:var(--orange)}.sc.orange .v{color:var(--orange)}
+.sc.teal{border-top-color:var(--teal)}.sc.teal .v{color:var(--teal)}
+.sc.blue .v{color:var(--blue)}
+/* toolbar */
+.tool{display:flex;gap:8px;align-items:center;margin-bottom:12px;flex-wrap:wrap}
+.tool input{flex:1;min-width:200px;background:#fff url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='none' stroke='%237d8396' stroke-width='2'%3E%3Ccircle cx='7' cy='7' r='5'/%3E%3Cpath d='m11 11 4 4'/%3E%3C/svg%3E") no-repeat 11px center;padding-left:34px}
+.tool select{width:auto}
+.vtitle{font-size:20px;font-weight:800;margin:2px 0 4px}
+.vhint{color:var(--soft);font-size:13px;margin-bottom:12px}
+/* order rows */
+.list{display:flex;flex-direction:column;gap:10px}
+.ord{background:var(--panel);border-radius:var(--r);box-shadow:var(--sh);border-left:6px solid var(--gray);overflow:hidden;transition:box-shadow .15s}
+.ord:hover{box-shadow:0 2px 4px #1018281a,0 8px 22px #10182814}
+.oh{display:flex;align-items:center;gap:14px;padding:12px 14px;cursor:pointer}
+.th{width:64px;height:64px;border-radius:10px;object-fit:cover;flex:none;background:var(--line2);border:1px solid var(--line)}
+.om{flex:1;min-width:0}
+.ot{font-weight:700;font-size:14.5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.os{font-size:12.5px;color:var(--ink2);margin-top:3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.os b{color:var(--ink)}
+.orr{display:flex;flex-direction:column;align-items:flex-end;gap:6px;flex:none}
+.orr .row1{display:flex;gap:6px;align-items:center}
+.chev{color:var(--soft);font-size:18px;transition:transform .15s;flex:none}
+.ord.open .chev{transform:rotate(180deg)}
+.ono{font:700 14px/1 ui-monospace,Consolas,monospace;background:var(--acc2);color:#3b2a8f;border:1px solid #d9cfff;border-radius:8px;padding:6px 9px;letter-spacing:.3px}
+.ono:hover{background:#e4dcff}
+.pill{display:inline-flex;align-items:center;gap:5px;font-size:12px;font-weight:700;border-radius:20px;padding:4px 10px;white-space:nowrap;color:#fff;background:var(--gray)}
+.p-new{background:var(--blue)}.p-ordered{background:var(--purple)}.p-warehouse{background:var(--amber)}
+.p-shipped{background:var(--teal)}.p-delivered{background:var(--green)}.p-cancelled{background:var(--gray)}
+.p-delayed{background:var(--orange)}.p-outofstock,.p-problem{background:var(--red)}
+.due{font-size:12px;font-weight:700;border-radius:8px;padding:3px 8px;white-space:nowrap}
+.gift{font-size:12px;font-weight:700;color:#be185d;background:#fde7f1;border-radius:8px;padding:3px 8px}
+/* urgency + trust colors */
+.ord.u-calm{border-left-color:var(--blue)}
+.ord.u-calm .due{background:var(--blue-bg);color:var(--blue)}
+.ord.u-d35{border-left-color:var(--amber)}
+.ord.u-d35 .due{background:var(--amber-bg);color:#b45309}
+.ord.u-d12{border-left-color:var(--orange);background:linear-gradient(90deg,#fff3ea,#fff 40%)}
+.ord.u-d12 .due{background:var(--orange);color:#fff}
+.ord.u-late,.ord.u-today{border-left-color:var(--red);background:linear-gradient(90deg,#ffe9e9,#fff 45%)}
+.ord.u-late .due,.ord.u-today .due{background:var(--red);color:#fff;animation:pulse 1.6s ease-in-out infinite}
+@keyframes pulse{0%,100%{box-shadow:0 0 0 0 #dc262655}50%{box-shadow:0 0 0 5px #dc262600}}
+.ord.s-shipped{border-left-color:var(--teal);background:linear-gradient(90deg,var(--teal-bg),#fff 45%)}
+.ord.s-delivered{border-left-color:var(--green);background:linear-gradient(90deg,var(--green-bg),#fff 45%)}
+.ord.s-cancelled{border-left-color:var(--gray);opacity:.72}
+.ord.s-ordered.u-none{border-left-color:var(--purple)}
+.trust{font-size:12px;font-weight:700;color:var(--teal);background:var(--teal-bg);border-radius:8px;padding:3px 8px}
+.trust.dl{color:var(--green);background:var(--green-bg)}
+.warn{font-size:12px;font-weight:700;color:#b4441b;background:#fde7dc;border-radius:8px;padding:3px 8px}
+/* body */
+.ob{display:none;border-top:1px solid var(--line2);padding:14px;gap:16px;grid-template-columns:1.1fr 1fr}
+.ord.open .ob{display:grid}
+.blk{display:flex;flex-direction:column;gap:10px}
+.k{font-size:11px;font-weight:700;color:var(--soft);text-transform:uppercase;letter-spacing:.5px;margin-bottom:4px}
+.box{background:#f8f9fc;border:1px solid var(--line);border-radius:10px;padding:9px 11px;white-space:pre-wrap;word-break:break-word}
+.box.note{background:#fffbea;border-color:#f5e3a3}
+.box.info{background:#f2f6ff;border-color:#dbe5ff;font-size:12.5px;color:var(--ink2)}
+.lk{display:flex;gap:6px;flex-wrap:wrap}
+.lk a{font-size:12.5px;font-weight:600;text-decoration:none;border:1px solid var(--line);border-radius:8px;padding:4px 10px;background:#fff;color:var(--blue)}
+.lk a.l1688{color:#c2410c;border-color:#fed7aa;background:#fff7ed}
 .ph{display:flex;gap:6px;flex-wrap:wrap}
-.ph img{width:76px;height:76px;object-fit:cover;border-radius:6px;border:1px solid var(--line);cursor:zoom-in}
-.agent{border-top:1px dashed var(--line);padding-top:8px;display:grid;grid-template-columns:1fr 1fr;gap:6px}
-.agent input,.agent select,.agent textarea{width:100%;border:1px solid var(--line);border-radius:6px;padding:5px 7px}
-.agent .full{grid-column:1/-1}
-.log{font-size:11px;color:var(--soft);white-space:pre-wrap;max-height:70px;overflow:auto}
-.modal{position:fixed;inset:0;background:#0007;display:none;align-items:flex-start;justify-content:center;z-index:20;overflow:auto;padding:20px 10px}
+.ph img{width:72px;height:72px;object-fit:cover;border-radius:8px;border:1px solid var(--line);cursor:zoom-in}
+.kv{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.upd{background:#fafbff;border:1px solid var(--line);border-radius:12px;padding:12px;display:flex;flex-direction:column;gap:10px}
+.steps{display:flex;flex-wrap:wrap;gap:6px}
+.steps button{font-size:12.5px;padding:6px 10px;border-radius:20px;background:#fff}
+.steps button.on{color:#fff;border-color:transparent}
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.trk{font-weight:700;font-family:ui-monospace,Consolas,monospace;color:var(--teal);text-decoration:none;border-bottom:1px dashed var(--teal)}
+.log{font-size:11.5px;color:var(--soft);white-space:pre-wrap;max-height:110px;overflow:auto}
+details summary{cursor:pointer;font-size:12px;font-weight:700;color:var(--soft)}
+/* modal / toast / zoom */
+.modal{position:fixed;inset:0;background:#0b0a1a99;display:none;align-items:flex-start;justify-content:center;z-index:50;overflow:auto;padding:30px 12px}
 .modal.on{display:flex}
-.sheet{background:#fff;border-radius:14px;max-width:760px;width:100%;padding:16px}
+.sheet{background:#fff;border-radius:18px;max-width:760px;width:100%;padding:22px;box-shadow:0 20px 60px #0005}
+.sheet h2{margin:0 0 6px;font-size:22px}
 .grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
 .grid .full{grid-column:1/-1}
-.grid label{display:flex;flex-direction:column;gap:3px;font-size:12px;color:var(--soft)}
-.grid input,.grid textarea,.grid select{border:1px solid var(--line);border-radius:8px;padding:7px 9px;color:var(--ink)}
-.paste{border:2px dashed #c9b8ff;border-radius:10px;padding:12px;text-align:center;color:var(--soft);background:#faf7ff}
-.center{max-width:380px;margin:60px auto;background:#fff;border-radius:14px;padding:22px;display:flex;flex-direction:column;gap:10px;border:1px solid var(--line)}
-.center input{border:1px solid var(--line);border-radius:8px;padding:9px}
-.muted{color:var(--soft);font-size:12px}
-.empty{color:var(--soft);padding:30px;text-align:center}
-#toast{position:fixed;bottom:16px;left:50%;transform:translateX(-50%);background:#1f1b2e;color:#fff;padding:8px 16px;border-radius:20px;display:none;z-index:30}
-#zoom{position:fixed;inset:0;background:#000c;display:none;align-items:center;justify-content:center;z-index:40}
-#zoom img{max-width:95vw;max-height:92vh}
-/* v5 layout */
-.tabs{padding:12px 14px 0}
-.tab{font-size:13px;padding:5px 12px}
-.seg{display:flex;gap:6px;padding:10px 14px 0;flex-wrap:wrap}
-.seg button{border-radius:10px;padding:8px 14px;font-weight:600;color:var(--soft);display:flex;align-items:center;gap:6px}
-.seg button .n{min-width:22px;padding:0 7px;border-radius:10px;background:#0000000f;font-size:12px;color:var(--ink)}
-.seg button.on{background:var(--ink);border-color:var(--ink);color:#fff}
-.seg button.on .n{background:#ffffff33;color:#fff}
-.seg button.todo.on{background:var(--acc);border-color:var(--acc)}
-.seg .dot{width:9px;height:9px;border-radius:50%;display:inline-block}
-.hint{padding:6px 14px 0;color:var(--soft);font-size:12px}
-#list{grid-template-columns:repeat(auto-fill,minmax(400px,1fr))}
-.card{gap:10px;border-left:5px solid var(--line)}
-.card.b-new{border-left-color:var(--blue)}.card.b-ordered{border-left-color:#6b5bd2}.card.b-warehouse{border-left-color:var(--amber)}
-.card.b-shipped{border-left-color:var(--green)}.card.b-delivered{border-left-color:#1f7a4d}.card.b-cancelled{border-left-color:#999;opacity:.75}
-.card.b-delayed,.card.b-outofstock,.card.b-problem{border-left-color:var(--red)}
-.top{display:flex;gap:12px}
-.thumb{width:92px;height:92px;object-fit:cover;border-radius:10px;flex:none;background:#eee;cursor:zoom-in;border:1px solid var(--line)}
-.meta{flex:1;min-width:0;display:flex;flex-direction:column;gap:5px}
-.title{font-size:14px;line-height:1.3;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
-.sub{font-size:12px;color:var(--soft)}
-.sub b{color:var(--ink)}
-.lk{display:flex;gap:6px;flex-wrap:wrap}
-.lk a{font-size:12px;text-decoration:none;border:1px solid var(--line);border-radius:6px;padding:2px 8px;color:var(--blue);background:#fff}
-.trk{font-weight:700;color:var(--blue);text-decoration:none;border-bottom:1px dashed var(--blue)}
-.lk a.l1688{color:#c2410c;border-color:#fed7aa;background:#fff7ed}
-.note{background:#fff8e1;border-color:#f3dc9b}
-.info{font-size:12px;color:var(--soft);white-space:pre-wrap;background:#f4f6fb;border-radius:8px;padding:6px 8px}
-details{border-top:1px solid var(--line);padding-top:6px}
-details>summary{cursor:pointer;font-size:12px;font-weight:600;color:var(--soft);list-style:none;user-select:none}
-details>summary::before{content:'▸ ';}
-details[open]>summary::before{content:'▾ ';}
-details>summary b{color:var(--ink);font-weight:600}
-details .agent{border-top:0;margin-top:6px;padding-top:0}
-.ono{font:700 15px/1.2 ui-monospace,Consolas,monospace;background:#f1edff;color:#3b2a8f;border:1px solid #d6ccff;border-radius:8px;padding:5px 10px;letter-spacing:.3px}
-.ono:hover{background:#e4dcff}
-.ono .lb{font:600 10px/1 -apple-system,Segoe UI,sans-serif;color:#7a6cc4;margin-right:6px;text-transform:uppercase;letter-spacing:.5px}
-.trk{font-size:14px}
-#list.c1{grid-template-columns:1fr;max-width:1000px;margin:0 auto}
-#list.c2{grid-template-columns:repeat(2,minmax(0,1fr))}
-.view{display:inline-flex;border:1px solid var(--line);border-radius:8px;overflow:hidden;background:#fff}
-.view button{border:0;border-radius:0;padding:6px 10px;font-size:13px;color:var(--soft)}
-.view button.on{background:var(--ink);color:#fff}
-.guide h2{margin:0 0 4px;font-size:20px}.guide h3{margin:16px 0 6px;font-size:15px}
-.guide ol,.guide ul{margin:4px 0;padding-left:20px}.guide li{margin:3px 0}
-.guide .tip{background:#f1edff;border-radius:8px;padding:8px 10px;margin-top:8px}
-.guide .stt{display:inline-block;color:#fff;border-radius:10px;padding:1px 8px;font-size:12px;font-weight:600}
-@media(max-width:600px){#list.c2{grid-template-columns:1fr}.view{display:none}#list{grid-template-columns:1fr}.grid{grid-template-columns:1fr}.agent{grid-template-columns:1fr}.thumb{width:72px;height:72px}}
+.grid label{display:flex;flex-direction:column;gap:4px;font-size:12px;color:var(--soft);font-weight:600}
+#toast{position:fixed;bottom:18px;left:50%;transform:translateX(-50%);background:var(--head);color:#fff;padding:9px 18px;border-radius:24px;display:none;z-index:60;font-weight:600;box-shadow:var(--sh)}
+#zoom{position:fixed;inset:0;background:#000d;display:none;align-items:center;justify-content:center;z-index:70}
+#zoom img{max-width:95vw;max-height:92vh;border-radius:8px}
+.center{max-width:400px;margin:70px auto;background:#fff;border-radius:18px;padding:26px;display:flex;flex-direction:column;gap:12px;box-shadow:var(--sh)}
+.center h2{margin:0;font-size:22px}
+.pw{position:relative}
+.pw input{padding-right:46px}
+.pw button{position:absolute;right:5px;top:50%;transform:translateY(-50%);border:0;background:transparent;font-size:17px;padding:4px 8px}
+.chk{display:flex;gap:8px;align-items:center;font-size:13px;color:var(--ink2)}
+.chk input{width:auto}
+.err{color:var(--red);font-size:13px;min-height:18px}
+.empty{background:#fff;border-radius:var(--r);padding:40px;text-align:center;color:var(--soft);box-shadow:var(--sh)}
+/* help */
+.hcard{background:#fff;border-radius:var(--r);box-shadow:var(--sh);padding:18px 20px;margin-bottom:14px}
+.hcard h3{margin:0 0 8px;font-size:16px}
+.faq details{border-bottom:1px solid var(--line2);padding:10px 0}
+.faq summary{font-size:14px;color:var(--ink);font-weight:600}
+.faq p{margin:8px 0 2px;color:var(--ink2)}
+.legend{display:grid;grid-template-columns:auto 1fr;gap:6px 12px;align-items:center;font-size:13px}
+.msg{border:1px solid var(--line);border-radius:12px;padding:10px 12px;margin-top:10px;background:#fff}
+.msg.unread{border-color:var(--acc);box-shadow:0 0 0 3px var(--acc2)}
+.msg .meta{font-size:11.5px;color:var(--soft);margin-bottom:4px}
+.msg .rep{margin-top:8px;padding:8px 10px;background:var(--teal-bg);border-radius:10px;white-space:pre-wrap;font-size:13px}
+.welcome .stat{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:14px 0}
+.welcome .stat div{border-radius:12px;padding:12px;text-align:center;font-weight:600;font-size:12px;color:var(--ink2)}
+.welcome .stat b{display:block;font-size:26px;font-weight:800}
+.welcome ol{padding-left:20px;line-height:1.7}
+@media(max-width:900px){
+  .wrap{grid-template-columns:1fr;padding:12px}
+  nav.side{position:static;flex-direction:row;overflow-x:auto;gap:8px}
+  .navbox{display:flex;align-items:center;gap:4px;padding:6px;flex:none}
+  .navbox h4{display:none}
+  .nv{white-space:nowrap;padding:7px 10px}
+  .cards{grid-template-columns:repeat(2,1fr)}
+  .ob{grid-template-columns:1fr}
+  .oh{flex-wrap:wrap}
+  .orr{flex-direction:row;flex-wrap:wrap;align-items:center;width:100%;justify-content:flex-start;padding-left:78px}
+  header{flex-wrap:wrap}
+  .grid,.g2{grid-template-columns:1fr}
+}
 </style>
-<script>window.onerror=function(m,s,l,c){try{var d=document.createElement('pre');d.style.cssText='color:#b00;white-space:pre-wrap;padding:8px';d.textContent='JS error: '+m+' @'+l+':'+c;(document.body||document.documentElement).appendChild(d);}catch(e){}};</script>
 </head>
 <body>
 <header>
-  <h1>📦 Order Hub</h1>
-  <span id="who" class="muted" style="color:#c9c3e6"></span>
+  <div class="logo">📦 Order Hub</div><span class="role" id="who" style="display:none"></span>
+  <span class="sync" id="sync"></span>
   <span class="sp"></span>
   <span class="lang"><button data-l="tr">TR</button><button data-l="en">EN</button><button data-l="zh">中文</button></span>
-  <label style="font-size:12px;color:#c9c3e6;display:flex;gap:4px;align-items:center"><input type="checkbox" id="trc"> <span data-t="translateContent"></span></label>
-  <button id="gd" class="sm" style="background:transparent;color:#fff;border-color:#4b4466">❓ <span data-t="guide"></span></button>
-  <button id="logout" class="sm" style="display:none" data-t="logout"></button>
+  <label class="tr" id="trw" style="display:none"><input type="checkbox" id="trc"> <span data-t="translate"></span></label>
+  <button class="hb" id="logout" style="display:none" data-t="logout"></button>
 </header>
 <div id="app"></div>
 <div class="modal" id="modal"><div class="sheet" id="sheet"></div></div>
 <div id="toast"></div>
-<div id="zoom" onclick="this.style.display='none'"><img></div>
+<div id="zoom" onclick="this.style.display='none'"><img alt=""></div>
 
 <script>
+const API_URL='https://script.google.com/macros/s/AKfycbxcL7aDesUjUH22yMh18IZK9eL8J--DX0ts114PmPOQPyJvnAdNMuqTNJzMOdBmxBeb9A/exec';
+const HUB_TITLE='Order Hub';
+
+/* ================= i18n ================= */
 const T={
- tr:{translateContent:'İçeriği çevir',logout:'Çıkış',all:'Tümü',search:'Ara: isim, sipariş no, takip…',allStatus:'Tüm durumlar',active:'Aktif (gönderilmemiş)',sortQueue:'Sıra: iş kuyruğu',sortShip:'Sıra: son kargo tarihi',sortNew:'Sıra: en yeni',newOrder:'+ Yeni sipariş',addStore:'+ Mağaza',
-  st_new:'Yeni',st_ordered:'1688\'den sipariş verildi',st_warehouse:'Depoda / hazır',st_shipped:'Kargoya verildi',st_delivered:'Teslim edildi',st_delayed:'Gecikme',st_outofstock:'Stokta yok',st_problem:'Sorun',st_cancelled:'İptal',
-  store:'Mağaza',etsyOrderId:'Etsy sipariş no',productName:'Ürün adı',productLink:'Etsy ürün linki',links1688:'1688 linkleri (her satıra bir)',variant:'Renk / beden / model',qty:'Adet',buyerName:'Alıcı adı',address:'Teslimat adresi',country:'Ülke',taxCode:'Vergi kodu (IOSS / VAT)',orderValue:'Sipariş değeri (gümrük)',shipBy:'Son kargo tarihi',gift:'Hediye olarak işaretli',giftNote:'Hediye notu',special:'Özel istek / not',photos:'Fotoğraflar (ekran görüntüsü)',
-  status:'Durum',tracking:'Kargo takip no',carrier:'Kargo firması',costProduct:'Ürün maliyeti',costShip:'Kargo maliyeti',costCurrency:'Para birimi',agentNote:'Agent notu',agentPhotos:'Agent fotoğrafları',
-  save:'Kaydet',cancel:'Vazgeç',edit:'Düzenle',archive:'Arşivle',copy:'Kopyala',copied:'Kopyalandı',saved:'Kaydedildi',uploadPhoto:'Foto ekle',
-  pasteHelp:'Etsy sipariş / IOSS metnini buraya yapıştır → vergi kodu ve değer otomatik doldurulur. Ekran görüntüsünü bu kutuya Ctrl+V ile yapıştırabilirsin.',
-  login:'Giriş',password:'Şifre',wrong:'Şifre yanlış',setupTitle:'İlk kurulum',adminPass:'Yönetici şifresi (sen)',agentPass:'Agent şifresi (Ivy)',setupBtn:'Kur',
-  late:'GECİKTİ',daysLeft:'gün kaldı',today:'BUGÜN',total:'Toplam',empty:'Sipariş yok',created:'Oluşturuldu',history:'Geçmiş',openSheet:'Tabloyu aç',loading:'Yükleniyor…',newStore:'Yeni mağaza adı',
-  guide:'Rehber',copyOrderNo:'Sipariş no — tıkla kopyala',oneCol:'Alt alta',twoCol:'Yan yana 2',orderNo:'Sipariş no',todo:'Yapılacak',f_all:'Hepsi',addrBlock:'Adres · vergi · değer',updBlock:'Durum / kargo / maliyet güncelle',ordDate:'Sipariş',seg_shipped:'Kargoda · Etsy’de ✓',seg_shippedDs:'Kargoda · Etsy’ye girilmedi',hintShippedDs:'Dropsure’da (veya Ivy’de) kargoya verilmiş ama Etsy’de hâlâ "shipped" değil. Takip no’yu Etsy’ye gir ya da Dropsure > Sync Order. Takip no’ya tıkla → 17track.',notOnEtsy:'Etsy’ye girilmedi',track17:'17track’te konumu aç',hintTodo:'Yeni, depoda, gecikme, stok yok ve sorunlu siparişler. Diğerleri üstteki butonlardan açılır.',overwrite:'Etsy alanlarını yenile (adres, fiyat, ürün, link…). Ivy\'nin girdikleri korunur.'},
- en:{translateContent:'Translate content',logout:'Log out',all:'All',search:'Search: name, order no, tracking…',allStatus:'All statuses',active:'Active (not shipped)',sortQueue:'Sort: work queue',sortShip:'Sort: ship-by date',sortNew:'Sort: newest',newOrder:'+ New order',addStore:'+ Store',
-  st_new:'New',st_ordered:'Ordered on 1688',st_warehouse:'In warehouse / ready',st_shipped:'Shipped',st_delivered:'Delivered',st_delayed:'Delayed',st_outofstock:'Out of stock',st_problem:'Problem',st_cancelled:'Cancelled',
-  store:'Store',etsyOrderId:'Etsy order no',productName:'Product name',productLink:'Etsy product link',links1688:'1688 links (one per line)',variant:'Color / size / style',qty:'Qty',buyerName:'Buyer name',address:'Shipping address',country:'Country',taxCode:'Tax code (IOSS / VAT)',orderValue:'Order value (customs)',shipBy:'Ship by date',gift:'Marked as gift',giftNote:'Gift note',special:'Special request / note',photos:'Photos (screenshots)',
-  status:'Status',tracking:'Tracking number',carrier:'Carrier',costProduct:'Product cost',costShip:'Shipping cost',costCurrency:'Currency',agentNote:'Agent note',agentPhotos:'Agent photos',
-  save:'Save',cancel:'Cancel',edit:'Edit',archive:'Archive',copy:'Copy',copied:'Copied',saved:'Saved',uploadPhoto:'Add photo',
-  pasteHelp:'Paste the Etsy order / IOSS text here → tax code and value are filled automatically. You can also paste a screenshot here with Ctrl+V.',
-  login:'Log in',password:'Password',wrong:'Wrong password',setupTitle:'First setup',adminPass:'Admin password (you)',agentPass:'Agent password (Ivy)',setupBtn:'Set up',
-  late:'LATE',daysLeft:'days left',today:'TODAY',total:'Total',empty:'No orders',created:'Created',history:'History',openSheet:'Open sheet',loading:'Loading…',newStore:'New store name',
-  guide:'Guide',copyOrderNo:'Order no — click to copy',oneCol:'List',twoCol:'2 columns',orderNo:'Order no',todo:'To do',f_all:'All',addrBlock:'Address · tax · value',updBlock:'Update status / tracking / cost',ordDate:'Ordered',seg_shipped:'Shipped · on Etsy ✓',seg_shippedDs:'Shipped · not on Etsy',hintShippedDs:'Shipped by Dropsure (or agent) but not yet marked shipped on Etsy. Add the tracking number on Etsy or use Dropsure > Sync Order. Click a tracking number → 17track.',notOnEtsy:'Not on Etsy',track17:'Open location on 17track',hintTodo:'New, in warehouse, delayed, out of stock and problem orders. Open the others with the buttons above.',overwrite:'Refresh Etsy fields (address, price, product, links…). Agent fields are kept.'},
- zh:{translateContent:'翻译内容',logout:'退出',all:'全部',search:'搜索：姓名、订单号、快递单号…',allStatus:'全部状态',active:'未发货',sortQueue:'排序：工作队列',sortShip:'排序：最晚发货日期',sortNew:'排序：最新',newOrder:'+ 新订单',addStore:'+ 店铺',
-  st_new:'新订单',st_ordered:'已在1688下单',st_warehouse:'已到仓 / 已备好',st_shipped:'已发货',st_delivered:'已签收',st_delayed:'延迟',st_outofstock:'缺货',st_problem:'有问题',st_cancelled:'已取消',
-  store:'店铺',etsyOrderId:'Etsy订单号',productName:'产品名称',productLink:'Etsy产品链接',links1688:'1688链接（每行一个）',variant:'颜色 / 尺码 / 款式',qty:'数量',buyerName:'收件人',address:'收货地址',country:'国家',taxCode:'税号（IOSS / VAT）',orderValue:'申报价值（海关）',shipBy:'最晚发货日期',gift:'礼物订单',giftNote:'礼物留言',special:'特殊要求 / 备注',photos:'图片（截图）',
-  status:'状态',tracking:'快递单号',carrier:'快递公司',costProduct:'产品成本',costShip:'运费',costCurrency:'币种',agentNote:'代理备注',agentPhotos:'代理图片',
-  save:'保存',cancel:'取消',edit:'编辑',archive:'归档',copy:'复制',copied:'已复制',saved:'已保存',uploadPhoto:'上传图片',
-  pasteHelp:'在这里粘贴Etsy订单/IOSS文字 → 自动填写税号和价值。也可以用Ctrl+V粘贴截图。',
-  login:'登录',password:'密码',wrong:'密码错误',setupTitle:'初始设置',adminPass:'管理员密码',agentPass:'代理密码（Ivy）',setupBtn:'设置',
-  late:'已逾期',daysLeft:'天',today:'今天',total:'合计',empty:'没有订单',created:'创建时间',history:'记录',openSheet:'打开表格',loading:'加载中…',newStore:'新店铺名称',
-  guide:'使用指南',copyOrderNo:'订单号 — 点击复制',oneCol:'单列',twoCol:'双列',orderNo:'订单号',todo:'待处理',f_all:'全部',addrBlock:'地址 · 税号 · 价值',updBlock:'更新状态 / 快递 / 成本',ordDate:'下单',seg_shipped:'已发货 · Etsy已标记',seg_shippedDs:'已发货 · Etsy未标记',hintShippedDs:'已由Dropsure（或代理）发货，但Etsy上还未标记发货。点击快递单号 → 17track。',notOnEtsy:'Etsy未标记',track17:'在17track查看位置',hintTodo:'新订单、已到仓、延迟、缺货和有问题的订单。其他订单请点上方按钮查看。',overwrite:'刷新Etsy字段（地址、价格、产品、链接…）。代理填写的内容会保留。'}
+tr:{translate:'İçeriği çevir',logout:'Çıkış',login:'Giriş yap',password:'Şifre',remember:'Beni hatırla',wrong:'Şifre yanlış',loading:'Yükleniyor…',
+ search:'Ara: ürün, isim, sipariş no, takip no…',sortNew:'En yeni önce',sortUrgent:'En acil önce',empty:'Bu listede sipariş yok 🎉',
+ h_stores:'Mağaza',h_orders:'Siparişler',h_more:'Diğer',all:'Tümü',
+ nav_todo:'Yapılacak',nav_urgent:'Acil: gecikmiş / bugün',nav_ordered:'Sipariş verildi',nav_shippedDs:'Kargoda · Etsy\'ye girilmedi',nav_shipped:'Kargoda · Etsy\'de ✓',nav_delivered:'Teslim edildi',nav_cancelled:'İptal / iade',nav_all:'Hepsi',nav_help:'Yardım & rehber',nav_msgs:'Mesajlar',
+ v_todo:'Yeni, depoda ya da sorunlu siparişler — senin sıran.',v_urgent:'Son gönderim tarihi bugün olan ya da geçmiş siparişler. Önce bunlar!',v_ordered:'1688\'den sipariş verildi, depoya gelmesi bekleniyor.',v_shippedDs:'Kargoya verildi ama Etsy\'de hâlâ "shipped" değil. Takip no\'yu Etsy\'ye gir.',v_shipped:'Kargoya verildi ve Etsy\'de işaretli. Yolda. ✓',v_delivered:'Müşteriye ulaştı. ✓',v_cancelled:'İptal edilen / iade edilen siparişler.',v_all:'Bütün siparişler.',
+ sum_todo:'Yapılacak',sum_urgent:'Gecikmiş / bugün',sum_soon:'3 gün içinde gönderilmeli',sum_notEtsy:'Etsy\'ye girilmemiş kargo',
+ st_new:'Yeni',st_ordered:'Sipariş verildi',st_warehouse:'Depoda / hazır',st_shipped:'Kargoya verildi',st_delivered:'Teslim edildi',st_delayed:'Gecikme',st_outofstock:'Stokta yok',st_problem:'Sorun var',st_cancelled:'İptal',
+ late:'🔥 GECİKTİ',today:'🔥 BUGÜN',daysLeft:'gün kaldı',inTransit:'🚚 Yolda',delivered:'✓ Teslim edildi',notOnEtsy:'⚠ Etsy\'ye girilmedi',gift:'🎁 Hediye',
+ orderNo:'Sipariş no',address:'Teslimat adresi',taxCode:'Vergi kodu (IOSS/VAT)',orderValue:'Sipariş değeri (gümrük)',shipBy:'Son gönderim',giftNote:'Hediye notu',special:'Müşteri notu / özel istek',photos:'Fotoğraflar',links:'Linkler',variant:'Renk / beden',qty:'Adet',
+ tracking:'Kargo takip no',carrier:'Kargo firması',costProduct:'Ürün maliyeti',costShip:'Kargo maliyeti',costCurrency:'Para birimi',agentNote:'Not',agentPhotos:'Ürün / paket fotoğrafı ekle',history:'Geçmiş',
+ upd:'Durumu güncelle',flow:'İş akışı',issues:'Sorun varsa',save:'Kaydet',saved:'Kaydedildi ✓',cancel:'Vazgeç',edit:'Düzenle',archive:'Arşivle',copy:'Kopyala',copied:'Kopyalandı',close:'Kapat',
+ newOrder:'+ Yeni sipariş',addStore:'+ Mağaza',jsonImport:'JSON import',etsySync:'🔗 Etsy senkron',newStore:'Yeni mağaza adı',open17:'17track\'te konumu aç',
+ syncAt:'Etsy senkron',syncNew:'yeni',
+ w_hi:'Merhaba! 👋',w_today:'Bugünün özeti',w_todo:'yapılacak',w_urgent:'acil (bugün/gecikmiş)',w_wh:'depoda',w_steps:'<li>Kırmızı / turuncu siparişlerden başla.</li><li>Siparişe tıkla → 1688 linkinden al → durumu “Sipariş verildi” yap.</li><li>Kargoya verince takip no gir → “Kargoya verildi” → Kaydet.</li>',w_help:'❓ Yardım',w_start:'Tamam, başlayalım',w_hide:'Bugün tekrar gösterme',
+ help_t:'Yardım & rehber',help_s:'Soru ara…',ask_t:'Furkan\'a sor',ask_ph:'Sorunu yaz… (ör. bu ürünün beden tablosu nerede?)',ask_order:'Sipariş no (isteğe bağlı)',send:'Gönder',sent:'Gönderildi ✓',my_msgs:'Mesajlar',noReply:'Henüz cevap yok',reply_ph:'Cevap yaz…',reply:'Cevapla',from_agent:'Ivy',from_admin:'Furkan',legend:'Renklerin anlamı',
+ sync_help:'Etsy senkron'},
+en:{translate:'Translate content',logout:'Log out',login:'Log in',password:'Password',remember:'Remember me',wrong:'Wrong password',loading:'Loading…',
+ search:'Search: product, name, order no, tracking…',sortNew:'Newest first',sortUrgent:'Most urgent first',empty:'No orders here 🎉',
+ h_stores:'Store',h_orders:'Orders',h_more:'More',all:'All',
+ nav_todo:'To do',nav_urgent:'Urgent: late / today',nav_ordered:'Ordered on 1688',nav_shippedDs:'Shipped · not on Etsy',nav_shipped:'Shipped · on Etsy ✓',nav_delivered:'Delivered',nav_cancelled:'Cancelled / refunded',nav_all:'All orders',nav_help:'Help & guide',nav_msgs:'Messages',
+ v_todo:'New, in-warehouse or problem orders — your turn.',v_urgent:'Ship-by date is today or already passed. Do these first!',v_ordered:'Bought on 1688, waiting to arrive at the warehouse.',v_shippedDs:'Shipped but not yet marked shipped on Etsy.',v_shipped:'Shipped and marked on Etsy. On the way. ✓',v_delivered:'Delivered to the customer. ✓',v_cancelled:'Cancelled / refunded orders.',v_all:'Every order.',
+ sum_todo:'To do',sum_urgent:'Late / today',sum_soon:'Ship within 3 days',sum_notEtsy:'Shipped, not on Etsy',
+ st_new:'New',st_ordered:'Ordered on 1688',st_warehouse:'In warehouse',st_shipped:'Shipped',st_delivered:'Delivered',st_delayed:'Delayed',st_outofstock:'Out of stock',st_problem:'Problem',st_cancelled:'Cancelled',
+ late:'🔥 LATE',today:'🔥 TODAY',daysLeft:'days left',inTransit:'🚚 On the way',delivered:'✓ Delivered',notOnEtsy:'⚠ Not on Etsy',gift:'🎁 Gift',
+ orderNo:'Order no',address:'Shipping address',taxCode:'Tax code (IOSS/VAT)',orderValue:'Order value (customs)',shipBy:'Ship by',giftNote:'Gift note',special:'Customer note / special request',photos:'Photos',links:'Links',variant:'Color / size',qty:'Qty',
+ tracking:'Tracking number',carrier:'Carrier',costProduct:'Product cost',costShip:'Shipping cost',costCurrency:'Currency',agentNote:'Note',agentPhotos:'Add item / parcel photo',history:'History',
+ upd:'Update this order',flow:'Workflow',issues:'If there is a problem',save:'Save',saved:'Saved ✓',cancel:'Cancel',edit:'Edit',archive:'Archive',copy:'Copy',copied:'Copied',close:'Close',
+ newOrder:'+ New order',addStore:'+ Store',jsonImport:'JSON import',etsySync:'🔗 Etsy sync',newStore:'New store name',open17:'Open location on 17track',
+ syncAt:'Etsy sync',syncNew:'new',
+ w_hi:'Hi Ivy! 👋',w_today:'Today',w_todo:'to do',w_urgent:'urgent (today / late)',w_wh:'in warehouse',w_steps:'<li>Start with the <b>red / orange</b> orders.</li><li>Click an order → buy from the <b>1688</b> link → set <b>Ordered on 1688</b>.</li><li>When you ship: enter the tracking number → <b>Shipped</b> → <b>Save</b>.</li>',w_help:'❓ Help',w_start:'OK, let\'s start',w_hide:'Don\'t show again today',
+ help_t:'Help & guide',help_s:'Search questions…',ask_t:'Ask Furkan',ask_ph:'Write your question… (e.g. where is the size chart for this item?)',ask_order:'Order no (optional)',send:'Send',sent:'Sent ✓',my_msgs:'Messages',noReply:'No reply yet',reply_ph:'Write a reply…',reply:'Reply',from_agent:'Ivy',from_admin:'Furkan',legend:'What the colors mean',
+ sync_help:'Etsy sync'},
+zh:{translate:'翻译内容',logout:'退出',login:'登录',password:'密码',remember:'记住我',wrong:'密码错误',loading:'加载中…',
+ search:'搜索：产品、姓名、订单号、快递单号…',sortNew:'最新优先',sortUrgent:'最紧急优先',empty:'这里没有订单 🎉',
+ h_stores:'店铺',h_orders:'订单',h_more:'更多',all:'全部',
+ nav_todo:'待处理',nav_urgent:'紧急：已逾期 / 今天',nav_ordered:'已在1688下单',nav_shippedDs:'已发货 · Etsy未标记',nav_shipped:'已发货 · Etsy已标记',nav_delivered:'已签收',nav_cancelled:'已取消 / 退款',nav_all:'全部订单',nav_help:'帮助和指南',nav_msgs:'消息',
+ v_todo:'新订单、已到仓或有问题的订单——需要你处理。',v_urgent:'最晚发货日期是今天或已经过了，请先处理！',v_ordered:'已在1688下单，等待到仓。',v_shippedDs:'已发货，但Etsy上还未标记发货。',v_shipped:'已发货并在Etsy上标记，运输中。✓',v_delivered:'客户已签收。✓',v_cancelled:'已取消 / 退款的订单。',v_all:'所有订单。',
+ sum_todo:'待处理',sum_urgent:'已逾期 / 今天',sum_soon:'3天内需发货',sum_notEtsy:'已发货 · Etsy未标记',
+ st_new:'新订单',st_ordered:'已在1688下单',st_warehouse:'已到仓',st_shipped:'已发货',st_delivered:'已签收',st_delayed:'延迟',st_outofstock:'缺货',st_problem:'有问题',st_cancelled:'已取消',
+ late:'🔥 已逾期',today:'🔥 今天',daysLeft:'天',inTransit:'🚚 运输中',delivered:'✓ 已签收',notOnEtsy:'⚠ Etsy未标记',gift:'🎁 礼物',
+ orderNo:'订单号',address:'收货地址',taxCode:'税号（IOSS/VAT）',orderValue:'申报价值',shipBy:'最晚发货',giftNote:'礼物留言',special:'客户备注 / 特殊要求',photos:'图片',links:'链接',variant:'颜色 / 尺码',qty:'数量',
+ tracking:'快递单号',carrier:'快递公司',costProduct:'产品成本',costShip:'运费',costCurrency:'币种',agentNote:'备注',agentPhotos:'上传实物 / 包裹照片',history:'记录',
+ upd:'更新这个订单',flow:'流程',issues:'如果有问题',save:'保存',saved:'已保存 ✓',cancel:'取消',edit:'编辑',archive:'归档',copy:'复制',copied:'已复制',close:'关闭',
+ newOrder:'+ 新订单',addStore:'+ 店铺',jsonImport:'JSON导入',etsySync:'🔗 Etsy同步',newStore:'新店铺名称',open17:'在17track查看位置',
+ syncAt:'Etsy同步',syncNew:'新',
+ w_hi:'Ivy 你好！👋',w_today:'今天',w_todo:'待处理',w_urgent:'紧急（今天/逾期）',w_wh:'已到仓',w_steps:'<li>先处理<b>红色 / 橙色</b>的订单。</li><li>点击订单 → 用 <b>1688</b> 链接下单 → 状态改为 <b>已在1688下单</b>。</li><li>发货后：填写快递单号 → <b>已发货</b> → <b>保存</b>。</li>',w_help:'❓ 帮助',w_start:'好的，开始',w_hide:'今天不再显示',
+ help_t:'帮助和指南',help_s:'搜索问题…',ask_t:'问Furkan',ask_ph:'写下你的问题…（例如：这个产品的尺码表在哪里？）',ask_order:'订单号（可选）',send:'发送',sent:'已发送 ✓',my_msgs:'消息',noReply:'还没有回复',reply_ph:'写回复…',reply:'回复',from_agent:'Ivy',from_admin:'Furkan',legend:'颜色说明',
+ sync_help:'Etsy同步'}
 };
-const S={lang:'en',pass:'',role:'',stores:[],orders:[],statuses:[],tab:'*',q:'',fs:'todo',sort:'new',cols:'1',tr:false,trCache:{},sheetUrl:''};
-const ls={get(k){try{return localStorage.getItem(k)}catch(e){return null}},set(k,v){try{localStorage.setItem(k,v)}catch(e){}},del(k){try{localStorage.removeItem(k)}catch(e){}}};
+const FAQ={
+en:[
+ ['How do I update an order?','Click the order to open it. In “Update this order” press the status button (e.g. <b>Ordered on 1688</b>), fill tracking / cost / note if needed and press <b>Save</b>. The order moves to the right list automatically.'],
+ ['Which orders should I do first?','Open <b>⚡ To do</b>. Red rows (🔥 LATE / TODAY) first, then orange (1–2 days), then amber (3–5 days). Blue rows still have time.'],
+ ['The item is out of stock / delayed — what do I do?','Choose <b>Out of stock</b> or <b>Delayed</b> under “If there is a problem”, write a short note (e.g. new date or a similar item link) and Save. Furkan sees it immediately.'],
+ ['Where do I put the IOSS / tax code?','Open “Shipping address”. EU orders show <b>IOSS IM3720000224</b> with a Copy button and the customs value in €. Put both on the customs form / label. UK, Norway and Switzerland show their own note.'],
+ ['Gift orders 🎁','Do not put any price or invoice inside the parcel. If there is a gift note, print or write it and put it in the parcel.'],
+ ['Which carrier and how do I enter tracking?','Type the tracking number and the carrier (e.g. YunExpress, Wanb, 4PX). After saving, the number becomes a link — click it to see the parcel on 17track.'],
+ ['I entered a wrong tracking number','Open the order, correct the number and press Save again. Every change is kept in the History.'],
+ ['How do I add photos?','Open the order → “Add item / parcel photo” → choose photos from your phone or computer. Please send a photo when the item arrives at the warehouse.'],
+ ['The color / size is not clear','Look at “Color / size” and the photos. If still unclear, set <b>Problem</b>, write your question in the note, or use <b>Ask Furkan</b> below.'],
+ ['What do the colors mean?','See the color table below.']],
+zh:[
+ ['怎么更新订单？','点击订单打开。在“更新这个订单”里点状态按钮（例如 <b>已在1688下单</b>），需要的话填写快递单号/成本/备注，然后点 <b>保存</b>。订单会自动移到对应的列表。'],
+ ['先处理哪些订单？','打开 <b>⚡ 待处理</b>。先做红色（🔥 已逾期 / 今天），然后橙色（1–2天），再黄色（3–5天）。蓝色的还有时间。'],
+ ['缺货 / 延迟怎么办？','在“如果有问题”里选 <b>缺货</b> 或 <b>延迟</b>，写简短备注（例如新的日期或类似商品链接），然后保存。Furkan会马上看到。'],
+ ['IOSS / 税号写在哪里？','打开“收货地址”。欧盟订单会显示 <b>IOSS IM3720000224</b>（有复制按钮）和欧元申报价值，请填在报关单/面单上。英国、挪威、瑞士有各自的说明。'],
+ ['礼物订单 🎁','包裹里不要放价格或发票。如果有礼物留言，请打印或手写放进包裹。'],
+ ['用哪个快递？怎么填快递单号？','填写快递单号和快递公司（例如 YunExpress、Wanb、4PX）。保存后单号会变成链接，点击可以在17track查看包裹位置。'],
+ ['快递单号填错了','打开订单，改正单号再点保存。所有修改都会记录在“记录”里。'],
+ ['怎么上传照片？','打开订单 → “上传实物/包裹照片” → 从手机或电脑选择照片。货到仓库时请上传照片。'],
+ ['颜色 / 尺码看不清楚','看“颜色/尺码”和图片。如果还是不清楚，把状态设为 <b>有问题</b>，在备注里写问题，或者用下面的 <b>问Furkan</b>。'],
+ ['颜色代表什么？','请看下面的颜色说明。']],
+tr:[
+ ['Sipariş nasıl güncellenir?','Siparişe tıkla. “Durumu güncelle” kısmında durum butonuna bas (ör. <b>Sipariş verildi</b>), gerekiyorsa takip no / maliyet / not gir ve <b>Kaydet</b>. Sipariş kendiliğinden doğru listeye geçer.'],
+ ['Önce hangi siparişler?','<b>⚡ Yapılacak</b>: önce kırmızılar (🔥 GECİKTİ / BUGÜN), sonra turuncu (1–2 gün), sonra sarı (3–5 gün). Maviler daha bekleyebilir.'],
+ ['Etsy senkron nasıl çalışır?','Sol menüde değil üstte <b>🔗 Etsy senkron</b> → mor butonu yer imlerine sürükle → Etsy Shop Manager’da tıkla. O Etsy sekmesi açık kaldıkça her 15 dakikada bir siparişleri kendiliğinden gönderir. Etsy sayfasını yenilersen yer imine tekrar bas.'],
+ ['“Kargoda · Etsy’ye girilmedi” ne demek?','Ivy ya da Dropsure kargoya vermiş, takip no var ama Etsy’de hâlâ “shipped” değil. Takip no’yu kopyalayıp Etsy’de siparişi “Mark as shipped” yap; bir sonraki senkronda yeşil listeye geçer.'],
+ ['Ivy soru sorarsa?','Sol menüde <b>💬 Mesajlar</b> rozetle gösterir. Mesajı aç, cevabı yaz, Cevapla.'],
+ ['Renkler ne demek?','Aşağıdaki renk tablosuna bak.']]
+};
 const t=k=>(T[S.lang]&&T[S.lang][k])||T.en[k]||k;
-const esc=s=>String(s==null?'':s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+
+/* ================= state & utils ================= */
+const S={lang:'en',pass:'',role:'',stores:[],orders:[],statuses:[],store:'*',view:'todo',q:'',sort:'new',open:new Set(),tr:false,trCache:{},unread:0,msgs:[],lastSync:null,newSince:0};
+const store={get(k){try{return localStorage.getItem(k)}catch(e){return null}},set(k,v){try{localStorage.setItem(k,v)}catch(e){}},del(k){try{localStorage.removeItem(k)}catch(e){}}};
+const sess={get(k){try{return sessionStorage.getItem(k)}catch(e){return null}},set(k,v){try{sessionStorage.setItem(k,v)}catch(e){}},del(k){try{sessionStorage.removeItem(k)}catch(e){}}};
+const esc=s=>String(s==null?'':s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const $=s=>document.querySelector(s);
-const API_URL='https:'+'/'.repeat(2)+'script.google.com/macros/s/AKfycbxcL7aDesUjUH22yMh18IZK9eL8J--DX0ts114PmPOQPyJvnAdNMuqTNJzMOdBmxBeb9A/exec';
-const GAS=!!(window.google&&google.script&&google.script.run);
+const $$=s=>[...document.querySelectorAll(s)];
+function toast(m){const e=$('#toast');e.textContent=m;e.style.display='block';clearTimeout(e._t);e._t=setTimeout(()=>e.style.display='none',2000);}
 function api(fn,...a){
-  if(GAS)return new Promise((res,rej)=>google.script.run.withSuccessHandler(res).withFailureHandler(e=>rej(e))[fn](...a));
   return fetch(API_URL,{method:'POST',credentials:'omit',redirect:'follow',body:JSON.stringify({fn:fn,args:a})})
     .then(r=>r.json()).then(j=>{if(!j.ok)throw new Error(j.error);return j.data;});
 }
-let SYNC_READY_SENT=false;
-function syncReady(){if(SYNC_READY_SENT||S.role!=='admin'||!window.opener)return;SYNC_READY_SENT=true;try{window.opener.postMessage({type:'oh-ready'},'*');}catch(e){}}
-window.addEventListener('message',async e=>{
-  const d=e.data||{};if(d.type!=='oh-etsy')return;
-  if(!/^https:[/][/]([a-z]+[.])?etsy[.]com$/.test(e.origin))return;
-  const reply=m=>{try{e.source.postMessage(Object.assign({type:'oh-res'},m),e.origin);}catch(x){}};
-  if(S.role!=='admin'){reply({error:'log in to Order Hub as admin'});return;}
-  const L=d.orders||[];let c=0,u=0;
-  try{
-    for(let i=0;i<L.length;i+=40){const r=await api('importOrders',S.pass,L.slice(i,i+40),true);c+=r.created;u+=r.updated;toast('Etsy → '+Math.min(i+40,L.length)+'/'+L.length);}
-    reply({ok:true,total:L.length,created:c,updated:u});
-    await reload();
-    $('#sheet').innerHTML=`<h3 style="margin:0 0 8px">✅ Etsy senkron</h3><p>${esc(L[0]&&L[0].store||'')}: <b>${L.length}</b> sipariş okundu · <b>${c}</b> yeni · <b>${u}</b> güncellendi.</p><div class="row" style="justify-content:flex-end"><button class="pri" id="sok">OK</button></div>`;
-    $('#modal').classList.add('on');$('#sok').onclick=()=>$('#modal').classList.remove('on');
-  }catch(err){reply({error:String(err.message||err)});alert('Etsy sync error: '+(err.message||err));}
-});
-function toast(m){const e=$('#toast');e.textContent=m;e.style.display='block';clearTimeout(e._t);e._t=setTimeout(()=>e.style.display='none',1800);}
-function applyLang(){document.querySelectorAll('[data-t]').forEach(e=>e.textContent=t(e.dataset.t));document.querySelectorAll('.lang button').forEach(b=>b.classList.toggle('on',b.dataset.l===S.lang));}
+const TODO=['new','warehouse','delayed','outofstock','problem'];
+const OPEN_ST=['new','ordered','warehouse','delayed','outofstock','problem'];
+const FLOW=['new','ordered','warehouse','shipped','delivered'];
+const ISSUES=['delayed','outofstock','problem','cancelled'];
+const ST_COLOR={new:'#2563eb',ordered:'#7c3aed',warehouse:'#d97706',shipped:'#0e9f8b',delivered:'#15803d',delayed:'#ea580c',outofstock:'#dc2626',problem:'#dc2626',cancelled:'#8a90a0'};
+const etsyShip=o=>/^Etsy: shipped/m.test(String(o.agentNote||''));
+function daysTo(d){if(!d)return null;const x=new Date(String(d).slice(0,10)+'T00:00:00');if(isNaN(x))return null;const n=new Date();n.setHours(0,0,0,0);return Math.round((x-n)/864e5);}
+function urg(o){
+  if(!OPEN_ST.includes(o.status||'new'))return 'none';
+  const d=daysTo(o.shipBy);if(d==null)return 'calm';
+  if(d<0)return 'late';if(d===0)return 'today';if(d<=2)return 'd12';if(d<=5)return 'd35';return 'calm';
+}
+const VIEWS={
+  todo:o=>TODO.includes(o.status||'new'),
+  urgent:o=>['late','today'].includes(urg(o)),
+  ordered:o=>o.status==='ordered',
+  shippedDs:o=>o.status==='shipped'&&!etsyShip(o),
+  shipped:o=>o.status==='shipped'&&etsyShip(o),
+  delivered:o=>o.status==='delivered',
+  cancelled:o=>o.status==='cancelled',
+  all:o=>true
+};
+const VIEW_DOT={todo:'#6d4aff',urgent:'#dc2626',ordered:'#7c3aed',shippedDs:'#ea580c',shipped:'#0e9f8b',delivered:'#15803d',cancelled:'#8a90a0',all:'#141826'};
+const FLAG={'United States':'US','United Kingdom':'GB','Germany':'DE','France':'FR','Austria':'AT','Canada':'CA','Australia':'AU','Netherlands':'NL','The Netherlands':'NL','Italy':'IT','Spain':'ES','Belgium':'BE','Ireland':'IE','Sweden':'SE','Denmark':'DK','Finland':'FI','Norway':'NO','Switzerland':'CH','Poland':'PL','Portugal':'PT','Czech Republic':'CZ','Czechia':'CZ','Greece':'GR','New Zealand':'NZ','Japan':'JP','Romania':'RO','Hungary':'HU','Slovakia':'SK','Slovenia':'SI','Croatia':'HR','Bulgaria':'BG','Luxembourg':'LU','Lithuania':'LT','Latvia':'LV','Estonia':'EE','Malta':'MT','Cyprus':'CY','Israel':'IL','Singapore':'SG','Mexico':'MX','Türkiye':'TR','Turkey':'TR'};
+const flag=c=>{const k=FLAG[c];return k?'<b title="'+esc(c)+'">'+k+'</b>':esc(c||'');};
+const inStore=o=>S.store==='*'||o.store===S.store;
+const fmtDate=d=>{const x=new Date(d);return isNaN(x)?'':x.toLocaleDateString(S.lang==='zh'?'zh-CN':S.lang,{day:'numeric',month:'short'});};
+const TX=s=>S.tr&&s?(S.trCache[S.lang+'|'+s]||s):s;
+async function trFetch(texts){
+  const need=[...new Set(texts.filter(x=>x&&!S.trCache[S.lang+'|'+x]))];
+  if(!need.length)return;
+  try{const out=await api('translate',S.pass,need,S.lang==='zh'?'zh-CN':S.lang);need.forEach((x,i)=>S.trCache[S.lang+'|'+x]=out[i]);}catch(e){}
+}
 
-
+/* ================= boot / auth ================= */
+function applyLang(){$$('[data-t]').forEach(e=>e.textContent=t(e.dataset.t));$$('.lang button').forEach(b=>b.classList.toggle('on',b.dataset.l===S.lang));document.documentElement.lang=S.lang;}
+function savedPass(){return store.get('oh_pass')||sess.get('oh_pass');}
+function forget(){store.del('oh_pass');sess.del('oh_pass');}
 async function boot(){
-  S.lang=ls.get('oh_lang')||(navigator.language||'').slice(0,2).replace(/[^a-z]/g,'');if(!T[S.lang])S.lang='en';
+  S.lang=store.get('oh_lang')||((navigator.language||'').toLowerCase().startsWith('zh')?'zh':(navigator.language||'').toLowerCase().startsWith('tr')?'tr':'en');
+  if(!T[S.lang])S.lang='en';
   applyLang();
-  document.querySelectorAll('.lang button').forEach(b=>b.onclick=()=>{S.lang=b.dataset.l;ls.set('oh_lang',S.lang);applyLang();render();});
+  $$('.lang button').forEach(b=>b.onclick=()=>{S.lang=b.dataset.l;store.set('oh_lang',S.lang);applyLang();S.role?render():loginView();});
   $('#trc').onchange=e=>{S.tr=e.target.checked;render();};
-  $('#logout').onclick=()=>{ls.del('oh_pass');location.reload();};
-  S.cols=ls.get('oh_cols')||'1';
-  $('#gd').onclick=()=>showGuide();
-  $('#app').innerHTML='<div class="empty">'+t('loading')+'</div>';
-  const st=await api('status');
-  if(!st.configured)return setupView();
-  const saved=ls.get('oh_pass');
-  if(saved){try{S.pass=saved;await reload();return;}catch(e){ls.del('oh_pass');}}
+  $('#logout').onclick=()=>{forget();location.reload();};
+  $('#app').innerHTML=`<div class="center"><div>${t('loading')}</div></div>`;
+  const p=savedPass();
+  if(p){S.pass=p;try{await reload();afterLogin();return;}catch(e){forget();}}
+  let st={configured:true};try{st=await api('status');}catch(e){}
+  if(!st.configured){$('#app').innerHTML='<div class="center">Setup: open the old Apps Script link once to set passwords.</div>';return;}
   loginView();
 }
-function setupView(){
-  $('#app').innerHTML=`<div class="center"><b>${t('setupTitle')}</b><input id="ap" type="password" placeholder="${t('adminPass')}"><input id="gp" type="password" placeholder="${t('agentPass')}"><button class="pri" id="sb">${t('setupBtn')}</button><div class="muted" id="msg"></div></div>`;
-  $('#sb').onclick=async()=>{try{await api('setup',$('#ap').value,$('#gp').value);S.pass=$('#ap').value;ls.set('oh_pass',S.pass);await reload();}catch(e){$('#msg').textContent=e.message||e;}};
-}
 function loginView(){
-  $('#app').innerHTML=`<div class="center"><b>📦 Order Hub</b><input id="pw" type="password" placeholder="${t('password')}"><button class="pri" id="lb">${t('login')}</button><div class="muted" id="msg"></div></div>`;
-  const go=async()=>{S.pass=$('#pw').value;try{await reload();ls.set('oh_pass',S.pass);}catch(e){$('#msg').textContent=t('wrong');}};
-  $('#lb').onclick=go;$('#pw').onkeydown=e=>{if(e.key==='Enter')go();};
+  $('#app').innerHTML=`<div class="center">
+   <h2>📦 Order Hub</h2>
+   <div class="pw"><input id="pw" type="password" placeholder="${t('password')}" autocomplete="current-password"><button type="button" id="eye" title="show">👁</button></div>
+   <label class="chk"><input type="checkbox" id="rem" checked> ${t('remember')}</label>
+   <button class="pri" id="lb">${t('login')}</button>
+   <div class="err" id="msg"></div></div>`;
+  $('#eye').onclick=()=>{const i=$('#pw');i.type=i.type==='password'?'text':'password';$('#eye').textContent=i.type==='password'?'👁':'🙈';i.focus();};
+  const go=async()=>{S.pass=$('#pw').value;$('#lb').disabled=true;$('#msg').textContent='';
+    try{await reload();forget();($('#rem')&&$('#rem').checked?store:sess).set('oh_pass',S.pass);afterLogin(true);}
+    catch(e){$('#msg').textContent=t('wrong');$('#lb').disabled=false;}};
+  $('#lb').onclick=go;$('#pw').onkeydown=e=>{if(e.key==='Enter')go();};$('#pw').focus();
 }
 async function reload(){
   const d=await api('load',S.pass);
-  Object.assign(S,{role:d.role,stores:d.stores,orders:d.orders,statuses:d.statuses,sheetUrl:d.sheetUrl});
-  $('#who').textContent=S.role==='admin'?'Admin':'Agent';$('#logout').style.display='';
+  Object.assign(S,{role:d.role,stores:d.stores,orders:d.orders,statuses:d.statuses,sheetUrl:d.sheetUrl,unread:d.unread||0});
+  $('#who').textContent=S.role==='admin'?'Admin':'Agent';$('#who').style.display='';$('#logout').style.display='';$('#trw').style.display='';
   render();
+}
+function afterLogin(fresh){
   syncReady();
-  if(S.role==='agent'&&!ls.get('oh_guide_seen')){ls.set('oh_guide_seen','1');showGuide();}
+  if(S.role==='agent'){
+    const today=new Date().toISOString().slice(0,10);
+    if(store.get('oh_welcome_hide')!==today&&(fresh||!sess.get('oh_welcomed'))){sess.set('oh_welcomed','1');welcome();}
+  }
 }
 
-
-function daysTo(d){if(!d)return null;const x=new Date(String(d).slice(0,10)+'T00:00:00');const n=new Date();n.setHours(0,0,0,0);return Math.round((x-n)/864e5);}
-const PRI={problem:0,outofstock:1,delayed:2,new:3,ordered:4,warehouse:5,shipped:8,delivered:9,cancelled:10};
-const TODO=['new','warehouse','delayed','outofstock','problem'];
-const SEG=[['todo',null],['ordered','#6b5bd2'],['shippedDs','#e0662b'],['shipped','#1f9d55'],['delivered','#1f7a4d'],['cancelled','#999'],['*',null]];
-const etsyShip=o=>String(o.etsyShipped)==='true'||/^Etsy: shipped/m.test(String(o.agentNote||''));
-const inSeg=(o,f)=>f==='*'?true:f==='todo'?TODO.includes(o.status||'new'):f==='shipped'?o.status==='shipped'&&etsyShip(o):f==='shippedDs'?o.status==='shipped'&&!etsyShip(o):o.status===f;
-const IMG='image'+'/'+'*';
-const T17='https:'+'/'.repeat(2)+'t.17track.net/en#nums=';
-function filtered(){
-  let L=S.orders.filter(o=>S.tab==='*'||o.store===S.tab);
-  L=L.filter(o=>inSeg(o,S.fs));
-  const q=S.q.trim().toLowerCase();
-  if(q)L=L.filter(o=>['id','etsyOrderId','productName','buyerName','address','tracking','variant','country'].some(k=>String(o[k]||'').toLowerCase().includes(q)));
-  const sd=o=>{const d=daysTo(o.shipBy);return d==null?999:d;};
-  if(S.sort==='queue')L.sort((a,b)=>(PRI[a.status]??5)-(PRI[b.status]??5)||sd(a)-sd(b));
-  else if(S.sort==='ship')L.sort((a,b)=>sd(a)-sd(b));
-  else L.sort((a,b)=>String(b.created).localeCompare(String(a.created)));
-  return L;
-}
-async function tr(texts){
-  const need=[...new Set(texts.filter(x=>x&&!S.trCache[S.lang+'|'+x]))];
-  if(need.length){try{const out=await api('translate',S.pass,need,S.lang==='zh'?'zh-CN':S.lang);need.forEach((x,i)=>S.trCache[S.lang+'|'+x]=out[i]);}catch(e){}}
-}
-const TX=s=>S.tr&&s?(S.trCache[S.lang+'|'+s]||s):s;
-
-
+/* ================= render ================= */
+function counts(){const L=S.orders.filter(inStore);const c={};Object.keys(VIEWS).forEach(v=>c[v]=L.filter(VIEWS[v]).length);return c;}
+function navBtn(v,c){return `<button class="nv ${S.view===v?'on':''}" data-v="${v}"><span class="dot" style="background:${VIEW_DOT[v]}"></span>${v==='todo'?'⚡ ':v==='urgent'?'🔥 ':''}${t('nav_'+v)}<span class="n ${v==='urgent'&&c[v]?'alert':''}">${c[v]}</span></button>`;}
 async function render(){
   if(!S.role)return;
-  const L=filtered();
-  if(S.tr)await tr(L.flatMap(o=>[o.productName,o.variant,o.special,o.giftNote,o.agentNote]));
-  const cnt=s=>S.orders.filter(o=>(s==='*'||o.store===s)&&TODO.includes(o.status||'new')).length;
-  const tabs=['*',...S.stores].map(s=>`<button class="tab ${S.tab===s?'on':''}" data-s="${esc(s)}">${s==='*'?t('all'):esc(s)}<span class="n">${cnt(s)}</span></button>`).join('')+(S.role==='admin'?`<button class="tab" id="as">${t('addStore')}</button>`:'');
-  const inTab=S.orders.filter(o=>S.tab==='*'||o.store===S.tab);
-  const segs=SEG.map(([f,c])=>`<button class="${f==='todo'?'todo ':''}${S.fs===f?'on':''}" data-f="${f}">${c?`<span class="dot" style="background:${c}"></span>`:''}${f==='todo'?'⚡ '+t('todo'):f==='*'?t('f_all'):f.startsWith('shipped')?t('seg_'+f):t('st_'+f)}<span class="n">${inTab.filter(o=>inSeg(o,f)).length}</span></button>`).join('');
-  $('#app').innerHTML=`<div class="tabs">${tabs}</div>
-  <div class="seg">${segs}</div>${S.fs==='todo'?`<div class="hint">${t('hintTodo')}</div>`:S.fs==='shippedDs'?`<div class="hint">⚠️ ${t('hintShippedDs')}</div>`:''}
-  <div class="bar"><input id="q" placeholder="${t('search')}" value="${esc(S.q)}">
-  <select id="so"><option value="new">${t('sortNew')}</option><option value="ship">${t('sortShip')}</option><option value="queue">${t('sortQueue')}</option></select>
-  ${S.role==='admin'?`<button class="pri" id="no">${t('newOrder')}</button> <button id="esy">🔗 Etsy senkron</button> <button id="imp">⇩ JSON import</button>`+(S.sheetUrl?` <a class="muted" href="${esc(S.sheetUrl)}" target="_blank">${t('openSheet')}</a>`:''):''}
-  <span style="flex:1"></span><span class="muted">${t('total')}: ${L.length}</span>
-  <span class="view"><button data-cols="1" class="${S.cols==='1'?'on':''}">☰ ${t('oneCol')}</button><button data-cols="2" class="${S.cols==='2'?'on':''}">▦ ${t('twoCol')}</button></span></div>
-  <div id="list" class="c${S.cols}">${L.length?L.map(card).join(''):`<div class="empty">${t('empty')}</div>`}</div>`;
-  $('#so').value=S.sort;
-  document.querySelectorAll('.tab[data-s]').forEach(b=>b.onclick=()=>{S.tab=b.dataset.s;render();});
-  document.querySelectorAll('.view button[data-cols]').forEach(b=>b.onclick=()=>{S.cols=b.dataset.cols;ls.set('oh_cols',S.cols);render();});
-  document.querySelectorAll('.seg button[data-f]').forEach(b=>b.onclick=()=>{S.fs=b.dataset.f;render();});
-  if($('#esy'))$('#esy').onclick=async()=>{
-    $('#sheet').innerHTML=`<h3 style="margin:0 0 8px">🔗 Etsy → Order Hub senkron</h3>
-    <ol style="padding-left:18px;margin:0 0 10px;line-height:1.6">
-    <li>Aşağıdaki mor butonu <b>tarayıcının yer imleri çubuğuna sürükle</b> (çubuk görünmüyorsa Ctrl+Shift+B). Her tarayıcıda bir kere yapılır.</li>
-    <li>Etsy’de mağazanın <b>Shop Manager → Orders</b> sayfasını aç (Novelle, Lumiva veya MiniBoutique; hangi mağaza açıksa o gelir).</li>
-    <li>Yer imindeki <b>📦 Etsy → Order Hub</b>’a tıkla. Yeni pencerede Order Hub açılır (admin girişi yapılmış olmalı) ve bütün siparişler otomatik aktarılır: yeni siparişler eklenir, kargoya verilen / teslim edilen / iptal olanlar güncellenir, 1688 linkleri ilan tablosundan otomatik dolar. Ivy’nin girdikleri korunur.</li></ol>
-    <p id="bmw" style="text-align:center;margin:14px 0">${GAS?'<b>Bu buton sadece GitHub adresinde çalışır:</b><br>satanxiety.github.io/order-hub':'yükleniyor…'}</p>
-    <p class="muted">Etsy açılır pencere izni isterse “izin ver” de. Takip numaraları Etsy’den gelmez; Ivy girer.</p>
-    <div class="row" style="justify-content:flex-end"><button id="bmc">${t('cancel')}</button></div>`;
-    $('#modal').classList.add('on');$('#bmc').onclick=()=>$('#modal').classList.remove('on');
-    if(!GAS){try{const code=await (await fetch('etsy-sync.js',{cache:'no-store'})).text();
-      $('#bmw').innerHTML='<a id="bml" style="display:inline-block;background:#7c4dff;color:#fff;padding:10px 18px;border-radius:10px;font-weight:700;text-decoration:none;cursor:grab">📦 Etsy → Order Hub</a>';
-      $('#bml').setAttribute('href','javascript:'+encodeURIComponent(code));$('#bml').onclick=ev=>{ev.preventDefault();alert('Bu butonu yer imleri çubuğuna sürükle, sonra Etsy sayfasında tıkla.');};
-    }catch(e){$('#bmw').textContent='etsy-sync.js yüklenemedi: '+e.message;}}
-  };
-  if($('#imp'))$('#imp').onclick=()=>{
-    $('#sheet').innerHTML=`<h3 style="margin:0 0 10px">Etsy import</h3><p class="muted">Paste the JSON exported from Etsy (tools/order-hub/etsy-export.js). Existing orders are matched by Etsy order no: only empty fields are filled and status moves forward (shipped / delivered / cancelled).</p>
-    <textarea id="impt" rows="10" style="width:100%;font:12px monospace"></textarea>
-    <label class="muted" style="display:flex;gap:6px;align-items:center;margin-top:6px"><input type="checkbox" id="impo" checked> ${t('overwrite')}</label>
-    <div class="row" style="margin-top:10px;justify-content:flex-end;display:flex;gap:8px"><button id="impc">Cancel</button><button class="pri" id="impgo">Import</button></div><div id="impr" class="muted"></div>`;
-    $('#modal').classList.add('on');
-    $('#impc').onclick=()=>$('#modal').classList.remove('on');
-    $('#impgo').onclick=async()=>{let list;try{list=JSON.parse($('#impt').value);}catch(e){$('#impr').textContent='JSON error: '+e.message;return;}
-      if(Array.isArray(list)&&list.length&&list[0].listingId){$('#impgo').disabled=true;try{const n=await api('setListingMap',S.pass,list,false);$('#impr').textContent='Listings → 1688: '+n+' ✓';}catch(e){$('#impr').textContent='Error: '+(e.message||e);}$('#impgo').disabled=false;return;}
-      $('#impgo').disabled=true;$('#impr').textContent='…';
-      try{let c=0,u=0;for(let i=0;i<list.length;i+=40){const r=await api('importOrders',S.pass,list.slice(i,i+40),$('#impo').checked);c+=r.created;u+=r.updated;$('#impr').textContent=`${Math.min(i+40,list.length)}/${list.length} · new ${c} · updated ${u}`;}
-        $('#impr').textContent+=' ✓';await reload();}catch(e){$('#impr').textContent='Error: '+(e.message||e);$('#impgo').disabled=false;}};
-  };
-  if($('#as'))$('#as').onclick=async()=>{const n=prompt(t('newStore'));if(n){await api('addStore',S.pass,n);await reload();}};
-  $('#q').oninput=e=>{S.q=e.target.value;clearTimeout(S._q);S._q=setTimeout(()=>{render().then(()=>{const q=$('#q');q.focus();q.setSelectionRange(q.value.length,q.value.length);});},350);};
-  $('#so').onchange=e=>{S.sort=e.target.value;render();};
-  if($('#no'))$('#no').onclick=()=>form({store:S.tab==='*'?S.stores[0]:S.tab,qty:1,costCurrency:'CNY'});
-  bindCards();
+  const c=counts();
+  const stores=['*',...S.stores].map(s=>`<button class="${S.store===s?'on':''}" data-s="${esc(s)}">${s==='*'?t('all'):esc(s)}</button>`).join('')+(S.role==='admin'?`<button id="as">${t('addStore')}</button>`:'');
+  const side=`<nav class="side">
+    <div class="navbox"><h4>${t('h_stores')}</h4><div class="storesel">${stores}</div></div>
+    <div class="navbox"><h4>${t('h_orders')}</h4>${['todo','urgent','ordered','shippedDs','shipped','delivered','cancelled','all'].map(v=>navBtn(v,c)).join('')}</div>
+    <div class="navbox"><h4>${t('h_more')}</h4>
+      <button class="nv ${S.view==='help'?'on':''}" data-v="help"><span class="dot" style="background:#0ea5e9"></span>❓ ${t('nav_help')}${S.role==='agent'&&S.unread?`<span class="n alert">${S.unread}</span>`:''}</button>
+      ${S.role==='admin'?`<button class="nv ${S.view==='msgs'?'on':''}" data-v="msgs"><span class="dot" style="background:#f59e0b"></span>💬 ${t('nav_msgs')}<span class="n ${S.unread?'alert':''}">${S.unread}</span></button>`:''}
+    </div></nav>`;
+  let main='';
+  if(S.view==='help')main=await helpView();
+  else if(S.view==='msgs')main=await msgsView();
+  else main=await ordersView(c);
+  $('#app').innerHTML=`<div class="wrap">${side}<main>${main}</main></div>`;
+  bind();
 }
-function photoStrip(v){return String(v||'').split('\n').filter(Boolean).map(u=>`<img src="${esc(u)}" data-z="${esc(u)}">`).join('');}
-function card(o){
-  const d=daysTo(o.shipBy);const late=d!=null&&d<0&&!['shipped','delivered','cancelled'].includes(o.status);
-  const due=o.shipBy&&!['shipped','delivered','cancelled'].includes(o.status)?`<span class="chip due ${late||d===0?'late':''}">📅 ${esc(String(o.shipBy).slice(0,10))} · ${late?t('late'):d===0?t('today'):d+' '+t('daysLeft')}</span>`:'';
-  const gift=String(o.gift)==='true'?`<span class="chip gift">🎁 ${t('gift')}</span>`:'';
-  const L1688=String(o.links1688||'').split('\n').filter(Boolean);
-  const links=L1688.map((u,i)=>`<a class="l1688" href="${esc(u)}" target="_blank">1688${L1688.length>1?' '+(i+1):''} ↗</a>`).join('');
-  const etsyL=String(o.productLink||'').split('\n').filter(Boolean).map((u,i,a)=>`<a href="${esc(u)}" target="_blank">Etsy${a.length>1?' '+(i+1):''} ↗</a>`).join('');
-  const stSel=S.statuses.map(s=>`<option value="${s}" ${o.status===s?'selected':''}>${t('st_'+s)}</option>`).join('');
+async function ordersView(c){
+  let L=S.orders.filter(inStore).filter(VIEWS[S.view]||VIEWS.todo);
+  const q=S.q.trim().toLowerCase();
+  if(q)L=L.filter(o=>['id','etsyOrderId','productName','buyerName','address','tracking','variant','country'].some(k=>String(o[k]||'').toLowerCase().includes(q)));
+  const dd=o=>{const d=daysTo(o.shipBy);return d==null?999:d;};
+  if(S.sort==='urgent')L.sort((a,b)=>(OPEN_ST.includes(a.status)?0:1)-(OPEN_ST.includes(b.status)?0:1)||dd(a)-dd(b));
+  else L.sort((a,b)=>String(b.created).localeCompare(String(a.created)));
+  if(S.tr)await trFetch(L.flatMap(o=>[o.productName,o.variant,o.special,o.giftNote,o.agentNote]));
+  const all=S.orders.filter(inStore);
+  const soon=all.filter(o=>['d12'].includes(urg(o))||(OPEN_ST.includes(o.status)&&daysTo(o.shipBy)===3)).length;
+  const cards=`<div class="cards">
+    <button class="sc blue" data-v="todo"><span class="v">${c.todo}</span><span class="l">⚡ ${t('sum_todo')}</span></button>
+    <button class="sc red" data-v="urgent"><span class="v">${c.urgent}</span><span class="l">🔥 ${t('sum_urgent')}</span></button>
+    <button class="sc orange" data-v="todo" data-sort="urgent"><span class="v">${soon}</span><span class="l">⏳ ${t('sum_soon')}</span></button>
+    <button class="sc teal" data-v="shippedDs"><span class="v">${c.shippedDs}</span><span class="l">🚚 ${t('sum_notEtsy')}</span></button></div>`;
+  const admin=S.role==='admin'?`<button class="pri" id="no">${t('newOrder')}</button><button id="esy">${t('etsySync')}</button><button id="imp">${t('jsonImport')}</button>${S.sheetUrl?`<a href="${esc(S.sheetUrl)}" target="_blank" style="font-size:12px">Sheet ↗</a>`:''}`:'';
+  return `${cards}
+   <div class="vtitle">${t('nav_'+S.view)} <span style="color:var(--soft);font-weight:600;font-size:15px">· ${L.length}</span></div>
+   <div class="vhint">${t('v_'+S.view)}</div>
+   <div class="tool"><input id="q" placeholder="${t('search')}" value="${esc(S.q)}">
+     <select id="so"><option value="new">${t('sortNew')}</option><option value="urgent">${t('sortUrgent')}</option></select>${admin}</div>
+   <div class="list">${L.length?L.map(row).join(''):`<div class="empty">${t('empty')}</div>`}</div>`;
+}
+function dueBadge(o){
+  const u=urg(o);
+  if(o.status==='delivered')return `<span class="trust dl">${t('delivered')}</span>`;
+  if(o.status==='shipped')return `<span class="trust">${t('inTransit')}</span>`+(etsyShip(o)?'':` <span class="warn">${t('notOnEtsy')}</span>`);
+  if(u==='none')return '';
+  const d=daysTo(o.shipBy);
+  if(d==null)return '';
+  const txt=u==='late'?t('late')+' '+(-d)+'d':u==='today'?t('today'):`📅 ${d} ${t('daysLeft')}`;
+  return `<span class="due" title="${t('shipBy')}: ${esc(String(o.shipBy).slice(0,10))}">${txt}</span>`;
+}
+function row(o){
+  const st=o.status||'new',u=urg(o),open=S.open.has(o.id);
   const ph=String(o.photos||'').split('\n').filter(Boolean);
-  const todo=TODO.includes(o.status||'new');
-  const od=o.created?new Date(o.created):null;
-  const odS=od&&!isNaN(od)?od.toLocaleDateString(S.lang==='zh'?'zh-CN':S.lang,{day:'numeric',month:'short'}):'';
-  const trkLine=o.tracking?`🚚 ${String(o.tracking).split(/[\s,]+/).filter(Boolean).map(n=>`<a class="trk" href="${T17+encodeURIComponent(n)}" target="_blank" title="${t('track17')}">${esc(n)} ↗</a> <button class="sm" data-copy="${esc(n)}">${t('copy')}</button>`).join(' ')}${o.carrier?' · '+esc(o.carrier):''}${o.status==='shipped'&&!etsyShip(o)?` <span class="chip" style="background:#fde7dc;color:#b4441b;font-weight:600">⚠ ${t('notOnEtsy')}</span>`:''}`:'';
-  return `<div class="card b-${esc(o.status||'new')} ${late?'over':''}" data-id="${esc(o.id)}">
-   <div class="top">
-    ${ph[0]?`<img class="thumb" src="${esc(ph[0])}" data-z="${esc(ph[0])}">`:''}
-    <div class="meta">
-     <div class="row"><span class="chip st st-${esc(o.status)}">${t('st_'+o.status)}</span>${due}${gift}<span style="flex:1"></span><span class="sub">${odS?t('ordDate')+' '+esc(odS):''}</span></div>
-     <div class="title"><b>${esc(TX(o.productName))||'—'}</b></div>
-     <div class="sub">${o.variant?`<b>${esc(TX(o.variant))}</b> · `:''}${t('qty')} <b>${esc(o.qty)}</b> · ${esc(o.store)}${o.country?` · ${esc(o.country)}`:''}</div>
-     ${o.etsyOrderId?`<div><button class="ono" data-copy="${esc(o.etsyOrderId)}" title="${t('copyOrderNo')}"><span class="lb">${t('orderNo')}</span>${esc(o.etsyOrderId)} 📋</button></div>`:''}
-     <div class="lk">${etsyL}${links}</div>
-    </div>
+  return `<div class="ord u-${u} s-${esc(st)} ${open?'open':''}" data-id="${esc(o.id)}">
+   <div class="oh" data-tog>
+     ${ph[0]?`<img class="th" src="${esc(ph[0])}" alt="" loading="lazy">`:'<div class="th"></div>'}
+     <div class="om"><div class="ot">${esc(TX(o.productName))||'—'}</div>
+       <div class="os">${o.variant?`<b>${esc(TX(o.variant))}</b> · `:''}×${esc(o.qty||1)} · ${flag(o.country)} · ${esc(o.store)} · ${t('ordDate')}${esc(fmtDate(o.created))}</div></div>
+     <div class="orr"><div class="row1">${String(o.gift)==='true'?`<span class="gift">${t('gift')}</span>`:''}<span class="pill p-${esc(st)}">${t('st_'+st)}</span>${dueBadge(o)}</div>
+       ${o.etsyOrderId?`<button class="ono" data-copy="${esc(o.etsyOrderId)}" title="${t('orderNo')} · ${t('copy')}">#${esc(o.etsyOrderId)} 📋</button>`:''}</div>
+     <span class="chev">▾</span>
    </div>
-   ${trkLine?`<div class="sub">${trkLine}</div>`:''}
-   ${o.special?`<div class="box note">📝 ${esc(TX(o.special))}</div>`:''}
-   ${o.giftNote?`<div class="box note">🎁 ${esc(TX(o.giftNote))}</div>`:''}
-   ${o.agentNote?`<div class="info">${esc(TX(o.agentNote))}</div>`:''}
-   <details ${todo?'open':''}><summary>📍 ${t('addrBlock')}</summary>
-    <div style="margin-top:6px"><div class="row"><span class="k">${t('address')}</span><button class="sm" data-copy="${esc((o.buyerName&&!String(o.address).startsWith(o.buyerName)?o.buyerName+'\n':'')+o.address)}">${t('copy')}</button></div><div class="box">${esc(o.buyerName&&!String(o.address).startsWith(o.buyerName)?o.buyerName+'\n':'')}${esc(o.address)}</div></div>
-    ${o.taxCode?`<div class="row" style="margin-top:6px"><span class="k">${t('taxCode')}:</span> <b>${esc(o.taxCode)}</b> <button class="sm" data-copy="${esc(o.taxCode)}">${t('copy')}</button></div>`:''}
-    ${o.orderValue?`<div class="row" style="margin-top:4px"><span class="k">${t('orderValue')}:</span> <span>${esc(o.orderValue)}</span></div>`:''}
-    ${ph.length>1?`<div class="ph" style="margin-top:6px">${photoStrip(ph.slice(1).join('\n'))}</div>`:''}
-   </details>
-   <details ${todo?'open':''}><summary>✏️ ${t('updBlock')}</summary>
-   <div class="agent">
-     <label class="full"><span class="k">${t('status')}</span><select data-f="status">${stSel}</select></label>
-     <label><span class="k">${t('tracking')}</span><input data-f="tracking" value="${esc(o.tracking)}"></label>
-     <label><span class="k">${t('carrier')}</span><input data-f="carrier" value="${esc(o.carrier)}"></label>
-     <label><span class="k">${t('costProduct')}</span><input data-f="costProduct" type="number" step="0.01" value="${esc(o.costProduct)}"></label>
-     <label><span class="k">${t('costShip')}</span><input data-f="costShip" type="number" step="0.01" value="${esc(o.costShip)}"></label>
-     <label><span class="k">${t('costCurrency')}</span><select data-f="costCurrency">${['CNY','USD','TRY','EUR'].map(c=>`<option ${String(o.costCurrency||'CNY')===c?'selected':''}>${c}</option>`).join('')}</select></label>
-     <label><span class="k">${t('agentPhotos')}</span><input type="file" accept="${IMG}" multiple data-up="agentPhotos"></label>
-     <label class="full"><span class="k">${t('agentNote')}</span><textarea data-f="agentNote" rows="2">${esc(o.agentNote)}</textarea></label>
-     ${o.agentNote&&S.tr?`<div class="full muted">↳ ${esc(TX(o.agentNote))}</div>`:''}
-     <div class="ph full">${photoStrip(o.agentPhotos)}</div>
-     <div class="full row"><button class="pri" data-save>${t('save')}</button>${S.role==='admin'?`<button data-edit>${t('edit')}</button><button data-arch>${t('archive')}</button>`:''}</div>
-   </div></details>
-   ${o.log?`<details><summary>🕘 ${t('history')} <span class="muted">${esc(o.id)}</span></summary><div class="log">${esc(o.log)}</div></details>`:''}
-   </div>`;
+   ${open?body(o):'<div class="ob"></div>'}
+  </div>`;
 }
-function bindCards(){
-  document.querySelectorAll('[data-copy]').forEach(b=>b.onclick=()=>{navigator.clipboard.writeText(b.dataset.copy).then(()=>toast(t('copied')));});
-  document.querySelectorAll('[data-z]').forEach(i=>i.onclick=()=>{const z=$('#zoom');z.querySelector('img').src=i.dataset.z;z.style.display='flex';});
-  document.querySelectorAll('.card').forEach(c=>{
-    const o=S.orders.find(x=>x.id===c.dataset.id);
-    c.querySelector('[data-save]').onclick=async()=>{const u={id:o.id};c.querySelectorAll('[data-f]').forEach(e=>u[e.dataset.f]=e.value);await saveOrder(u);};
-    const up=c.querySelector('[data-up]');up.onchange=async()=>{const urls=await uploadFiles(up.files);if(urls.length){await saveOrder({id:o.id,agentPhotos:[o.agentPhotos,...urls].filter(Boolean).join('\n')});}};
-    const ed=c.querySelector('[data-edit]');if(ed)ed.onclick=()=>form(o);
-    const ar=c.querySelector('[data-arch]');if(ar)ar.onclick=async()=>{if(confirm(t('archive')+'?'))await saveOrder({id:o.id,archived:'true'});};
+function body(o){
+  const ph=String(o.photos||'').split('\n').filter(Boolean);
+  const L1688=String(o.links1688||'').split('\n').filter(Boolean);
+  const links=String(o.productLink||'').split('\n').filter(Boolean).map((u,i,a)=>`<a href="${esc(u)}" target="_blank">Etsy${a.length>1?' '+(i+1):''} ↗</a>`).join('')+L1688.map((u,i)=>`<a class="l1688" href="${esc(u)}" target="_blank">1688${L1688.length>1?' '+(i+1):''} ↗</a>`).join('');
+  const addr=(o.buyerName&&!String(o.address).startsWith(o.buyerName)?o.buyerName+'\n':'')+(o.address||'');
+  const trks=String(o.tracking||'').split(/[\s,]+/).filter(Boolean);
+  const st=o.status||'new';
+  const stepBtn=s=>`<button type="button" data-st="${s}" class="${st===s?'on':''}" style="${st===s?'background:'+ST_COLOR[s]:''}">${t('st_'+s)}</button>`;
+  return `<div class="ob">
+   <div class="blk">
+     ${links?`<div><div class="k">${t('links')}</div><div class="lk">${links}</div></div>`:''}
+     ${o.special?`<div><div class="k">📝 ${t('special')}</div><div class="box note">${esc(TX(o.special))}</div></div>`:''}
+     ${o.giftNote?`<div><div class="k">🎁 ${t('giftNote')}</div><div class="box note">${esc(TX(o.giftNote))}</div></div>`:''}
+     <div><div class="kv"><span class="k" style="margin:0">📍 ${t('address')}</span><button class="sm" data-copy="${esc(addr)}">${t('copy')}</button></div><div class="box" style="margin-top:4px">${esc(addr)}</div></div>
+     ${o.taxCode?`<div><div class="kv"><span class="k" style="margin:0">${t('taxCode')}</span><button class="sm" data-copy="${esc(o.taxCode)}">${t('copy')}</button></div><div style="font-weight:700;margin-top:4px">${esc(o.taxCode)}</div></div>`:''}
+     ${o.orderValue?`<div><div class="k">${t('orderValue')}</div><div>${esc(o.orderValue)}</div></div>`:''}
+     ${o.shipBy?`<div><div class="k">${t('shipBy')}</div><div>${esc(String(o.shipBy).slice(0,10))} ${dueBadge(o)}</div></div>`:''}
+     ${ph.length?`<div><div class="k">${t('photos')}</div><div class="ph">${ph.map(u=>`<img src="${esc(u)}" data-z="${esc(u)}" alt="">`).join('')}</div></div>`:''}
+     ${o.agentNote?`<div class="box info">${esc(TX(o.agentNote))}</div>`:''}
+   </div>
+   <div class="blk">
+     <div class="upd" data-form>
+       <div style="font-weight:800">✏️ ${t('upd')}</div>
+       <div><div class="k">${t('flow')}</div><div class="steps">${FLOW.map(stepBtn).join('')}</div></div>
+       <div><div class="k">${t('issues')}</div><div class="steps">${ISSUES.map(stepBtn).join('')}</div></div>
+       <input type="hidden" data-f="status" value="${esc(st)}">
+       <div class="g2"><label><div class="k">${t('tracking')}</div><input data-f="tracking" value="${esc(o.tracking)}"></label>
+         <label><div class="k">${t('carrier')}</div><input data-f="carrier" value="${esc(o.carrier)}"></label></div>
+       ${trks.length?`<div class="kv">${trks.map(n=>`<a class="trk" href="https://t.17track.net/en#nums=${encodeURIComponent(n)}" target="_blank" title="${t('open17')}">🚚 ${esc(n)} ↗</a><button class="sm" data-copy="${esc(n)}">${t('copy')}</button>`).join(' ')}</div>`:''}
+       <div class="g2"><label><div class="k">${t('costProduct')}</div><input data-f="costProduct" type="number" step="0.01" value="${esc(o.costProduct)}"></label>
+         <label><div class="k">${t('costShip')}</div><input data-f="costShip" type="number" step="0.01" value="${esc(o.costShip)}"></label></div>
+       <label><div class="k">${t('costCurrency')}</div><select data-f="costCurrency">${['CNY','USD','EUR','TRY'].map(x=>`<option ${String(o.costCurrency||'CNY')===x?'selected':''}>${x}</option>`).join('')}</select></label>
+       <label><div class="k">${t('agentNote')}</div><textarea data-f="agentNote" rows="3">${esc(o.agentNote)}</textarea></label>
+       <label><div class="k">📷 ${t('agentPhotos')}</div><input type="file" accept="image/*" multiple data-up></label>
+       ${String(o.agentPhotos||'').trim()?`<div class="ph">${String(o.agentPhotos).split('\n').filter(Boolean).map(u=>`<img src="${esc(u)}" data-z="${esc(u)}" alt="">`).join('')}</div>`:''}
+       <div class="kv"><button class="pri" data-save>💾 ${t('save')}</button>${S.role==='admin'?`<button data-edit>${t('edit')}</button><button data-arch>${t('archive')}</button>`:''}</div>
+     </div>
+     ${o.log?`<details><summary>🕘 ${t('history')} · ${esc(o.id)}</summary><div class="log">${esc(o.log)}</div></details>`:''}
+   </div></div>`;
+}
+T.tr.ordDate='Sipariş ';T.en.ordDate='Ordered ';T.zh.ordDate='下单 ';
+
+/* ================= bindings ================= */
+function bind(){
+  $$('.nv[data-v],.sc[data-v]').forEach(b=>b.onclick=()=>{S.view=b.dataset.v;if(b.dataset.sort)S.sort=b.dataset.sort;S.open.clear();render();window.scrollTo(0,0);});
+  $$('.storesel button[data-s]').forEach(b=>b.onclick=()=>{S.store=b.dataset.s;render();});
+  if($('#as'))$('#as').onclick=async()=>{const n=prompt(t('newStore'));if(n){await api('addStore',S.pass,n);await reload();}};
+  if($('#q')){$('#q').oninput=e=>{S.q=e.target.value;clearTimeout(S._q);S._q=setTimeout(()=>render().then(()=>{const q=$('#q');q.focus();q.setSelectionRange(q.value.length,q.value.length);}),300);};}
+  if($('#so')){$('#so').value=S.sort;$('#so').onchange=e=>{S.sort=e.target.value;render();};}
+  if($('#no'))$('#no').onclick=()=>form({store:S.store==='*'?S.stores[0]:S.store,qty:1,costCurrency:'CNY'});
+  if($('#imp'))$('#imp').onclick=importModal;
+  if($('#esy'))$('#esy').onclick=syncModal;
+  $$('[data-copy]').forEach(b=>b.onclick=e=>{e.stopPropagation();navigator.clipboard.writeText(b.dataset.copy).then(()=>toast(t('copied')+' ✓'));});
+  $$('[data-z]').forEach(i=>i.onclick=e=>{e.stopPropagation();const z=$('#zoom');z.querySelector('img').src=i.dataset.z;z.style.display='flex';});
+  $$('.ord').forEach(card=>{
+    const o=S.orders.find(x=>x.id===card.dataset.id);if(!o)return;
+    card.querySelector('[data-tog]').onclick=e=>{if(e.target.closest('a,button'))return;
+      if(S.open.has(o.id)){S.open.delete(o.id);card.classList.remove('open');card.querySelector('.ob').outerHTML='<div class="ob"></div>';}
+      else{S.open.add(o.id);card.classList.add('open');const tmp=document.createElement('div');tmp.innerHTML=body(o);card.querySelector('.ob').replaceWith(tmp.firstElementChild);bindCard(card,o);bindCommon(card);}};
+    if(S.open.has(o.id))bindCard(card,o);
   });
+  $$('[data-faq-q]').forEach(()=>{});
+  if(S.view==='help')bindHelp();
+  if(S.view==='msgs')bindMsgs();
+}
+function bindCommon(root){
+  root.querySelectorAll('[data-copy]').forEach(b=>b.onclick=e=>{e.stopPropagation();navigator.clipboard.writeText(b.dataset.copy).then(()=>toast(t('copied')+' ✓'));});
+  root.querySelectorAll('[data-z]').forEach(i=>i.onclick=e=>{e.stopPropagation();const z=$('#zoom');z.querySelector('img').src=i.dataset.z;z.style.display='flex';});
+}
+function bindCard(card,o){
+  const f=card.querySelector('[data-form]');if(!f)return;
+  f.querySelectorAll('[data-st]').forEach(b=>b.onclick=()=>{f.querySelector('[data-f=status]').value=b.dataset.st;
+    f.querySelectorAll('[data-st]').forEach(x=>{const on=x===b;x.classList.toggle('on',on);x.style.background=on?ST_COLOR[x.dataset.st]:'';});});
+  f.querySelector('[data-save]').onclick=async()=>{const u={id:o.id};f.querySelectorAll('[data-f]').forEach(e=>u[e.dataset.f]=e.value);await saveOrder(u);};
+  f.querySelector('[data-up]').onchange=async e=>{const urls=await uploadFiles(e.target.files);if(urls.length)await saveOrder({id:o.id,agentPhotos:[o.agentPhotos,...urls].filter(Boolean).join('\n')});};
+  const ed=f.querySelector('[data-edit]');if(ed)ed.onclick=()=>form(o);
+  const ar=f.querySelector('[data-arch]');if(ar)ar.onclick=async()=>{if(confirm(t('archive')+'?'))await saveOrder({id:o.id,archived:'true'});};
 }
 async function saveOrder(u){
   try{await api('saveOrder',S.pass,u);toast(t('saved'));await reload();}catch(e){alert(e.message||e);}
 }
 
-
+/* ================= photos ================= */
 function shrink(file){return new Promise(res=>{const r=new FileReader();r.onload=()=>{const im=new Image();im.onload=()=>{const m=1600,k=Math.min(1,m/Math.max(im.width,im.height));const c=document.createElement('canvas');c.width=im.width*k;c.height=im.height*k;c.getContext('2d').drawImage(im,0,0,c.width,c.height);res(c.toDataURL('image/jpeg',0.85).split(',')[1]);};im.src=r.result;};r.readAsDataURL(file);});}
 async function uploadFiles(files){const out=[];for(const f of [...files]){toast('⬆️ '+(f.name||'photo'));const b=await shrink(f);out.push(await api('uploadPhoto',S.pass,b,'image/jpeg',(f.name||'paste')+'.jpg'));}return out;}
 
-
+/* ================= modals ================= */
+function modal(html){$('#sheet').innerHTML=html;$('#modal').classList.add('on');}
+function closeModal(){$('#modal').classList.remove('on');}
+$('#modal').addEventListener('click',e=>{if(e.target.id==='modal')closeModal();});
+function welcome(){
+  const L=S.orders;
+  const todo=L.filter(VIEWS.todo).length,urgent=L.filter(VIEWS.urgent).length,wh=L.filter(o=>o.status==='warehouse').length;
+  modal(`<div class="welcome"><h2>${t('w_hi')}</h2><div style="color:var(--soft)">${t('w_today')} · ${new Date().toLocaleDateString(S.lang==='zh'?'zh-CN':S.lang,{weekday:'long',day:'numeric',month:'long'})}</div>
+   <div class="stat"><div style="background:var(--blue-bg)"><b style="color:var(--blue)">${todo}</b>${t('w_todo')}</div><div style="background:var(--red-bg)"><b style="color:var(--red)">${urgent}</b>${t('w_urgent')}</div><div style="background:var(--amber-bg)"><b style="color:var(--amber)">${wh}</b>${t('w_wh')}</div></div>
+   <ol>${t('w_steps')}</ol>
+   <label class="chk"><input type="checkbox" id="whide"> ${t('w_hide')}</label>
+   <div class="kv" style="justify-content:flex-end;margin-top:12px"><button id="whelp">${t('w_help')}</button><button class="pri" id="wgo">${t('w_start')}</button></div></div>`);
+  const done=()=>{if($('#whide').checked)store.set('oh_welcome_hide',new Date().toISOString().slice(0,10));closeModal();};
+  $('#wgo').onclick=()=>{done();S.view=urgent?'urgent':'todo';render();};
+  $('#whelp').onclick=()=>{done();S.view='help';render();};
+}
+function importModal(){
+  modal(`<h2>JSON import</h2><p style="color:var(--soft)">Orders exported from Etsy (etsy-export.js) or listings [{listingId,links1688,...}].</p>
+   <textarea id="impt" rows="10" style="font:12px monospace"></textarea>
+   <label class="chk" style="margin-top:8px"><input type="checkbox" id="impo" checked> Refresh Etsy fields (agent fields are kept)</label>
+   <div class="kv" style="justify-content:flex-end;margin-top:10px"><button id="impc">${t('cancel')}</button><button class="pri" id="impgo">Import</button></div><div id="impr" style="color:var(--soft);margin-top:6px"></div>`);
+  $('#impc').onclick=closeModal;
+  $('#impgo').onclick=async()=>{let list;try{list=JSON.parse($('#impt').value);}catch(e){$('#impr').textContent='JSON error: '+e.message;return;}
+    $('#impgo').disabled=true;
+    try{
+      if(Array.isArray(list)&&list.length&&list[0].listingId){const n=await api('setListingMap',S.pass,list,false);$('#impr').textContent='Listings → 1688: '+n+' ✓';}
+      else{let c=0,u=0;for(let i=0;i<list.length;i+=40){const r=await api('importOrders',S.pass,list.slice(i,i+40),$('#impo').checked);c+=r.created;u+=r.updated;$('#impr').textContent=`${Math.min(i+40,list.length)}/${list.length} · new ${c} · updated ${u}`;}
+        $('#impr').textContent+=' ✓';await reload();}
+    }catch(e){$('#impr').textContent='Error: '+(e.message||e);}
+    $('#impgo').disabled=false;};
+}
+async function syncModal(){
+  modal(`<h2>🔗 Etsy → Order Hub</h2>
+   <ol style="line-height:1.7;padding-left:20px">
+    <li>Aşağıdaki mor butonu <b>yer imleri çubuğuna sürükle</b> (çubuk yoksa Ctrl+Shift+B). Her tarayıcıda bir kere.</li>
+    <li>Etsy’de <b>Shop Manager → Orders</b> sayfasını aç (hangi mağaza açıksa o gelir).</li>
+    <li>Yer imine tıkla → bu Order Hub penceresi açılır, siparişler aktarılır.</li>
+    <li><b>Oto-senkron:</b> O Etsy sekmesini ve açılan Order Hub penceresini açık bırak → her <b>15 dakikada</b> bir kendiliğinden tekrar senkronlar. Etsy sayfasını yenilersen yer imine tekrar bas.</li></ol>
+   <p style="text-align:center;margin:18px 0" id="bmw">…</p>
+   <p style="color:var(--soft);font-size:13px">Etsy “açılır pencere” izni isterse “izin ver” de. Takip numaraları Etsy’den gelmez; Ivy girer. Ivy’nin girdikleri asla silinmez.</p>
+   <div class="kv" style="justify-content:flex-end"><button id="bmc">${t('close')}</button></div>`);
+  $('#bmc').onclick=closeModal;
+  try{const code=await (await fetch('etsy-sync.js',{cache:'no-store'})).text();
+    $('#bmw').innerHTML='<a id="bml" style="display:inline-block;background:#6d4aff;color:#fff;padding:12px 20px;border-radius:12px;font-weight:800;text-decoration:none;cursor:grab;box-shadow:0 6px 16px #6d4aff55">📦 Etsy → Order Hub</a>';
+    $('#bml').setAttribute('href','javascript:'+encodeURIComponent(code));
+    $('#bml').onclick=ev=>{ev.preventDefault();alert('Bu butonu yer imleri çubuğuna sürükle, sonra Etsy sayfasında tıkla.');};
+  }catch(e){$('#bmw').textContent='etsy-sync.js: '+e.message;}
+}
 function form(o){
-  const f=(k,type='text',full)=>`<label class="${full?'full':''}">${t(k)}${type==='area'?`<textarea data-k="${k}" rows="${k==='address'?4:2}">${esc(o[k])}</textarea>`:`<input data-k="${k}" type="${type}" value="${esc(type==='date'?String(o[k]||'').slice(0,10):o[k])}">`}</label>`;
-  $('#sheet').innerHTML=`<h3 style="margin:0 0 10px">${o.id?esc(o.id):t('newOrder')}</h3>
-  <div class="paste" id="pz" tabindex="0">${t('pasteHelp')}<textarea id="pt" rows="3" style="width:100%;margin-top:6px;border:1px solid var(--line);border-radius:8px"></textarea></div>
-  <div class="grid" style="margin-top:10px">
-   <label>${t('store')}<select data-k="store">${S.stores.map(s=>`<option ${o.store===s?'selected':''}>${esc(s)}</option>`).join('')}</select></label>
-   ${f('etsyOrderId')}${f('productName','text',true)}${f('productLink','url',true)}${f('links1688','area',true)}
-   ${f('variant')}${f('qty','number')}${f('buyerName')}${f('country')}${f('address','area',true)}
-   ${f('taxCode')}${f('orderValue')}${f('shipBy','date')}
-   <label>${t('gift')}<select data-k="gift"><option value="false">—</option><option value="true" ${String(o.gift)==='true'?'selected':''}>🎁 ${t('gift')}</option></select></label>
-   ${f('giftNote','area',true)}${f('special','area',true)}
-   <label class="full">${t('photos')}<input type="file" accept="${IMG}" multiple id="pf"><div class="ph" id="pp">${photoStrip(o.photos)}</div></label>
-  </div>
-  <div class="row" style="margin-top:12px;justify-content:flex-end"><button id="cx">${t('cancel')}</button><button class="pri" id="sv">${t('save')}</button></div>`;
+  const f=(k,type='text',full)=>`<label class="${full?'full':''}">${t(k)||k}${type==='area'?`<textarea data-k="${k}" rows="${k==='address'?4:2}">${esc(o[k])}</textarea>`:`<input data-k="${k}" type="${type}" value="${esc(type==='date'?String(o[k]||'').slice(0,10):o[k])}">`}</label>`;
+  modal(`<h2>${o.id?esc(o.id):t('newOrder')}</h2>
+   <div class="grid">
+    <label>Store<select data-k="store">${S.stores.map(s=>`<option ${o.store===s?'selected':''}>${esc(s)}</option>`).join('')}</select></label>
+    ${f('etsyOrderId')}${f('productName','text',true)}${f('productLink','text',true)}${f('links1688','area',true)}
+    ${f('variant')}${f('qty','number')}${f('buyerName')}${f('country')}${f('address','area',true)}
+    ${f('taxCode')}${f('orderValue')}${f('shipBy','date')}
+    <label>${t('gift')}<select data-k="gift"><option value="false">—</option><option value="true" ${String(o.gift)==='true'?'selected':''}>🎁</option></select></label>
+    ${f('giftNote','area',true)}${f('special','area',true)}
+    <label class="full">${t('photos')}<input type="file" accept="image/*" multiple id="pf"><div class="ph" id="pp"></div></label>
+   </div>
+   <div class="kv" style="justify-content:flex-end;margin-top:12px"><button id="cx">${t('cancel')}</button><button class="pri" id="sv">${t('save')}</button></div>`);
   let photos=String(o.photos||'').split('\n').filter(Boolean);
-  const redraw=()=>$('#pp').innerHTML=photoStrip(photos.join('\n'));
-  const addFiles=async fs=>{const u=await uploadFiles(fs);photos=photos.concat(u);redraw();};
-  $('#pf').onchange=e=>addFiles(e.target.files);
-  const pasteImg=e=>{const it=[...(e.clipboardData||{}).items||[]].filter(i=>i.type.startsWith('image/'));if(it.length){e.preventDefault();addFiles(it.map(i=>i.getAsFile()));}};
-  $('#sheet').addEventListener('paste',pasteImg);
-  $('#pt').oninput=e=>{const s=e.target.value;
-    const ioss=(s.match(/\bIM\d{10}\b/)||[])[0];const vat=(s.match(/\b(GB|EU|NO|CH|AU|NZ)?\s?VAT[^\d]{0,12}(\d[\d ]{6,})/i)||[])[2];
-    const val=(s.match(/[€£$]\s?\d+[.,]\d{2}/)||[])[0];
-    const set=(k,v)=>{const el=document.querySelector(`[data-k="${k}"]`);if(el&&v&&!el.value)el.value=v;};
-    set('taxCode',ioss?'IOSS '+ioss:(vat?'VAT '+vat.trim():''));set('orderValue',val);
-    const lines=s.split('\n').map(x=>x.trim()).filter(Boolean);
-    if(!ioss&&lines.length>=2&&lines.length<=7&&!document.querySelector('[data-k="address"]').value){document.querySelector('[data-k="address"]').value=lines.join('\n');set('country',lines[lines.length-1]);}
-  };
-  $('#cx').onclick=()=>$('#modal').classList.remove('on');
-  $('#sv').onclick=async()=>{const u={id:o.id};document.querySelectorAll('#sheet [data-k]').forEach(e=>u[e.dataset.k]=e.value);u.photos=photos.join('\n');$('#sv').disabled=true;await saveOrder(u);$('#modal').classList.remove('on');};
-  $('#modal').classList.add('on');
+  const redraw=()=>$('#pp').innerHTML=photos.map(u=>`<img src="${esc(u)}" alt="">`).join('');redraw();
+  $('#pf').onchange=async e=>{photos=photos.concat(await uploadFiles(e.target.files));redraw();};
+  $('#cx').onclick=closeModal;
+  $('#sv').onclick=async()=>{const u={id:o.id};$$('#sheet [data-k]').forEach(e=>u[e.dataset.k]=e.value);u.photos=photos.join('\n');$('#sv').disabled=true;await saveOrder(u);closeModal();};
 }
-const GUIDE={
-en:`<h2>👋 Welcome, Ivy!</h2><p>This is our order board. Every order from our Etsy shops is here, so you don’t need WhatsApp screenshots any more. Please check it <b>every morning</b>.</p>
-<h3>1. Log in &amp; language</h3><ul><li>Open the link, type your password once (it is remembered on this device).</li><li>Language: <b>中文</b> button at the top right. Tick <b>Translate content</b> to translate product names and notes too.</li></ul>
-<h3>2. Which orders to work on</h3><ul><li>The site opens on <b>⚡ To do</b>, newest order first. These are the orders that need you.</li><li>Other lists are behind the buttons: <b>Ordered on 1688</b>, <b>Shipped</b>, <b>Delivered</b>, <b>Cancelled</b>, <b>All</b>.</li><li>Store tabs (Novelle, Lumiva, MiniBoutique) filter by shop. Search box: name, order no, tracking.</li><li>☰ <b>List</b> / ▦ <b>2 columns</b> (right side) changes the layout.</li></ul>
-<h3>3. Reading an order card</h3><ul><li>Photo, product name, <b>color / size</b>, quantity, country.</li><li><b>Order no</b> (purple box): click to copy.</li><li><b>1688 ↗</b>: the supplier link to buy from. <b>Etsy ↗</b>: our listing.</li><li>📅 <b>ship-by date</b>: red = late. 🎁 = gift order (no price inside the parcel!). 📝 yellow box = special request from the customer.</li><li><b>📍 Address · tax · value</b>: shipping address (Copy button), tax code (IOSS for EU — copy it to the customs form) and the order value for customs.</li></ul>
-<h3>4. Updating an order</h3><ol><li>Open <b>✏️ Update status / tracking / cost</b> on the card.</li><li>Choose the status:<br>
-<span class="stt" style="background:#6b5bd2">Ordered on 1688</span> after you buy it · <span class="stt" style="background:#d98b00">In warehouse</span> when it arrives (add photos!) · <span class="stt" style="background:#1f9d55">Shipped</span> when sent (tracking number + carrier) · <span class="stt" style="background:#e0662b">Delayed</span> / <span class="stt" style="background:#d93838">Out of stock</span> / <span class="stt" style="background:#9b1c1c">Problem</span> + write why in the note.</li>
-<li>Enter <b>product cost</b> and <b>shipping cost</b> (choose the currency, usually CNY).</li><li><b>Agent photos</b>: upload a photo of the real item / package — very helpful for quality check.</li><li>Press <b>Save</b>. ✅ "Saved" appears and the card moves to the right list.</li></ol>
-<h3>5. Tracking</h3><ul><li>Click a tracking number → it opens <b>17track</b> with the parcel location. The Copy button next to it copies the number.</li></ul>
-<div class="tip">💡 Only <b>status, tracking, carrier, costs, note and photos</b> can be changed by you — the order details come from Etsy. If something is wrong or unclear, write it in the <b>Agent note</b> and set status to <b>Problem</b>. Thank you! 🙏</div>`,
-zh:`<h2>👋 欢迎你，Ivy！</h2><p>这是我们的订单看板。我们Etsy店铺的所有订单都在这里，不用再发WhatsApp截图了。请<b>每天早上</b>查看一次。</p>
-<h3>1. 登录和语言</h3><ul><li>打开链接，输入一次密码（这台设备会记住）。</li><li>右上角点 <b>中文</b> 切换语言。勾选 <b>翻译内容</b> 可以把产品名称和备注也翻译成中文。</li></ul>
-<h3>2. 先处理哪些订单</h3><ul><li>打开后默认是 <b>⚡ 待处理</b>，最新的订单在最上面。这些就是需要你处理的订单。</li><li>其他列表在上方按钮里：<b>已在1688下单</b>、<b>已发货</b>、<b>已签收</b>、<b>已取消</b>、<b>全部</b>。</li><li>店铺标签（Novelle、Lumiva、MiniBoutique）按店铺筛选。搜索框可搜姓名、订单号、快递单号。</li><li>右侧 ☰ <b>单列</b> / ▦ <b>双列</b> 可以切换排列方式。</li></ul>
-<h3>3. 怎么看订单卡片</h3><ul><li>图片、产品名称、<b>颜色 / 尺码</b>、数量、国家。</li><li><b>订单号</b>（紫色框）：点击即可复制。</li><li><b>1688 ↗</b>：采购链接。<b>Etsy ↗</b>：我们的商品页面。</li><li>📅 <b>最晚发货日期</b>：红色 = 已逾期。🎁 = 礼物订单（包裹里不要放价格！）。📝 黄色框 = 客户的特殊要求。</li><li><b>📍 地址 · 税号 · 价值</b>：收货地址（复制按钮）、税号（欧盟订单是IOSS，请填到报关单上）和申报价值。</li></ul>
-<h3>4. 更新订单</h3><ol><li>在卡片上打开 <b>✏️ 更新状态 / 快递 / 成本</b>。</li><li>选择状态：<br>
-<span class="stt" style="background:#6b5bd2">已在1688下单</span> 下单后 · <span class="stt" style="background:#d98b00">已到仓</span> 到货后（请上传照片！）· <span class="stt" style="background:#1f9d55">已发货</span> 发出后（填快递单号和快递公司）· <span class="stt" style="background:#e0662b">延迟</span> / <span class="stt" style="background:#d93838">缺货</span> / <span class="stt" style="background:#9b1c1c">有问题</span> 请在备注里写原因。</li>
-<li>填写 <b>产品成本</b> 和 <b>运费</b>（选择币种，一般是CNY）。</li><li><b>代理图片</b>：上传实物 / 包裹照片，方便我们检查质量。</li><li>点击 <b>保存</b>。出现 ✅ "已保存"，订单会自动移到对应的列表。</li></ol>
-<h3>5. 物流查询</h3><ul><li>点击快递单号 → 自动打开 <b>17track</b> 显示包裹位置。旁边的复制按钮可以复制单号。</li></ul>
-<div class="tip">💡 你只能修改 <b>状态、快递单号、快递公司、成本、备注和照片</b>，订单信息来自Etsy。如果有问题或不清楚，请写在 <b>代理备注</b> 里并把状态设为 <b>有问题</b>。谢谢！🙏</div>`,
-tr:`<h2>👋 Order Hub rehberi</h2><p>Etsy mağazalarımızın bütün siparişleri burada. Ivy her sabah bakıyor ve güncelliyor; sen de aynı ekrandan takip ediyorsun.</p>
-<h3>1. Hangi siparişler görünür</h3><ul><li>Site <b>⚡ Yapılacak</b> sekmesiyle, en yeni sipariş en üstte açılır (yeni, depoda, gecikme, stok yok, sorun).</li><li>Diğerleri üstteki butonlarda: <b>Sipariş verildi</b>, <b>Kargoda · Etsy’ye girilmedi</b> (takip var, Etsy’de shipped değil), <b>Kargoda · Etsy’de ✓</b>, <b>Teslim</b>, <b>İptal</b>, <b>Hepsi</b>.</li><li>Sağdaki ☰ <b>Alt alta</b> / ▦ <b>Yan yana 2</b> ile görünümü seç (hatırlanır).</li></ul>
-<h3>2. Kart</h3><ul><li><b>Sipariş no</b> (mor kutu) ve <b>takip no</b>: tıkla/kopyala. Takip no’ya tıklayınca 17track açılır.</li><li><b>1688 ↗</b> tedarikçi, <b>Etsy ↗</b> ilan. 📍 bölümünde adres, IOSS/VAT ve gümrük değeri.</li></ul>
-<h3>3. Admin</h3><ul><li><b>+ Yeni sipariş</b> elle ekleme, <b>⇩ Etsy import</b> toplu senkron (adımlar README’de), <b>Düzenle / Arşivle</b> kartta.</li></ul>`
-};
-function showGuide(){
-  const g=GUIDE[S.lang]||GUIDE.en;
-  $('#sheet').innerHTML=`<div class="guide">${g}</div><div class="row" style="margin-top:14px;justify-content:flex-end"><button class="pri" id="gok">OK 👍</button></div>`;
-  $('#modal').classList.add('on');$('#gok').onclick=()=>$('#modal').classList.remove('on');
+T.tr.etsyOrderId='Etsy sipariş no';T.tr.productName='Ürün adı';T.tr.productLink='Etsy linki';T.tr.links1688='1688 linkleri (her satıra bir)';T.tr.buyerName='Alıcı';T.tr.country='Ülke';
+
+/* ================= help & messages ================= */
+function legend(){
+  const rows=[['var(--red)',{tr:'🔥 Gecikti / bugün gönderilmeli',en:'🔥 Late / ship today',zh:'🔥 已逾期 / 今天必须发货'}],['var(--orange)',{tr:'1–2 gün kaldı — acele',en:'1–2 days left — hurry',zh:'还剩1–2天——要快'}],['var(--amber)',{tr:'3–5 gün kaldı',en:'3–5 days left',zh:'还剩3–5天'}],['var(--blue)',{tr:'Vakit var (6+ gün)',en:'Plenty of time (6+ days)',zh:'时间充足（6天以上）'}],['var(--purple)',{tr:'1688’den sipariş verildi',en:'Ordered on 1688',zh:'已在1688下单'}],['var(--teal)',{tr:'🚚 Kargoda — güvende, yolda',en:'🚚 Shipped — safe, on the way',zh:'🚚 已发货——运输中'}],['var(--green)',{tr:'✓ Teslim edildi',en:'✓ Delivered',zh:'✓ 已签收'}],['var(--gray)',{tr:'İptal / iade',en:'Cancelled / refunded',zh:'已取消 / 退款'}]];
+  return `<div class="legend">${rows.map(([c,l])=>`<span style="width:34px;height:14px;border-radius:7px;background:${c};display:inline-block"></span><span>${l[S.lang]||l.en}</span>`).join('')}</div>`;
 }
+async function helpView(){
+  try{S.msgs=await api('listMessages',S.pass);}catch(e){S.msgs=[];}
+  const faq=(FAQ[S.lang]||FAQ.en).concat(S.lang==='tr'?[]:[]);
+  const mine=S.msgs;
+  if(S.role==='agent'&&S.unread){api('markMessagesRead',S.pass).then(()=>{S.unread=0;}).catch(()=>{});}
+  return `<div class="vtitle">❓ ${t('help_t')}</div><div class="vhint">${t('help_s')}</div>
+   <div class="hcard"><h3>🔎 FAQ</h3><input id="fq" placeholder="${t('help_s')}" style="margin-bottom:6px">
+     <div class="faq">${faq.map(([q,a],i)=>`<details data-faq ${i===0?'open':''}><summary>${q}</summary><p>${a}</p></details>`).join('')}</div></div>
+   <div class="hcard"><h3>🎨 ${t('legend')}</h3>${legend()}</div>
+   <div class="hcard"><h3>💬 ${t('ask_t')}</h3>
+     <div class="g2" style="grid-template-columns:2fr 1fr"><textarea id="aq" rows="3" placeholder="${t('ask_ph')}"></textarea><input id="ao" placeholder="${t('ask_order')}"></div>
+     <div class="kv" style="justify-content:flex-end;margin-top:8px"><button class="pri" id="asend">${t('send')}</button></div>
+     <div style="margin-top:6px"><div class="k">${t('my_msgs')}</div>${mine.length?mine.map(msgCard).join(''):'<div style="color:var(--soft)">—</div>'}</div></div>`;
+}
+function msgCard(m){
+  const unread=S.role==='agent'?m.readByAgent!=='true':m.readByAdmin!=='true';
+  return `<div class="msg ${unread?'unread':''}" data-mid="${esc(m.id)}"><div class="meta">${m.from==='agent'?t('from_agent'):t('from_admin')} · ${esc(fmtDate(m.created))}${m.orderNo?` · #${esc(m.orderNo)}`:''}</div>
+   <div style="white-space:pre-wrap">${esc(TX(m.text))}</div>
+   ${m.reply?`<div class="rep">${esc(m.reply)}</div>`:`<div style="color:var(--soft);font-size:12px;margin-top:6px">${t('noReply')}</div>`}
+   <div class="kv" style="margin-top:8px"><input data-rep placeholder="${t('reply_ph')}" style="flex:1"><button class="sm" data-repbtn>${t('reply')}</button></div></div>`;
+}
+function bindMsgReplies(){
+  $$('.msg[data-mid]').forEach(c=>{const b=c.querySelector('[data-repbtn]');if(!b)return;b.onclick=async()=>{const v=c.querySelector('[data-rep]').value.trim();if(!v)return;b.disabled=true;try{await api('replyMessage',S.pass,c.dataset.mid,v);toast(t('sent'));render();}catch(e){alert(e.message||e);b.disabled=false;}};});
+}
+function bindHelp(){
+  $('#fq').oninput=e=>{const q=e.target.value.toLowerCase();$$('[data-faq]').forEach(d=>{const hit=!q||d.textContent.toLowerCase().includes(q);d.style.display=hit?'':'none';if(q&&hit)d.open=true;});};
+  $('#asend').onclick=async()=>{const v=$('#aq').value.trim();if(!v)return;$('#asend').disabled=true;try{await api('sendMessage',S.pass,$('#ao').value.trim(),v);toast(t('sent'));render();}catch(e){alert(e.message||e);$('#asend').disabled=false;}};
+  bindMsgReplies();
+}
+async function msgsView(){
+  try{S.msgs=await api('listMessages',S.pass);}catch(e){S.msgs=[];}
+  if(S.unread){api('markMessagesRead',S.pass).then(()=>{S.unread=0;}).catch(()=>{});}
+  return `<div class="vtitle">💬 ${t('nav_msgs')}</div><div class="vhint">Ivy’nin soruları burada. Cevabın Ivy’nin Yardım sayfasında görünür.</div>
+   <div class="hcard"><div class="g2" style="grid-template-columns:2fr 1fr"><textarea id="aq" rows="2" placeholder="Ivy’ye mesaj yaz…"></textarea><input id="ao" placeholder="${t('ask_order')}"></div>
+   <div class="kv" style="justify-content:flex-end;margin-top:8px"><button class="pri" id="asend">${t('send')}</button></div></div>
+   ${S.msgs.length?S.msgs.map(msgCard).join(''):`<div class="empty">—</div>`}`;
+}
+function bindMsgs(){
+  $('#asend').onclick=async()=>{const v=$('#aq').value.trim();if(!v)return;$('#asend').disabled=true;try{await api('sendMessage',S.pass,$('#ao').value.trim(),v);toast(t('sent'));render();}catch(e){alert(e.message||e);$('#asend').disabled=false;}};
+  bindMsgReplies();
+}
+
+/* ================= Etsy sync receiver (from the bookmarklet in an etsy.com tab) ================= */
+let SYNC_READY_SENT=false;
+function syncReady(){if(SYNC_READY_SENT||S.role!=='admin'||!window.opener)return;SYNC_READY_SENT=true;try{window.opener.postMessage({type:'oh-ready'},'*');}catch(e){}}
+function beep(){try{const a=new (window.AudioContext||window.webkitAudioContext)();const o=a.createOscillator();const g=a.createGain();o.connect(g);g.connect(a.destination);o.frequency.value=880;g.gain.value=.08;o.start();setTimeout(()=>{o.frequency.value=1320;},120);setTimeout(()=>{o.stop();a.close();},260);}catch(e){}}
+function showSync(){
+  const s=S.lastSync;if(!s)return;const el=$('#sync');
+  el.textContent=`🔄 ${t('syncAt')} ${s.time.toLocaleTimeString(S.lang==='zh'?'zh-CN':S.lang,{hour:'2-digit',minute:'2-digit'})} · ${s.store}${s.created?` · +${s.created} ${t('syncNew')}`:''}`;
+  el.classList.add('on');
+  document.title=(S.newSince?`(+${S.newSince}) `:'')+HUB_TITLE;
+}
+window.addEventListener('focus',()=>{S.newSince=0;document.title=HUB_TITLE;});
+window.addEventListener('message',async e=>{
+  const d=e.data||{};if(d.type!=='oh-etsy')return;
+  if(!/^https:\/\/([a-z]+\.)?etsy\.com$/.test(e.origin))return;
+  const reply=m=>{try{e.source.postMessage(Object.assign({type:'oh-res'},m),e.origin);}catch(x){}};
+  if(S.role!=='admin'){reply({error:'log in to Order Hub as admin'});return;}
+  const L=d.orders||[];let c=0,u=0;
+  try{
+    for(let i=0;i<L.length;i+=40){const r=await api('importOrders',S.pass,L.slice(i,i+40),true);c+=r.created;u+=r.updated;}
+    reply({ok:true,total:L.length,created:c,updated:u});
+    S.lastSync={time:new Date(),store:(L[0]&&L[0].store)||'',created:c,updated:u};
+    if(c){S.newSince+=c;beep();toast(`🆕 ${c} ${t('syncNew')} · Etsy`);}else toast(`🔄 Etsy ✓ (${u})`);
+    await reload();showSync();
+  }catch(err){reply({error:String(err.message||err)});toast('Etsy sync error: '+(err.message||err));}
+});
+document.addEventListener('paste',e=>{});
 boot();
 </script>
 </body>
