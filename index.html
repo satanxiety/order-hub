@@ -388,11 +388,12 @@ async function render(){
     <div class="navbox"><h4>${t('h_orders')}</h4>${['todo','urgent','ordered','shippedDs','shipped','delivered','cancelled','all'].map(v=>navBtn(v,c)).join('')}</div>
     <div class="navbox"><h4>${t('h_more')}</h4>
       <button class="nv ${S.view==='help'?'on':''}" data-v="help"><span class="dot" style="background:#0ea5e9"></span>❓ ${t('nav_help')}${S.role==='agent'&&S.unread?`<span class="n alert">${S.unread}</span>`:''}</button>
-      ${S.role==='admin'?`<button class="nv ${S.view==='finance'?'on':''}" data-v="finance"><span class="dot" style="background:#0e9f8b"></span>📊 Finans</button>`:''}
+      ${S.role==='admin'?`<button class="nv ${S.view==='finance'?'on':''}" data-v="finance"><span class="dot" style="background:#0e9f8b"></span>📊 Finans</button><button class="nv ${S.view==='calendar'?'on':''}" data-v="calendar"><span class="dot" style="background:#ea580c"></span>📅 Takvim & kampanyalar${calendarItems(400).filter(e=>e.alert).length?`<span class="n alert">${calendarItems(400).filter(e=>e.alert).length}</span>`:''}</button>`:''}
       ${S.role==='admin'?`<button class="nv ${S.view==='msgs'?'on':''}" data-v="msgs"><span class="dot" style="background:#f59e0b"></span>💬 ${t('nav_msgs')}<span class="n ${S.unread?'alert':''}">${S.unread}</span></button>`:''}
     </div></nav>`;
   let main='';
   if(S.view==='finance'&&S.role==='admin')main=await financeView();
+  else if(S.view==='calendar'&&S.role==='admin')main=`<div class="vtitle">📅 Takvim & kampanyalar</div><div class="vhint">Özel günler, hangi ürünlerin öne çıkarılacağı ve Etsy’de kurulu indirimler.</div>${alertsHTML(5)}${calendarHTML()}`;
   else if(S.view==='help')main=await helpView();
   else if(S.view==='msgs')main=await msgsView();
   else main=await ordersView(c);
@@ -415,7 +416,7 @@ async function ordersView(c){
     <button class="sc orange" data-v="todo" data-sort="urgent"><span class="v">${soon}</span><span class="l">⏳ ${t('sum_soon')}</span></button>
     <button class="sc teal" data-v="shippedDs"><span class="v">${c.shippedDs}</span><span class="l">🚚 ${t('sum_notEtsy')}</span></button></div>`;
   const admin=S.role==='admin'?`<button class="pri" id="no">${t('newOrder')}</button><button id="esy">${t('etsySync')}</button><button id="imp">${t('jsonImport')}</button>${S.sheetUrl?`<a href="${esc(S.sheetUrl)}" target="_blank" style="font-size:12px">Sheet ↗</a>`:''}`:'';
-  return `${cards}
+  return `${S.role==='admin'?alertsHTML(2):''}${cards}
    <div class="vtitle">${t('nav_'+S.view)} <span style="color:var(--soft);font-weight:600;font-size:15px">· ${L.length}</span></div>
    <div class="vhint">${t('v_'+S.view)}</div>
    <div class="tool"><input id="q" placeholder="${t('search')}" value="${esc(S.q)}">
@@ -650,6 +651,74 @@ function bindMsgs(){
   bindMsgReplies();
 }
 
+/* ================= 📅 Sales calendar (researched retail dates, Novelle-focused) ================= */
+const EVENTS=[
+ ['2026-11-26','🦃 Şükran Günü (ABD) / Friendsgiving',7,'Ekose maxi etekler, ekose elbiseler, yün paltolar, örgü kazaklar (dark academia kombinleri)','Kombin fotoğraflarını öne al; Black Friday indirimine 1 gün kala ilgi en yüksek.'],
+ ['2026-11-27','🖤 Black Friday',3,'Çok satanlar: suni kürk paltolar, platform botlar, Juicy tarzı şişme montlar, Mrs Claus elbiseleri','Cyber Specials %45 zaten kurulu (23 Kas–1 Ara). Etsy Ads günlük bütçesini 2× yap.'],
+ ['2026-11-28','🛍️ Small Business Saturday',2,'Tüm mağaza — “küçük atölye” hikâyesini öne çıkar','Etsy bu gün küçük işletmeleri öne çıkarır; sosyal medya paylaşımı yap.'],
+ ['2026-11-30','💻 Cyber Monday',2,'Aksesuarlar (kemerler, yüz takısı), botlar, kürk ceketler','Cyber Specials’ın son 2 günü: “son gün” mesajı, reklam yüksek kalsın.'],
+ ['2026-12-01','🎁 Giving Tuesday',1,'Hediye olarak alınabilecek ürünler (bere-atkı, kemer, aksesuar)','Kampanya son günü (1 Ara). Ertesi gün 2 Ara %35 Çarşamba flaş indirimi kurulu.'],
+ ['2026-12-04','🕎 Hanuka (4–12 Ara)',7,'Mavi/gümüş/siyah kadife parti elbiseleri, suni kürk mini elbise','Parti elbiselerine “holiday party” etiketi + reklam.'],
+ ['2026-12-08','🎄 NOEL’E YETİŞMESİ İÇİN SON SİPARİŞ (Çin’den kargo)',7,'Tüm Noel ürünleri','6–8 Ara %35 “Last chance for Christmas” indirimi kurulu; duyuruda “order by Dec 8” yazıyor. Ivy’ye 8 Ara’ya kadarki siparişleri öncelikli gönder de.'],
+ ['2026-12-12','🎅 SantaCon (ABD/UK şehirlerinde Noel Baba kostümlü yürüyüş)',14,'Mrs Claus elbiseleri, elf kostümleri, Santa lingerie, kapüşonlu Noel elbisesi','KOSTÜM için en güçlü gün: kostüm ilanlarına reklamı 2 hafta önceden aç (28 Kas).'],
+ ['2026-12-14','💚 Green Monday + Free Shipping Day',3,'Tüm mağaza','14–16 Ara %30 indirim kurulu. Noel’e yetişmeyecek siparişler için “after Christmas gift / New Year outfit” mesajı.'],
+ ['2026-12-18','🦌 Ulusal Çirkin Noel Kazağı Günü (ABD)',10,'Geyikli Noel kazakları, Noel örgüleri','Kazak ilanlarına “ugly christmas sweater party” etiketi ekle, reklamı 8 Ara’dan aç.'],
+ ['2026-12-19','🛒 Super Saturday (Noel öncesi son büyük alışveriş günü)',2,'Dijital/hızlı hediye yok — kombin ürünleri','Teslimat Noel’e yetişmez; “Yılbaşı partisi için” vurgusu yap.'],
+ ['2026-12-26','📦 Boxing Day (UK/CA/AU) + yıl sonu',3,'Kış stoku: paltolar, botlar, kazaklar','26 Ara–1 Oca %40 indirim kurulu. Reklam bütçesini artır.'],
+ ['2026-12-31','🎆 Yılbaşı gecesi',10,'Işıltılı kadife elbiseler, suni kürk mini elbise, platform botlar, siber yüz maskesi','Parti ilanlarını ana sayfada öne al (Featured).'],
+ ['2027-01-07','✝️ Ortodoks Noeli',7,'Noel elbiseleri (Doğu Avrupa alıcıları)','Kalan Noel stoku için son fırsat.'],
+ ['2027-01-30','🏭 ÇİN YENİ YILI TATİLİ başlıyor (fabrikalar ~30 Oca–20 Şub kapalı)',21,'TEDARİK UYARISI','Ivy ile 1688 stoklarını Ocak ortasına kadar al; Etsy’de işlem süresini (processing time) Şubat için uzat.'],
+ ['2027-02-09','🎭 Mardi Gras',14,'Kostümler, maskeler, gotik aksesuarlar, platform botlar',''],
+ ['2027-02-13','💗 Galentine’s Day',14,'Kız arkadaş kombinleri, pembe ürünler, aksesuarlar',''],
+ ['2027-02-14','💘 Sevgililer Günü',21,'Lingerie elbiseler, kırmızı kadife elbiseler, çift ürünleri, hizmetçi kostümleri','Reklamı 24 Oca’da başlat; Çin tatili yüzünden stokları önceden al.'],
+ ['2027-03-07','💐 Anneler Günü (İngiltere)',14,'Hediye kombinleri, atkı-bere',''],
+ ['2027-03-17','☘️ St. Patrick’s Day',14,'Yeşil elf elbisesi, yeşil ekoseler, yeşil aksesuarlar','Yeşil ürünlere “st patricks day outfit” etiketi.'],
+ ['2027-03-28','🐣 Paskalya',14,'Bahar ürünleri: tığ işi bluzlar, ispanyol paça jeanler',''],
+ ['2027-04-09','🎪 Coachella / festival sezonu (Nisan)',30,'Tığ işi üstler, Y2K kemerler, çiçekli flare jeanler, yüz takıları','Festival koleksiyonunu Mart başında listele.'],
+ ['2027-04-20','🎓 Prom sezonu (Nisan–Mayıs)',30,'Y2K elbiseler, korseler, platform botlar',''],
+ ['2027-05-09','🌷 Anneler Günü (ABD)',21,'Hediye ürünleri, kombinler',''],
+ ['2027-06-01','🏳️‍🌈 Pride ayı',21,'Renkli Y2K ürünler, kemerler, aksesuarlar',''],
+ ['2027-08-15','🎒 Okula dönüş',21,'Kampüs kombinleri: ekose etekler, sweatler, botlar',''],
+ ['2027-10-31','🎃 Cadılar Bayramı',45,'Hizmetçi kostümleri, cosplay, gotik platform botlar, siber maske','Kostüm ilanlarını Eylül ortasında yenile, reklamı 15 Eyl’de aç.'],
+ ['2027-11-11','🛒 Singles’ Day (11.11)',10,'Tüm mağaza','Küçük flaş indirim.'],
+ ['2027-11-26','🖤 Black Friday 2027',21,'Çok satanlar','Etsy satış etkinliğine Ekim’de kayıt ol.']
+];
+/* sales Claude scheduled on Etsy (21.11.2026) — shown in the panel */
+const SALES_PLAN=[
+ ['2026-11-21','2026-11-23','EARLYBF20',20,'Early Black Friday (tüm mağaza)'],
+ ['2026-11-23','2026-12-01','CYBER26 (Etsy Cyber Specials)',45,'Etsy etkinliği — tüm mağaza'],
+ ['2026-12-02','2026-12-02','FLASHWED35',35,'Çarşamba flaş (etek hariç)'],
+ ['2026-12-03','2026-12-05','HOLIDAY20A',20,'Ara dönem (etek hariç)'],
+ ['2026-12-06','2026-12-08','XMASSHIP35',35,'“Noel’e son sipariş 8 Ara” (etek hariç)'],
+ ['2026-12-09','2026-12-09','FLASHWED30',30,'Çarşamba flaş (etek hariç)'],
+ ['2026-12-10','2026-12-13','WINTER15',15,'Sakin dönem (etek hariç)'],
+ ['2026-12-14','2026-12-16','GREENMONDAY30',30,'Green Monday (etek hariç)'],
+ ['2026-12-17','2026-12-20','HOLIDAY20B',20,'Noel haftası (etek hariç)'],
+ ['2026-12-21','2026-12-25','HOLIDAY20C',20,'Noel haftası (tüm mağaza)'],
+ ['2026-12-26','2027-01-01','BOXINGDAY40',40,'Boxing Day & yıl sonu (tüm mağaza)'],
+ ['2027-01-02','2027-01-15','NEWYEAR20',20,'Yeni yıl (tüm mağaza)']
+];
+const dParse=s=>{const [y,m,d]=s.split('-').map(Number);return new Date(y,m-1,d);};
+function calendarItems(limitDays){
+  const now=new Date();now.setHours(0,0,0,0);
+  return EVENTS.map(([ds,name,lead,prod,act])=>{const date=dParse(ds);const days=Math.round((date-now)/864e5);const start=new Date(date);start.setDate(date.getDate()-lead);return {date,name,lead,prod,act,days,start,alert:days>=0&&days<=lead};})
+    .filter(e=>e.days>=0&&e.days<=(limitDays||400));
+}
+function upcomingEvents(){return calendarItems(80).map(e=>({name:e.name,date:e.date,act:(e.prod?e.prod+'. ':'')+(e.act||''),start:e.start,days:e.days}));}
+function alertsHTML(max){
+  const al=calendarItems(400).filter(e=>e.alert).slice(0,max||3);
+  if(!al.length)return '';
+  return `<div class="hcard" style="border-left:6px solid var(--orange);padding:12px 16px"><b>⏰ Yaklaşan özel günler — şimdi hazırlan</b>${al.map(e=>`<div style="margin-top:6px"><b>${e.days===0?'BUGÜN':e.days+' gün sonra'}:</b> ${esc(e.name)} — <span style="color:var(--ink2)">${esc(e.prod)}</span></div>`).join('')}</div>`;
+}
+function calendarHTML(){
+  const now=new Date();now.setHours(0,0,0,0);
+  const sales=SALES_PLAN.map(([a,b,n,p,note])=>{const s=dParse(a),e=dParse(b);const st=now>e?'bitti':now>=s?'AKTİF':'sırada';return `<tr style="${st==='bitti'?'opacity:.45':''}"><td>${s.toLocaleDateString('tr-TR',{day:'numeric',month:'short'})} – ${e.toLocaleDateString('tr-TR',{day:'numeric',month:'short'})}</td><td><b>%${p}</b></td><td>${esc(n)}</td><td>${esc(note)}</td><td style="text-align:right">${st==='AKTİF'?'<span class="trust">AKTİF</span>':st}</td></tr>`;}).join('');
+  const ev=calendarItems(400).map(e=>`<tr style="${e.alert?'background:#fff6ec':''}"><td style="white-space:nowrap">${e.date.toLocaleDateString('tr-TR',{day:'numeric',month:'short',year:'numeric'})}<div style="font-size:11px;color:${e.alert?'var(--orange)':'var(--soft)'};font-weight:700">${e.days===0?'BUGÜN':e.days+' gün sonra'}</div></td><td><b>${esc(e.name)}</b>${e.act?`<div style="font-size:12px;color:var(--ink2)">${esc(e.act)}</div>`:''}</td><td style="font-size:12.5px">${esc(e.prod)}</td><td style="font-size:12px;white-space:nowrap;text-align:right">hazırlık:<br>${e.start.toLocaleDateString('tr-TR',{day:'numeric',month:'short'})}</td></tr>`).join('');
+  return `<div class="hcard"><h3>🏷️ Etsy’de kurulu indirim takvimi (Novelle)</h3><table class="ft"><thead><tr><th>Tarih</th><th>İndirim</th><th>Ad</th><th>Not</th><th>Durum</th></tr></thead><tbody>${sales}</tbody></table>
+   <p style="font-size:12px;color:var(--soft)">Strateji: kısa “nabız” indirimleri — düşük (%15–20) bekleme günleri, ardından 1–3 günlük derin (%30–45) flaş günler; Çarşambalar (ziyaret yüksek, dönüşüm düşük) flaş gün. Tavan %40–45 = ürün başı ~10 $ kâr sınırı. ⚠️ Otomatik kuponlar (sepet %40, favori %35, teşekkür %45, 35BLOOD %35) indirimin ÜSTÜNE eklenir — %10–15’e indirmen önerilir.</p></div>
+   <div class="hcard"><h3>📅 Özel günler takvimi (12 ay)</h3><table class="ft"><thead><tr><th>Tarih</th><th>Gün / ne yapmalı</th><th>Hangi ürünler</th><th>Başla</th></tr></thead><tbody>${ev}</tbody></table></div>`;
+}
+
 /* ================= 📊 Finance (admin only) ================= */
 const TRDAY=['Pazar','Pazartesi','Salı','Çarşamba','Perşembe','Cuma','Cumartesi'];
 const TRMON=['Ocak','Şubat','Mart','Nisan','Mayıs','Haziran','Temmuz','Ağustos','Eylül','Ekim','Kasım','Aralık'];
@@ -724,18 +793,6 @@ function weekdayStats(data){
   W.forEach(w=>{w.avgV=w.n?w.visits/w.n:0;w.avgO=w.n?w.orders/w.n:0;w.conv=w.visits?w.orders/w.visits:0;w.roas=w.ads?w.rev/w.ads:0;});
   return W;
 }
-function upcomingEvents(){
-  const now=new Date();now.setHours(0,0,0,0);const y=now.getFullYear();
-  const thanks=yr=>{const d=new Date(yr,10,1);const add=(4-d.getDay()+7)%7;return new Date(yr,10,1+add+21);};
-  const ev=[];
-  [y,y+1].forEach(yr=>{const tg=thanks(yr);const bf=new Date(tg);bf.setDate(tg.getDate()+1);const cm=new Date(tg);cm.setDate(tg.getDate()+4);
-    ev.push(['🖤 Black Friday',bf,'%20–30 indirim + reklam bütçesi 2×',3],['💻 Cyber Monday',cm,'Black Friday indirimini uzat, “son gün” mesajı',1],
-      ['🎄 ABD Noel son sipariş (tahmini)',new Date(yr,11,10),'“Noel’e yetişsin: 10 Aralık’a kadar sipariş ver” duyurusu + reklam artışı',7],
-      ['🎁 Boxing Day',new Date(yr,11,26),'Yıl sonu stok eritme indirimi',2],['🎆 Yılbaşı',new Date(yr+1,0,1),'Parti / ışıltılı ürünler öne',10],
-      ['💘 Sevgililer Günü',new Date(yr,1,14),'Çift / hediye ürünleri öne, reklamı 3 hafta önce başlat',21],['🌸 Anneler Günü (ABD)',new Date(yr,4,8+((7-new Date(yr,4,1).getDay())%7)),'Hediye kombinleri + kupon',14]);});
-  return ev.map(([name,date,act,lead])=>{const start=new Date(date);start.setDate(date.getDate()-lead);return {name,date,act,start,days:Math.round((date-now)/864e5)};})
-    .filter(e=>e.days>=0&&e.days<=80).sort((a,b)=>a.date-b.date);
-}
 function recommendations(data,store,fx,cal){
   const rec=[];const W=weekdayStats(data);const withData=W.filter(w=>w.n);
   if(withData.length>=5){
@@ -793,7 +850,7 @@ async function financeView(){
   const rec=recommendations(data,store,fx,cal);
   const ins=F.insights&&F.insights.text;
   const diff=(bal.pending!=null)?cal.sum-bal.pending:0;
-  return `${head}
+  return `${head}${alertsHTML(3)}
    <div class="kv" style="margin:6px 0 14px">${storeSel}<select id="finmonth" style="width:auto">${['all',...months].map(x=>`<option value="${x}" ${x===S.finMonth?'selected':''}>${monLabel(x)}</option>`).join('')}</select>${updBtn}
      <span style="font-size:12px;color:${age>24?'var(--red)':'var(--soft)'}">Son güncelleme: ${new Date(snap.savedAt).toLocaleString('tr-TR')}${age>24?' · eski veri, Güncelle’ye bas':''}</span>
      <span style="font-size:12px;color:var(--soft)">Kur: 1 $ = ${fx.USD.toFixed(2)} ₺ · 1 ¥ = ${fx.CNY.toFixed(2)} ₺${fx.live?'':' (tahmini)'}</span></div>
@@ -822,6 +879,7 @@ async function financeView(){
          ${Math.abs(diff)>1?`<p style="font-size:12px;color:var(--soft)">Takvim toplamı ${tl(cal.sum)}; Etsy “Pending” ${tl(bal.pending)}. Aradaki ${tl(diff)} reklam/ücret kesintisi olarak bakiyeden düşülecek.</p>`:''}
          <p style="font-size:12px;color:var(--soft)">Etsy kuralı: satış 14 gün sonra serbest, %30’u 45 gün rezervde. Bankaya geçiş 1–3 iş günü.</p></div>
      </div></div>
+   ${calendarHTML()}
    <div class="hcard"><h3>🧠 Öneriler</h3>${rec.map(([ic,t1,tx])=>`<div style="display:flex;gap:10px;padding:8px 0;border-bottom:1px solid var(--line2)"><div style="font-size:20px">${ic}</div><div><b>${esc(t1)}</b><div style="color:var(--ink2)">${esc(tx)}</div></div></div>`).join('')}
      <div class="box info" style="margin-top:12px"><b>🤖 Claude önerileri</b>${ins?` <span style="color:var(--soft);font-size:11px">(${new Date(F.insights.at).toLocaleString('tr-TR')})</span><div style="white-space:pre-wrap;margin-top:6px;color:var(--ink)">${esc(ins)}</div>`:`<div style="margin-top:4px">Henüz yok. Claude’a “finans panelini incele” de; buraya yazacak.</div>`}</div></div>
    <div class="hcard"><h3>📉 Son 30 gün: satış ve reklam</h3>${svgDaily(dailySeries(data,30))}</div>
