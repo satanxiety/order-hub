@@ -291,6 +291,7 @@ async function render(){
     $('#modal').classList.add('on');
     $('#impc').onclick=()=>$('#modal').classList.remove('on');
     $('#impgo').onclick=async()=>{let list;try{list=JSON.parse($('#impt').value);}catch(e){$('#impr').textContent='JSON error: '+e.message;return;}
+      if(Array.isArray(list)&&list.length&&list[0].listingId){$('#impgo').disabled=true;try{const n=await api('setListingMap',S.pass,list,false);$('#impr').textContent='Listings → 1688: '+n+' ✓';}catch(e){$('#impr').textContent='Error: '+(e.message||e);}$('#impgo').disabled=false;return;}
       $('#impgo').disabled=true;$('#impr').textContent='…';
       try{let c=0,u=0;for(let i=0;i<list.length;i+=40){const r=await api('importOrders',S.pass,list.slice(i,i+40),$('#impo').checked);c+=r.created;u+=r.updated;$('#impr').textContent=`${Math.min(i+40,list.length)}/${list.length} · new ${c} · updated ${u}`;}
         $('#impr').textContent+=' ✓';await reload();}catch(e){$('#impr').textContent='Error: '+(e.message||e);$('#impgo').disabled=false;}};
