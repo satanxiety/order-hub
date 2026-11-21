@@ -77,6 +77,7 @@ main{min-width:0}
 .tool{display:flex;gap:8px;align-items:center;margin-bottom:12px;flex-wrap:wrap}
 .tool input{flex:1;min-width:200px;background:#fff url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='none' stroke='%237d8396' stroke-width='2'%3E%3Ccircle cx='7' cy='7' r='5'/%3E%3Cpath d='m11 11 4 4'/%3E%3C/svg%3E") no-repeat 11px center;padding-left:34px}
 .tool select{width:auto}
+.tool .chk input{flex:none;min-width:0;width:auto;padding:0;background:none}
 .vtitle{font-size:20px;font-weight:800;margin:2px 0 4px}
 .vhint{color:var(--soft);font-size:13px;margin-bottom:12px}
 /* order rows */
@@ -257,6 +258,72 @@ details summary{cursor:pointer;font-size:12px;font-weight:700;color:var(--soft)}
   header{flex-wrap:wrap}
   .grid,.g2{grid-template-columns:1fr}
 }
+
+/* ---- notifications ---- */
+header .bell{position:relative;font-size:15px;padding:3px 9px}
+#bellN{position:absolute;top:-6px;right:-6px;background:var(--red);color:#fff;border-radius:10px;font-size:10px;padding:0 5px;min-width:16px;font-weight:800;line-height:16px}
+#banners{position:fixed;top:64px;right:14px;z-index:65;display:flex;flex-direction:column;gap:8px;width:min(360px,calc(100vw - 24px))}
+.bn{background:#fff;border-radius:14px;box-shadow:0 10px 30px #0003;padding:12px 14px;border-left:6px solid var(--acc);cursor:pointer;animation:bnin .25s ease-out;transition:opacity .5s,transform .5s}
+.bn.out{opacity:0;transform:translateX(30px)}
+.bn b{display:block;font-size:14px}.bn div{font-size:12.5px;color:var(--ink2);margin-top:2px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.bn-order,.ev-order{border-left-color:var(--green)!important}.bn-issue,.ev-issue{border-left-color:var(--red)!important}.bn-status,.ev-status{border-left-color:var(--teal)!important}.bn-msg,.ev-msg{border-left-color:var(--amber)!important}.bn-mentor,.ev-mentor{border-left-color:var(--purple)!important}
+@keyframes bnin{from{opacity:0;transform:translateY(-10px)}}
+.evlist{max-height:40vh;overflow:auto;margin-top:10px}
+.ev{border-left:4px solid var(--acc);background:#fafbff;border-radius:10px;padding:8px 10px;margin-bottom:6px;cursor:pointer}
+.evt{font-weight:700}.evb{font-size:12.5px;color:var(--ink2)}.evm{font-size:11px;color:var(--soft);margin-top:2px}
+.nbox{border:1px solid var(--line);border-radius:14px;padding:12px 14px;margin-top:14px}
+.nset{display:flex;gap:10px;align-items:center;padding:10px 0;border-bottom:1px solid var(--line2);flex-wrap:wrap}
+.nset>div:first-child{flex:1;min-width:180px}
+.nset:last-child{border-bottom:0}
+.trow{margin-top:10px}
+.tyc{background:var(--line2);border-radius:20px;padding:4px 10px}
+.hint{font-size:12px;color:var(--soft)}
+.topic{font:700 12.5px ui-monospace,Consolas,monospace;background:var(--acc2);color:#3b2a8f;border-radius:8px;padding:5px 8px;word-break:break-all}
+/* ---- mentorship ---- */
+.stgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:12px}
+.stu{background:#fff;border-radius:var(--r);box-shadow:var(--sh);padding:14px 16px;cursor:pointer;border-top:4px solid var(--acc)}
+.stu:hover{box-shadow:0 2px 4px #1018281a,0 8px 22px #10182814}
+.stn{font-weight:800;font-size:16px}.sts{font-size:12.5px;color:var(--soft)}
+.stmeta{display:flex;flex-wrap:wrap;gap:4px 12px;font-size:12.5px;color:var(--ink2);margin-top:8px}
+.stbadge{font-size:11px;font-weight:800;border-radius:20px;padding:2px 9px;background:var(--green-bg);color:var(--green);vertical-align:middle}
+.st-paused{background:var(--amber-bg);color:#b45309}.st-archived{background:var(--gray-bg);color:var(--gray)}
+.chip{display:inline-block;font-size:12px;font-weight:700;border-radius:8px;padding:3px 8px;white-space:nowrap}.chip.o{background:var(--orange-bg);color:var(--orange)}.chip.r{background:var(--red-bg);color:var(--red)}.chip.y{background:var(--amber-bg);color:#b45309}.chip.g{background:var(--green-bg);color:var(--green)}.chip.b{background:var(--blue-bg);color:var(--blue)}
+.pbar{height:8px;background:var(--line2);border-radius:6px;overflow:hidden;margin-top:4px}.pbar i{display:block;height:100%;background:linear-gradient(90deg,#6d4aff,#9b7bff);border-radius:6px}
+.mtabs{display:flex;gap:6px;overflow-x:auto;margin:12px 0 14px;padding-bottom:2px}
+.mtabs button{white-space:nowrap;border-radius:20px;font-size:13px;padding:6px 12px}
+.mtabs button.on{background:var(--ink);color:#fff;border-color:var(--ink)}
+.mtabs .n{background:var(--red);color:#fff;border-radius:10px;font-size:10px;padding:0 5px;margin-left:5px}
+.mod{background:#fff;border-radius:var(--r);box-shadow:var(--sh);padding:12px 14px;margin-bottom:12px}
+.modh{display:flex;gap:10px;align-items:center}.modi{font-size:24px}.modp{font-size:12px;color:var(--soft);font-weight:700;white-space:nowrap}
+.les{border-top:1px solid var(--line2);padding:8px 0 4px;margin-top:8px}
+.les summary{display:flex;justify-content:space-between;gap:8px;font-size:14px;color:var(--ink);font-weight:600;list-style:none}
+.les summary::-webkit-details-marker{display:none}
+.lesb{padding:8px 2px 4px;color:var(--ink2);font-size:13.5px}
+.lesb ul{margin:6px 0;padding-left:20px}
+.tasks{display:flex;flex-direction:column;gap:6px;margin-top:10px}
+.task{display:flex;gap:10px;align-items:center;background:#fafbff;border:1px solid var(--line);border-radius:10px;padding:9px 11px;cursor:pointer;color:var(--ink)}
+.task input{width:20px;height:20px;flex:none;accent-color:var(--acc)}
+.task .cb{font-size:18px;line-height:1}
+.task.on{background:var(--green-bg);border-color:#bfe8cc}.task.on span:not(.cb){text-decoration:line-through;color:var(--ink2)}
+.task small{margin-left:auto;color:var(--soft);font-size:11px;white-space:nowrap}
+.item{background:#fff;border:1px solid var(--line);border-radius:12px;padding:12px;margin-top:10px}
+.item .meta{font-size:11.5px;color:var(--soft);margin-bottom:4px}
+.fb{margin-top:8px;padding:8px 10px;border-radius:10px;background:var(--teal-bg);white-space:pre-wrap;font-size:13px}
+.fb.rev{background:var(--orange-bg)}
+.scorebar{display:grid;grid-template-columns:1fr 120px 26px;gap:8px;align-items:center;font-size:13px;padding:6px 0;border-bottom:1px solid var(--line2)}
+.audrow{display:grid;grid-template-columns:1.2fr 70px 1.5fr;gap:8px;align-items:center;font-size:13px;padding:4px 0}
+.mood{display:flex;gap:6px}.mood button{font-size:20px;padding:4px 9px}.mood button.on{background:var(--acc2);border-color:var(--acc)}
+.kvrow{display:flex;gap:10px;justify-content:space-between;align-items:center;padding:6px 0;border-bottom:1px solid var(--line2)}
+.kvrow .k{margin:0;min-width:110px}
+.todo-a{display:block;width:100%;text-align:left;border:0;border-bottom:1px solid var(--line2);border-radius:0;background:transparent;padding:9px 2px;font-weight:600}
+.todo-a:hover{background:#fafbff}
+.nextcall{display:flex;justify-content:space-between;align-items:center;gap:10px;border-left:6px solid var(--blue)}
+.nextstep{border-left:6px solid var(--acc)}
+.warnc{border-left:6px solid var(--orange);background:linear-gradient(90deg,#fff3ea,#fff 50%)}
+.btnlink{background:var(--blue);color:#fff;text-decoration:none;font-weight:700;border-radius:10px;padding:9px 14px;white-space:nowrap}
+.resl{display:flex;flex-direction:column;gap:2px;text-decoration:none;padding:9px 0;border-bottom:1px solid var(--line2)}
+.resl span{font-size:12.5px;color:var(--soft)}
+@media(max-width:760px){.audrow{grid-template-columns:1fr 70px}.audrow input{grid-column:1/-1}.scorebar{grid-template-columns:1fr 80px 22px}#banners{top:calc(56px + env(safe-area-inset-top))}}
 </style>
 </head>
 <body>
@@ -264,6 +331,7 @@ details summary{cursor:pointer;font-size:12px;font-weight:700;color:var(--soft)}
   <div class="logo">📦 Order Hub</div><span class="role" id="who" style="display:none"></span>
   <span class="sync" id="sync"></span>
   <span class="sp"></span>
+  <button class="hb bell" id="bell" style="display:none" title="Bildirimler">🔔<span id="bellN" style="display:none"></span></button>
   <span class="lang"><button data-l="tr">TR</button><button data-l="en">EN</button><button data-l="zh">中文</button></span>
   <label class="tr" id="trw" style="display:none"><input type="checkbox" id="trc"> <span data-t="translate"></span></label>
   <button class="hb" id="logout" style="display:none" data-t="logout"></button>
@@ -272,6 +340,7 @@ details summary{cursor:pointer;font-size:12px;font-weight:700;color:var(--soft)}
 <nav id="tabbar"></nav>
 <div class="modal" id="modal"><div class="sheet" id="sheet"></div></div>
 <div id="toast"></div>
+<div id="banners"></div>
 <div id="zoom" onclick="this.style.display='none'"><img alt=""></div>
 
 <script>
@@ -446,12 +515,18 @@ function loginView(){
 }
 async function reload(){
   const d=await api('load',S.pass);
-  Object.assign(S,{role:d.role,stores:d.stores,orders:d.orders,statuses:d.statuses,sheetUrl:d.sheetUrl,unread:d.unread||0});
-  $('#who').textContent=S.role==='admin'?'Admin':'Agent';$('#who').style.display='';$('#logout').style.display='';$('#trw').style.display='';
+  Object.assign(S,{role:d.role,stores:d.stores,orders:d.orders,statuses:d.statuses,sheetUrl:d.sheetUrl,unread:d.unread||0,me:d.me||null,topic:d.topic||'',notify:d.notify||null,evLast:d.evLast||''});
+  if(S.role==='student'&&S.mentor&&S.mentor.me&&d.me)S.mentor.me=Object.assign({},S.mentor.me,d.me);
+  if(!S._init){S._init=true;if(S.role==='student')S.view='sHome';const hv=decodeURIComponent((location.hash.match(/v=([^&]+)/)||[])[1]||'');
+    if(hv){if(hv.indexOf('mentor:')===0&&S.role==='admin'){S.view='mentor';S.mSid=hv.slice(7);}else if(hv==='sOrders')S.view='all';else if(VIEWS[hv]||STU_VIEWS.includes(hv)||['help','msgs','finance','catalog','calendar','mentor'].includes(hv))S.view=hv;try{history.replaceState(null,'',location.pathname);}catch(e){}}}
+  $('#bell').style.display='';$('#bell').onclick=bellPanel;
+  $('#who').textContent=S.role==='admin'?'Admin':S.role==='student'?'Öğrenci':'Agent';$('#who').style.display='';$('#logout').style.display='';$('#trw').style.display='';
   render();
 }
 function afterLogin(fresh){
-  syncReady();
+  syncReady();startPoll();
+  if(S.role==='admin')loadMentor().then(()=>{if(!['mentor'].includes(S.view))renderTabbar(counts());const b=$('.nv[data-v=mentor] .n');if(b){const n=mentorBadge();b.textContent=n;b.className='n'+(n?' alert':'');}}).catch(()=>{});
+  if(S.role==='student')loadMentor().then(()=>{stuWelcome();render();}).catch(()=>{});
   if(S.role==='agent'){
     const today=new Date().toISOString().slice(0,10);
     if(store.get('oh_welcome_hide')!==today&&(fresh||!sess.get('oh_welcomed'))){sess.set('oh_welcomed','1');welcome();}
@@ -465,20 +540,23 @@ async function render(){
   if(!S.role)return;
   const c=counts();
   const stores=['*',...S.stores].map(s=>`<button class="${S.store===s?'on':''}" data-s="${esc(s)}">${s==='*'?t('all'):esc(s)}</button>`).join('')+(S.role==='admin'?`<button id="as">${t('addStore')}</button>`:'');
-  const side=`<nav class="side">
+  const side=S.role==='student'?stuSideHTML(c):`<nav class="side">
     <div class="navbox"><h4>${t('h_stores')}</h4><div class="storesel">${stores}</div></div>
     <div class="navbox"><h4>${t('h_orders')}</h4>${['todo','urgent','ordered','shippedDs','shipped','delivered','cancelled','all'].map(v=>navBtn(v,c)).join('')}</div>
     <div class="navbox"><h4>${t('h_more')}</h4>
       <button class="nv ${S.view==='help'?'on':''}" data-v="help"><span class="dot" style="background:#0ea5e9"></span>❓ ${t('nav_help')}${S.role==='agent'&&S.unread?`<span class="n alert">${S.unread}</span>`:''}</button>
       ${S.role==='admin'?`<button class="nv ${S.view==='catalog'?'on':''}" data-v="catalog"><span class="dot" style="background:#c2410c"></span>📚 ${t('nav_catalog')}</button>`:''}
       ${S.role==='admin'?`<button class="nv ${S.view==='finance'?'on':''}" data-v="finance"><span class="dot" style="background:#0e9f8b"></span>📊 Finans</button><button class="nv ${S.view==='calendar'?'on':''}" data-v="calendar"><span class="dot" style="background:#ea580c"></span>📅 Takvim & kampanyalar${calendarItems(400).filter(e=>e.alert).length?`<span class="n alert">${calendarItems(400).filter(e=>e.alert).length}</span>`:''}</button>`:''}
+      ${S.role==='admin'?`<button class="nv ${S.view==='mentor'?'on':''}" data-v="mentor"><span class="dot" style="background:#7c3aed"></span>🎓 Mentörlük<span class="n ${mentorBadge()?'alert':''}">${mentorBadge()}</span></button>`:''}
       ${S.role==='admin'?`<button class="nv ${S.view==='msgs'?'on':''}" data-v="msgs"><span class="dot" style="background:#f59e0b"></span>💬 ${t('nav_msgs')}<span class="n ${S.unread?'alert':''}">${S.unread}</span></button>`:''}
     </div></nav>`;
   let main='';
-  if(S.view==='catalog'&&S.role==='admin')main=await catalogView();
+  if(S.view==='mentor'&&S.role==='admin')main=await mentorAdminView();
+  else if(STU_VIEWS.includes(S.view)&&S.role==='student')main=await studentView();
+  else if(S.view==='catalog'&&S.role==='admin')main=await catalogView();
   else if(S.view==='finance'&&S.role==='admin')main=await financeView();
   else if(S.view==='calendar'&&S.role==='admin')main=`<div class="vtitle">📅 Takvim & kampanyalar</div><div class="vhint">Özel günler, hangi ürünlerin öne çıkarılacağı ve Etsy’de kurulu indirimler.</div>${alertsHTML(5)}${calendarHTML()}`;
-  else if(S.view==='help')main=await helpView();
+  else if(S.view==='help'&&S.role!=='student')main=await helpView();
   else if(S.view==='msgs')main=await msgsView();
   else main=await ordersView(c);
   $('#app').innerHTML=`<div class="wrap">${side}<main>${a2hsHTML()}${main}</main></div>`;
@@ -500,7 +578,7 @@ async function ordersView(c){
     <button class="sc red" data-v="urgent"><span class="v">${c.urgent}</span><span class="l">🔥 ${t('sum_urgent')}</span></button>
     <button class="sc orange" data-v="todo" data-sort="urgent"><span class="v">${soon}</span><span class="l">⏳ ${t('sum_soon')}</span></button>
     <button class="sc teal" data-v="shippedDs"><span class="v">${c.shippedDs}</span><span class="l">🚚 ${t('sum_notEtsy')}</span></button></div>`;
-  const admin=S.role==='admin'?`<button class="pri" id="no">${t('newOrder')}</button><button id="esy">${t('etsySync')}</button><button id="imp">${t('jsonImport')}</button>${S.sheetUrl?`<a href="${esc(S.sheetUrl)}" target="_blank" style="font-size:12px">Sheet ↗</a>`:''}`:'';
+  const admin=S.role==='student'?`<button class="pri" id="no">＋ Sipariş ekle</button><button id="esy">🔗 Etsy senkron</button>`:S.role==='admin'?`<button class="pri" id="no">${t('newOrder')}</button><button id="esy">${t('etsySync')}</button><button id="imp">${t('jsonImport')}</button>${S.sheetUrl?`<a href="${esc(S.sheetUrl)}" target="_blank" style="font-size:12px">Sheet ↗</a>`:''}`:'';
   return `${S.role==='admin'?alertsHTML(2):''}${cards}
    <div class="vtitle">${t('nav_'+S.view)} <span style="color:var(--soft);font-weight:600;font-size:15px">· ${L.length}</span></div>
    <div class="vhint">${t('v_'+S.view)}</div>
@@ -554,7 +632,7 @@ function body(o){
      ${o.agentNote?`<div class="box info">${esc(TX(o.agentNote))}</div>`:''}
    </div>
    <div class="blk">
-     <div class="upd" data-form>
+     ${S.role==='student'?stuOrderInfo(o):`<div class="upd" data-form>
        <div style="font-weight:800">✏️ ${t('upd')}</div>
        <div><div class="k">${t('flow')}</div><div class="steps">${FLOW.map(stepBtn).join('')}</div></div>
        <div><div class="k">${t('issues')}</div><div class="steps">${ISSUES.map(stepBtn).join('')}</div></div>
@@ -569,7 +647,7 @@ function body(o){
        <label><div class="k">📷 ${t('agentPhotos')}</div><input type="file" accept="image/*" multiple data-up></label>
        ${String(o.agentPhotos||'').trim()?`<div class="ph">${String(o.agentPhotos).split('\n').filter(Boolean).map(u=>`<img src="${esc(u)}" data-z="${esc(u)}" alt="">`).join('')}</div>`:''}
        <div class="kv"><button class="pri" data-save>💾 ${t('save')}</button>${S.role==='admin'?`<button data-edit>${t('edit')}</button><button data-arch>${t('archive')}</button>`:''}</div>
-     </div>
+     </div>`}
      ${o.log?`<details><summary>🕘 ${t('history')} · ${esc(o.id)}</summary><div class="log">${esc(o.log)}</div></details>`:''}
    </div></div>`;
 }
@@ -577,7 +655,8 @@ T.tr.ordDate='Sipariş ';T.en.ordDate='Ordered ';T.zh.ordDate='下单 ';
 
 /* ================= bindings ================= */
 function bind(){
-  $$('.nv[data-v],.sc[data-v]').forEach(b=>b.onclick=()=>{S.view=b.dataset.v;if(b.dataset.sort)S.sort=b.dataset.sort;S.open.clear();render();window.scrollTo(0,0);});
+  const mv=S.view==='mentor'||STU_VIEWS.includes(S.view);$('#app').onclick=mv?mentorClick:null;$('#app').onchange=mv?mentorChange:null;
+  $$('.nv[data-v],.sc[data-v]').forEach(b=>b.onclick=()=>{if(b.dataset.v==='mentor')S.mSid=null;S.view=b.dataset.v;if(b.dataset.sort)S.sort=b.dataset.sort;S.open.clear();render();window.scrollTo(0,0);});
   $$('.storesel button[data-s]').forEach(b=>b.onclick=()=>{S.store=b.dataset.s;render();});
   if($('#as'))$('#as').onclick=async()=>{const n=prompt(t('newStore'));if(n){await api('addStore',S.pass,n);await reload();}};
   if($('#q')){$('#q').oninput=e=>{S.q=e.target.value;clearTimeout(S._q);S._q=setTimeout(()=>render().then(()=>{const q=$('#q');q.focus();q.setSelectionRange(q.value.length,q.value.length);}),300);};}
@@ -596,12 +675,14 @@ function bind(){
     if(S.open.has(o.id))bindCard(card,o);
   });
   $$('[data-faq-q]').forEach(()=>{});
+  bindCommon(document.getElementById('app'));
   if(S.view==='help')bindHelp();
   if(S.view==='msgs')bindMsgs();
   if(S.view==='finance')bindFinance();
   if(S.view==='catalog')bindCatalog();
 }
 function bindCommon(root){
+  root.querySelectorAll('[data-sedit]').forEach(b=>b.onclick=e=>{e.stopPropagation();const o=S.orders.find(x=>x.id===b.dataset.sedit);if(o)form(o);});
   root.querySelectorAll('[data-copy]').forEach(b=>b.onclick=e=>{e.stopPropagation();navigator.clipboard.writeText(b.dataset.copy).then(()=>toast(t('copied')+' ✓'));});
   root.querySelectorAll('[data-z]').forEach(i=>i.onclick=e=>{e.stopPropagation();const z=$('#zoom');z.querySelector('img').src=i.dataset.z;z.style.display='flex';});
 }
@@ -1002,63 +1083,69 @@ window.addEventListener('message',async e=>{
 
 /* ================= Etsy sync receiver (from the bookmarklet in an etsy.com tab) ================= */
 let SYNC_READY_SENT=false;
-function syncReady(){if(SYNC_READY_SENT||S.role!=='admin'||!window.opener)return;SYNC_READY_SENT=true;try{window.opener.postMessage({type:'oh-ready'},'*');}catch(e){}}
-function beep(){try{const a=new (window.AudioContext||window.webkitAudioContext)();const o=a.createOscillator();const g=a.createGain();o.connect(g);g.connect(a.destination);o.frequency.value=880;g.gain.value=.08;o.start();setTimeout(()=>{o.frequency.value=1320;},120);setTimeout(()=>{o.stop();a.close();},260);}catch(e){}}
+function syncReady(){if(SYNC_READY_SENT||!['admin','student'].includes(S.role)||!window.opener)return;SYNC_READY_SENT=true;try{window.opener.postMessage({type:'oh-ready'},'*');}catch(e){}}
+function beep(){chime('order');}
 function showSync(){
   const s=S.lastSync;if(!s)return;const el=$('#sync');
   el.textContent=`🔄 ${t('syncAt')} ${s.time.toLocaleTimeString(S.lang==='zh'?'zh-CN':S.lang,{hour:'2-digit',minute:'2-digit'})} · ${s.store}${s.created?` · +${s.created} ${t('syncNew')}`:''}`;
   el.classList.add('on');
-  document.title=(S.newSince?`(+${S.newSince}) `:'')+HUB_TITLE;
+  setTitle();
 }
-window.addEventListener('focus',()=>{S.newSince=0;document.title=HUB_TITLE;});
+window.addEventListener('focus',()=>{S.newSince=0;});
 window.addEventListener('message',e=>{
   const d=e.data||{};if(!/^https:\/\/([a-z]+\.)?etsy\.com$/.test(e.origin))return;
   if(e.source)S.etsySrc=e.source;
-  if(d.type==='oh-hello'&&S.role==='admin'){try{e.source.postMessage({type:'oh-ready'},e.origin);}catch(x){}}
+  if(d.type==='oh-hello'&&['admin','student'].includes(S.role)){try{e.source.postMessage({type:'oh-ready'},e.origin);}catch(x){}}
 });
 window.addEventListener('message',async e=>{
   const d=e.data||{};if(d.type!=='oh-etsy')return;
   if(!/^https:\/\/([a-z]+\.)?etsy\.com$/.test(e.origin))return;
   const reply=m=>{try{e.source.postMessage(Object.assign({type:'oh-res'},m),e.origin);}catch(x){}};
-  if(S.role!=='admin'){reply({error:'log in to Order Hub as admin'});return;}
+  if(!['admin','student'].includes(S.role)){reply({error:'log in to Order Hub (admin or student)'});return;}
   const L=d.orders||[];let c=0,u=0;
   S.oldBookmark=(d.v||1)<2;if(S.oldBookmark&&S.view==='finance')render();
   try{
     for(let i=0;i<L.length;i+=40){const r=await api('importOrders',S.pass,L.slice(i,i+40),true);c+=r.created;u+=r.updated;}
     reply({ok:true,total:L.length,created:c,updated:u});
     S.lastSync={time:new Date(),store:(L[0]&&L[0].store)||'',created:c,updated:u};
-    if(c){S.newSince+=c;beep();toast(`🆕 ${c} ${t('syncNew')} · Etsy`);}else toast(`🔄 Etsy ✓ (${u})`);
+    if(c){toast(`🆕 ${c} ${t('syncNew')} · Etsy`);if(S.pollNow)S.pollNow();else beep();}else toast(`🔄 Etsy ✓ (${u})`);
     await reload();showSync();
   }catch(err){reply({error:String(err.message||err)});toast('Etsy sync error: '+(err.message||err));}
 });
 document.addEventListener('paste',e=>{});
 /* ================= 📱 phone UI: tab bar, more sheet, order sheet, add-to-home hint ================= */
 function tabsFor(){
+  if(S.role==='student')return [['sHome','🏠','Panom'],['sRoad','🗺️','Yol'],['sHw','📝','Ödev'],['all','📦','Sipariş'],['more','☰','tab_more']];
   return S.role==='admin'
     ? [['todo','⚡','tab_todo'],['ship','🚚','tab_ship'],['catalog','📚','tab_cat'],['finance','📊','tab_fin'],['more','☰','tab_more']]
     : [['todo','⚡','tab_todo'],['ordered','🛒','tab_ordered'],['ship','🚚','tab_ship'],['help','❓','tab_help'],['more','☰','tab_more']];
 }
 function renderTabbar(c){
   const tb=$('#tabbar');if(!tb)return;
-  const badge=v=>v==='todo'?c.todo:v==='ship'?(S.orders.filter(inStore).filter(VIEWS.shippedDs).length||0):v==='help'&&S.role==='agent'?S.unread:v==='more'?(S.role==='admin'?S.unread+calendarItems(400).filter(e=>e.alert).length:0):0;
-  tb.innerHTML=tabsFor().map(([v,ic,l])=>{const n=badge(v);const on=v==='more'?false:(S.view===v||(v==='ship'&&['shipped','shippedDs'].includes(S.view)));return `<button class="${on?'on':''}" data-tab="${v}"><span class="ic">${ic}</span>${t(l)}${n?`<span class="bd">${n}</span>`:''}</button>`;}).join('');
-  tb.querySelectorAll('[data-tab]').forEach(b=>b.onclick=()=>{const v=b.dataset.tab;if(v==='more'){moreSheet();return;}S.view=v;S.open.clear();render();window.scrollTo(0,0);});
+  const sb=S.role==='student'?stuBadges():{};
+  const badge=v=>S.role==='student'?(v==='more'?(sb.sQa||0)+(sb.sCheck||0)+(sb.sSessions||0)+(sb.sAudit||0):v==='all'?c.todo:(sb[v]||0)):v==='todo'?c.todo:v==='ship'?(S.orders.filter(inStore).filter(VIEWS.shippedDs).length||0):v==='help'&&S.role==='agent'?S.unread:v==='more'?(S.role==='admin'?S.unread+mentorBadge()+calendarItems(400).filter(e=>e.alert).length:0):0;
+  tb.innerHTML=tabsFor().map(([v,ic,l])=>{const n=badge(v);const on=v==='more'?false:(S.view===v||(v==='ship'&&['shipped','shippedDs'].includes(S.view))||(v==='all'&&S.role==='student'&&!!VIEWS[S.view]));return `<button class="${on?'on':''}" data-tab="${v}"><span class="ic">${ic}</span>${t(l)}${n?`<span class="bd">${n}</span>`:''}</button>`;}).join('');
+  tb.querySelectorAll('[data-tab]').forEach(b=>b.onclick=()=>{const v=b.dataset.tab;if(v==='more'){moreSheet();return;}if(v==='mentor')S.mSid=null;S.view=v;S.open.clear();render();window.scrollTo(0,0);});
 }
 function moreSheet(){
   const c=counts();
-  const views=['urgent','todo','ordered','shippedDs','shipped','delivered','cancelled','all'];
-  const extra=S.role==='admin'
-    ?`<button class="nv" data-mv="catalog"><span class="dot" style="background:#c2410c"></span>📚 ${t('nav_catalog')}</button><button class="nv" data-mv="finance"><span class="dot" style="background:#0e9f8b"></span>📊 Finans</button><button class="nv" data-mv="calendar"><span class="dot" style="background:#ea580c"></span>📅 Takvim & kampanyalar</button><button class="nv" data-mv="msgs"><span class="dot" style="background:#f59e0b"></span>💬 ${t('nav_msgs')}${S.unread?`<span class="n alert">${S.unread}</span>`:''}</button>`
-    :`<button class="nv" data-mv="help"><span class="dot" style="background:#0ea5e9"></span>❓ ${t('nav_help')}</button>`;
+  const views=S.role==='student'?['todo','ordered','shippedDs','shipped','delivered','all']:['urgent','todo','ordered','shippedDs','shipped','delivered','cancelled','all'];
+  const sb=S.role==='student'?stuBadges():{};
+  const extra=S.role==='student'
+    ?STU_VIEWS.map(v=>`<button class="nv ${S.view===v?'on':''}" data-mv="${v}"><span class="dot" style="background:#7c3aed"></span>${STU_NAV[v][0]} ${STU_NAV[v][1]}${sb[v]?`<span class="n alert">${sb[v]}</span>`:''}</button>`).join('')+`<button class="nv" id="mbell"><span class="dot" style="background:#f59e0b"></span>🔔 Bildirimler & ayarlar</button>`
+    :S.role==='admin'
+    ?`<button class="nv" data-mv="mentor"><span class="dot" style="background:#7c3aed"></span>🎓 Mentörlük${mentorBadge()?`<span class="n alert">${mentorBadge()}</span>`:''}</button><button class="nv" id="mbell"><span class="dot" style="background:#f59e0b"></span>🔔 Bildirimler & ayarlar</button><button class="nv" data-mv="catalog"><span class="dot" style="background:#c2410c"></span>📚 ${t('nav_catalog')}</button><button class="nv" data-mv="finance"><span class="dot" style="background:#0e9f8b"></span>📊 Finans</button><button class="nv" data-mv="calendar"><span class="dot" style="background:#ea580c"></span>📅 Takvim & kampanyalar</button><button class="nv" data-mv="msgs"><span class="dot" style="background:#f59e0b"></span>💬 ${t('nav_msgs')}${S.unread?`<span class="n alert">${S.unread}</span>`:''}</button>`
+    :`<button class="nv" data-mv="help"><span class="dot" style="background:#0ea5e9"></span>❓ ${t('nav_help')}</button><button class="nv" id="mbell"><span class="dot" style="background:#f59e0b"></span>🔔 ${nt('title')}</button>`;
   modal(`<h2>${t('more_t')}</h2>
-   <div class="k">${t('h_stores')}</div><div class="storesel" style="padding:0 0 10px">${['*',...S.stores].map(s=>`<button class="${S.store===s?'on':''}" data-ms="${esc(s)}">${s==='*'?t('all'):esc(s)}</button>`).join('')}</div>
+   ${S.role==='student'?`<div class="k">🎓 Koçluk</div><div class="morelist">${extra}</div><div class="k" style="margin-top:10px">📦 Siparişlerim</div>`:`<div class="k">${t('h_stores')}</div>`}<div class="storesel" style="padding:0 0 10px;${S.role==='student'?'display:none':''}">${['*',...S.stores].map(s=>`<button class="${S.store===s?'on':''}" data-ms="${esc(s)}">${s==='*'?t('all'):esc(s)}</button>`).join('')}</div>
    <div class="k">${t('h_orders')}</div><div class="morelist">${views.map(v=>`<button class="nv ${S.view===v?'on':''}" data-mv="${v}"><span class="dot" style="background:${VIEW_DOT[v]}"></span>${t('nav_'+v)}<span class="n ${v==='urgent'&&c[v]?'alert':''}">${c[v]}</span></button>`).join('')}</div>
-   <div class="k" style="margin-top:10px">${t('h_more')}</div><div class="morelist">${extra}</div>
+   ${S.role==='student'?'':`<div class="k" style="margin-top:10px">${t('h_more')}</div><div class="morelist">${extra}</div>`}
    <div class="kv" style="margin-top:14px;justify-content:space-between">
      <span class="lang" style="display:flex;gap:4px">${['tr','en','zh'].map(l=>`<button class="${S.lang===l?'pri':''}" data-ml="${l}">${l==='zh'?'中文':l.toUpperCase()}</button>`).join('')}</span>
      <label class="chk"><input type="checkbox" id="mtr" ${S.tr?'checked':''}> ${t('translate')}</label></div>
    <div class="kv" style="margin-top:12px">${S.role==='admin'?`<button id="mesy">${t('etsySync')}</button>`:''}<button id="mlo" style="margin-left:auto">${t('logout')}</button><button class="pri" id="mcl">${t('close')}</button></div>`);
-  $$('#sheet [data-mv]').forEach(b=>b.onclick=()=>{S.view=b.dataset.mv;S.open.clear();closeModal();render();window.scrollTo(0,0);});
+  if($('#mbell'))$('#mbell').onclick=()=>{closeModal();bellPanel();};
+  $$('#sheet [data-mv]').forEach(b=>b.onclick=()=>{if(b.dataset.mv==='mentor')S.mSid=null;S.view=b.dataset.mv;S.open.clear();closeModal();render();window.scrollTo(0,0);});
   $$('#sheet [data-ms]').forEach(b=>b.onclick=()=>{S.store=b.dataset.ms;closeModal();render();});
   $$('#sheet [data-ml]').forEach(b=>b.onclick=()=>{S.lang=b.dataset.ml;store.set('oh_lang',S.lang);applyLang();closeModal();render();});
   $('#mtr').onchange=e=>{S.tr=e.target.checked;closeModal();render();};
@@ -1158,6 +1245,638 @@ window.addEventListener('message',async e=>{
   try{const r=await api('upsertListings',S.pass,d.store||'Novelle',d.rows||[]);S.cat=null;toast('📚 Katalog: '+r.total+(r.added?' · +'+r.added+' yeni':''));if(S.view==='catalog')render();}
   catch(err){toast('Katalog kaydedilemedi: '+(err.message||err));}
 });
+
+/* ================= 🔔 Notifications: sound, banners, desktop + phone push (ntfy) ================= */
+const HUB_URL='https://satanxiety.github.io/order-hub/';
+const NT={sound:store.get('oh_sound')!=='0',ac:null};
+const NTX={
+ tr:{title:'Bildirimler',settings:'Bildirim ayarları',sound:'🔊 Ses',soundHint:'Yeni sipariş: zil · Sorun: uyarı sesi · Mesaj: kısa ses',test:'▶︎ Dene',desktop:'🖥️ Masaüstü bildirimi',desktopHint:'Sekme arkadayken de ekranın köşesinde çıkar',allow:'İzin ver',granted:'✓ açık',denied:'Tarayıcıda engellenmiş (adres çubuğundaki 🔒 → Bildirimler → İzin ver)',unsupported:'Bu tarayıcı desteklemiyor — telefon için aşağıdaki ntfy’yi kullan',phone:'📱 Telefon bildirimi (ntfy)',phoneHint:'Uygulama kapalıyken bile telefonun çalar. Ücretsiz, hesap gerekmez.',create:'Oluştur',renew:'Yenile',copy:'Kopyala',sendTest:'Test gönder',steps:'<b>Kurulum (1 dk):</b> 1) iPhone: App Store’dan <a href="https://apps.apple.com/app/id1625396347" target="_blank">ntfy</a> indir (Android: Play Store “ntfy”). 2) Uygulamada <b>+</b> → konu adını yapıştır → <b>Subscribe</b>. 3) Buradan <b>Test gönder</b> → telefon çalmalı. Bildirime izin ver de.',empty:'Henüz bildirim yok.',types:'Telefona hangi bildirimler gitsin?',now:'az önce',min:'dk',hour:'sa',day:'g',newData:'🔄 Yeni veriler var — yenilemek için dokun',myTopic:'Senin konu adın',ivyTopic:'Ivy’nin konu adı',relay:'Telefon bildirimleri, bilgisayarındaki Order Hub açıkken gönderilir (yeni siparişler de zaten oradan geliyor). Konu adını kimseyle paylaşma.',none:'Henüz yok',sent:'Test gönderildi — telefonuna bak 📱'},
+ en:{title:'Notifications',settings:'Notification settings',sound:'🔊 Sound',soundHint:'New order: bell · Problem: alert · Message: short tone',test:'▶︎ Test',desktop:'🖥️ Desktop notifications',desktopHint:'Pops up even when the tab is in the background',allow:'Allow',granted:'✓ on',denied:'Blocked in the browser (🔒 in the address bar → Notifications → Allow)',unsupported:'Not supported here — use ntfy below for your phone',phone:'📱 Phone notifications (ntfy)',phoneHint:'Your phone rings even when the app is closed. Free, no account.',create:'Create',renew:'Renew',copy:'Copy',sendTest:'Send test',steps:'<b>Setup (1 min):</b> 1) Install <a href="https://apps.apple.com/app/id1625396347" target="_blank">ntfy</a> (App Store / Play Store). 2) In the app tap <b>+</b> → paste the topic name → <b>Subscribe</b>. 3) Press <b>Send test</b> here → your phone should ring. Allow notifications.',empty:'No notifications yet.',types:'Which notifications go to the phone?',now:'just now',min:'min',hour:'h',day:'d',newData:'🔄 New data — tap to refresh',myTopic:'Your topic name',ivyTopic:'Ivy’s topic name',relay:'Phone notifications are sent while Furkan’s Order Hub computer is on. Don’t share the topic name.',none:'Not set',sent:'Test sent — check your phone 📱'},
+ zh:{title:'通知',settings:'通知设置',sound:'🔊 声音',soundHint:'新订单：铃声 · 问题：警报 · 消息：短提示音',test:'▶︎ 试听',desktop:'🖥️ 桌面通知',desktopHint:'页面在后台时也会弹出',allow:'允许',granted:'✓ 已开启',denied:'浏览器已阻止（地址栏🔒 → 通知 → 允许）',unsupported:'此浏览器不支持——手机请用下面的 ntfy',phone:'📱 手机通知 (ntfy)',phoneHint:'即使App关闭，手机也会响。免费，无需账号。',create:'创建',renew:'更换',copy:'复制',sendTest:'发送测试',steps:'<b>设置（1分钟）：</b>1) 安装 <a href="https://apps.apple.com/app/id1625396347" target="_blank">ntfy</a>（App Store / 应用商店）。2) 在App里点 <b>+</b> → 粘贴主题名 → <b>Subscribe</b>。3) 在这里点 <b>发送测试</b> → 手机应该会响。请允许通知。',empty:'暂无通知。',types:'哪些通知发到手机？',now:'刚刚',min:'分钟',hour:'小时',day:'天',newData:'🔄 有新数据——点击刷新',myTopic:'你的主题名',ivyTopic:'Ivy 的主题名',relay:'手机通知在 Furkan 的电脑开着 Order Hub 时发送。不要分享主题名。',none:'未设置',sent:'测试已发送——请看手机 📱'}
+};
+const nt=k=>(NTX[S.lang]&&NTX[S.lang][k])||NTX.en[k]||k;
+function audio(){if(!NT.ac){try{NT.ac=new (window.AudioContext||window.webkitAudioContext)();}catch(e){}}return NT.ac;}
+document.addEventListener('pointerdown',()=>{const a=audio();if(a&&a.state==='suspended')a.resume().catch(()=>{});},{passive:true});
+function chime(kind,force){
+  if(!NT.sound&&!force)return;const a=audio();if(!a)return;if(a.state==='suspended')a.resume().catch(()=>{});
+  const P={order:[[659,0],[784,.11],[988,.22],[1319,.33]],issue:[[523,0],[392,.18],[523,.36],[392,.54]],msg:[[880,0],[1175,.13]],mentor:[[784,0],[988,.12],[1175,.24]],status:[[740,0],[988,.12]]}[kind]||[[880,0],[1175,.13]];
+  const t0=a.currentTime+.03,typ=kind==='issue'?'triangle':'sine',vol=kind==='issue'?.12:.16;
+  P.forEach(([f,d])=>{const o=a.createOscillator(),g=a.createGain();o.type=typ;o.frequency.value=f;o.connect(g);g.connect(a.destination);const s=t0+d;
+    g.gain.setValueAtTime(.0001,s);g.gain.exponentialRampToValueAtTime(vol,s+.015);g.gain.exponentialRampToValueAtTime(.0001,s+.42);o.start(s);o.stop(s+.45);});
+}
+function setTitle(){
+  const n=(S.bell||0);document.title=(n?`(${n}) `:'')+HUB_TITLE;
+  try{if(navigator.setAppBadge){n?navigator.setAppBadge(n):navigator.clearAppBadge();}}catch(e){}
+  const b=$('#bellN');if(b){b.textContent=n||'';b.style.display=n?'':'none';}
+}
+function evKey(){return 'oh_ev_'+S.role+(S.me?'_'+S.me.id:'');}
+function startPoll(){
+  clearTimeout(S._poll);
+  const k=evKey();let since=store.get(k);
+  if(!since){since=S.evLast||'';if(since)store.set(k,since);}
+  S.evSince=since;
+  const tick=async()=>{
+    clearTimeout(S._poll);
+    try{const r=await api('poll',S.pass,S.evSince);
+      if(r.push&&r.push.length)relay(r.push);
+      if(r.events&&r.events.length)onEvents(r.events);
+      if(r.last&&r.last>S.evSince){S.evSince=r.last;store.set(k,r.last);}
+    }catch(e){}
+    S._poll=setTimeout(tick,document.hidden?90000:45000);
+  };
+  S.pollNow=()=>{clearTimeout(S._poll);S._poll=setTimeout(tick,1500);};
+  S._poll=setTimeout(tick,2500);
+}
+document.addEventListener('visibilitychange',()=>{if(!document.hidden&&S.role&&S.pollNow)S.pollNow();});
+function onEvents(evs){
+  S.events=[...evs.slice().reverse(),...(S.events||[])].slice(0,60);
+  S.bell=(S.bell||0)+evs.length;setTitle();
+  const kind=evs.some(e=>e.type==='order')?'order':evs.some(e=>e.type==='issue')?'issue':evs[evs.length-1].type;
+  chime(kind);
+  try{navigator.vibrate&&navigator.vibrate(kind==='order'?[220,80,220,80,320]:[160,70,160]);}catch(e){}
+  evs.slice(-3).forEach(banner);
+  sysNotify(evs);
+  if(evs.some(e=>['order','status','issue'].includes(e.type)))softReload(false);
+  else if(evs.some(e=>e.type==='mentor')){S.mentor=null;if(S.view==='mentor'||STU_VIEWS.includes(S.view))softReload(true);else render();}
+}
+function busy(){const a=document.activeElement;return $('#modal').classList.contains('on')||!!(a&&/INPUT|TEXTAREA|SELECT/.test(a.tagName)&&!['q','cq'].includes(a.id)&&a.value);}
+function softReload(renderOnly){
+  if(busy()){S.needReload=true;reloadPill();return;}
+  (renderOnly?render():reload()).catch(()=>{});
+}
+function reloadPill(){
+  if($('#rpill'))return;const d=document.createElement('div');d.id='rpill';d.className='bn bn-status';d.innerHTML=`<b>${nt('newData')}</b>`;
+  d.onclick=()=>{d.remove();S.needReload=false;S.mentor=null;reload();};$('#banners').prepend(d);
+}
+function banner(e){
+  const box=$('#banners');if(!box)return;const d=document.createElement('div');d.className='bn bn-'+(e.type||'msg');
+  d.innerHTML=`<b>${esc(e.title)}</b>${e.body?`<div>${esc(e.body)}</div>`:''}`;
+  d.onclick=()=>{d.remove();goView(e.view);};box.prepend(d);
+  setTimeout(()=>d.classList.add('out'),9000);setTimeout(()=>d.remove(),9600);
+  while(box.children.length>4)box.lastChild.remove();
+}
+function sysNotify(evs){
+  try{if(!('Notification' in window)||Notification.permission!=='granted')return;
+    if(document.visibilityState==='visible'&&document.hasFocus())return;
+    const e=evs[evs.length-1];
+    const n=new Notification(evs.length>1?`${e.title} (+${evs.length-1})`:e.title,{body:e.body||'',icon:'icon-192.png',tag:'oh-'+e.type});
+    n.onclick=()=>{window.focus();goView(e.view);n.close();};
+  }catch(x){}
+}
+function goView(v){
+  if(!v)return;closeModal();
+  if(v.indexOf('mentor:')===0){if(S.role!=='admin')return;S.view='mentor';S.mSid=v.slice(7);S.mTab='gen';}
+  else if(v==='sOrders')S.view='all';
+  else if(VIEWS[v]||['help','msgs','finance','catalog','calendar','mentor'].includes(v)||STU_VIEWS.includes(v))S.view=v;
+  S.open.clear();render();window.scrollTo(0,0);
+}
+function ntfySend(topic,title,body,view,type){
+  return fetch('https://ntfy.sh/',{method:'POST',credentials:'omit',body:JSON.stringify({topic,title:title||'Order Hub',message:body||title||'Order Hub',
+    click:HUB_URL+(view?'#v='+encodeURIComponent(view):''),priority:['order','issue'].includes(type)?4:3})});
+}
+function relay(list){list.forEach(p=>{ntfySend(p.topic,p.title,p.body,p.view,p.type).catch(()=>{});});}
+function newTopic(){const a=new Uint8Array(16);crypto.getRandomValues(a);return 'oh-'+[...a].map(b=>'abcdefghijkmnpqrstuvwxyz23456789'[b%32]).join('');}
+function ago(iso){const m=Math.floor((Date.now()-new Date(iso))/6e4);if(isNaN(m))return '';if(m<1)return nt('now');if(m<60)return m+' '+nt('min');if(m<1440)return Math.floor(m/60)+' '+nt('hour');return Math.floor(m/1440)+' '+nt('day');}
+async function bellPanel(){
+  S.bell=0;setTitle();
+  let evs=S.events||[];
+  modal(`<div class="kv" style="justify-content:space-between"><h2 style="margin:0">🔔 ${nt('title')}</h2><button class="sm" id="bx">✕</button></div><div class="evlist" id="evl"><div class="hint" style="padding:10px 0">…</div></div><div id="nsetw"></div>`);
+  $('#bx').onclick=closeModal;
+  const draw=()=>{$('#evl').innerHTML=evs.length?evs.map(e=>`<div class="ev ev-${esc(e.type)}" data-ev="${esc(e.view||'')}"><div class="evt">${esc(e.title)}</div>${e.body?`<div class="evb">${esc(e.body)}</div>`:''}<div class="evm">${esc(ago(e.at))}</div></div>`).join(''):`<div class="hint" style="padding:10px 0">${nt('empty')}</div>`;
+    $$('#evl [data-ev]').forEach(x=>x.onclick=()=>goView(x.dataset.ev));};
+  draw();drawNotifSettings();
+  try{const r=await api('poll',S.pass,'');evs=(r.events||[]).slice().reverse();S.events=evs;if($('#evl'))draw();}catch(e){}
+}
+function drawNotifSettings(){
+  const w=$('#nsetw');if(!w)return;
+  const perm=!('Notification' in window)?'unsupported':Notification.permission;
+  const topicRow=(key,topic,label)=>`<div class="trow"><div class="k" style="margin:0">${label}</div>
+     <div class="kv" style="margin-top:4px">${topic?`<span class="topic">${esc(topic)}</span><button class="sm" data-tcopy="${esc(topic)}">📋 ${nt('copy')}</button><button class="sm pri" data-ttest="${esc(topic)}">🔔 ${nt('sendTest')}</button><button class="sm ghost" data-tnew="${key}">↻ ${nt('renew')}</button>`:`<span class="hint">${nt('none')}</span><button class="sm pri" data-tnew="${key}">＋ ${nt('create')}</button>`}</div></div>`;
+  const off=(S.notify&&S.notify.off)||{};
+  const TY=[['order','🛒 Yeni sipariş'],['status','🚚 Ivy durum güncellemesi'],['issue','⚠️ Sorun (stok yok / gecikme)'],['msg','💬 Mesajlar'],['mentor','🎓 Öğrenci (ödev, soru, rapor)']];
+  w.innerHTML=`<div class="nbox"><h3 style="margin:0 0 4px">⚙️ ${nt('settings')}</h3>
+   <div class="nset"><div><b>${nt('sound')}</b><div class="hint">${nt('soundHint')}</div></div><label class="chk"><input type="checkbox" id="nsnd" ${NT.sound?'checked':''}></label><button class="sm" id="ntest">${nt('test')}</button></div>
+   <div class="nset"><div><b>${nt('desktop')}</b><div class="hint">${nt('desktopHint')}</div></div>${perm==='granted'?`<span class="chip g">${nt('granted')}</span>`:perm==='default'?`<button class="sm pri" id="nperm">${nt('allow')}</button>`:`<span class="hint" style="max-width:260px">${nt(perm==='denied'?'denied':'unsupported')}</span>`}</div>
+   <div class="nset" style="display:block"><b>${nt('phone')}</b><div class="hint">${nt('phoneHint')}</div>
+     ${topicRow('me',S.topic,nt('myTopic'))}
+     ${S.role==='admin'?topicRow('agent',S.notify&&S.notify.agentTopic,nt('ivyTopic')+' — Ivy kendi panelinden de kurabilir'):''}
+     <div class="hint" style="margin-top:8px;line-height:1.6">${nt('steps')}</div>
+     <div class="hint" style="margin-top:6px">ℹ️ ${nt('relay')}</div></div>
+   ${S.role==='admin'?`<div class="nset" style="display:block"><b>${nt('types')}</b><div class="kv" style="margin-top:6px">${TY.map(([k,l])=>`<label class="chk tyc"><input type="checkbox" data-ty="${k}" ${off[k]?'':'checked'}> ${l}</label>`).join('')}</div></div>`:''}</div>`;
+  $('#nsnd').onchange=e=>{NT.sound=e.target.checked;store.set('oh_sound',NT.sound?'1':'0');if(NT.sound)chime('order');};
+  $('#ntest').onclick=()=>chime('order',true);
+  if($('#nperm'))$('#nperm').onclick=async()=>{try{await Notification.requestPermission();}catch(e){}drawNotifSettings();if(Notification.permission==='granted'){try{new Notification('🔔 Order Hub',{body:nt('granted'),icon:'icon-192.png'});}catch(e){}}};
+  $$('#nsetw [data-tcopy]').forEach(b=>b.onclick=()=>navigator.clipboard.writeText(b.dataset.tcopy).then(()=>toast(t('copied')+' ✓')));
+  $$('#nsetw [data-ttest]').forEach(b=>b.onclick=async()=>{b.disabled=true;try{const r=await ntfySend(b.dataset.ttest,'🔔 Order Hub test','✓ '+new Date().toLocaleTimeString(),'todo','order');toast(r.ok?nt('sent'):'ntfy '+r.status);}catch(e){toast('ntfy: '+(e.message||e));}b.disabled=false;});
+  $$('#nsetw [data-tnew]').forEach(b=>b.onclick=async()=>{const k=b.dataset.tnew,tp=newTopic();b.disabled=true;
+    try{if(k==='agent'){S.notify=await api('saveNotify',S.pass,{agentTopic:tp});}else{await api('setMyTopic',S.pass,tp);S.topic=tp;if(S.role==='admin'&&S.notify)S.notify.adminTopic=tp;S.mentor=null;}
+      drawNotifSettings();toast('✓');}catch(e){alert(e.message||e);b.disabled=false;}});
+  $$('#nsetw [data-ty]').forEach(c=>c.onchange=async()=>{const o={};$$('#nsetw [data-ty]').forEach(x=>{if(!x.checked)o[x.dataset.ty]=1;});try{S.notify=await api('saveNotify',S.pass,{off:o});toast('✓');}catch(e){alert(e.message||e);}});
+}
+
+/* ================= 🎓 Mentorship (admin ⇄ students) ================= */
+const STU_VIEWS=['sHome','sRoad','sHw','sCheck','sSessions','sAudit','sQa','sRes'];
+const STU_NAV={sHome:['🏠','Panom'],sRoad:['🗺️','Yol haritası'],sHw:['📝','Ödevler'],sCheck:['📈','Haftalık rapor'],sSessions:['📅','Görüşmeler'],sAudit:['🔍','Mağaza denetimi'],sQa:['💬','Soru-cevap'],sRes:['📎','Kaynaklar']};
+const STATUS_TR={active:'Aktif',paused:'Durduruldu',archived:'Arşiv'};
+const AUDIT_CATS=[['thumb','📸 Kapak fotoğrafı & görseller'],['title','🔤 Başlıklar & anahtar kelimeler'],['tags','🏷️ 13 etiket & özellikler'],['desc','📝 Açıklama & ölçü tablosu'],['price','💰 Fiyat & kâr marjı'],['brand','🎨 Vitrin: logo, banner, About'],['policy','📦 Kargo, işlem süresi, politikalar'],['reviews','⭐ Yorumlar & müşteri iletişimi'],['ads','📣 Reklam & ROAS'],['range','🧺 Ürün çeşitliliği & ilan sayısı']];
+const DEFAULT_CUR_TEXT=`# 🚀 Başlangıç & mağaza kurulumu
+## Mağazanın temeli
+Mağaza adı kısa, akılda kalıcı ve nişini anlatan bir ad olsun. Logo + banner aynı renk ve fontla hazırlanır.
+- **About** bölümüne gerçek hikâyeni yaz (kim olduğun, neden bu ürünler).
+- Politikalar: iade/değişim, işlem süresi, kargo süreleri gerçekçi olmalı.
+- Ödeme ve vergi bilgilerini eksiksiz doldur; hesap doğrulamasını bitir.
+- [ ] Mağaza adını ve nişini belirle
+- [ ] Logo ve banner yükle
+- [ ] About + mağaza politikalarını doldur
+- [ ] Ödeme / vergi / doğrulama adımlarını tamamla
+## Etsy kuralları: mağazanı riske atma
+link: https://www.etsy.com/legal/sellers/
+Kapanan mağazaların çoğu kural ihlalinden kapanır. Etsy satıcı politikasını baştan sona oku.
+- Bir **üretim ortağı** (production partner) ile çalışıyorsan bunu ilanda ve mağazanda belirtmen gerekir.
+- Marka, logo, karakter ya da telifli tasarım içeren ürün satma.
+- İşlem ve kargo sürelerini gerçeğe göre yaz; geciken siparişler mağaza puanını düşürür.
+- [ ] Etsy satıcı politikasını oku
+- [ ] Üretim ortağı bilgisini ekle (gerekiyorsa)
+- [ ] Ürün listende marka/telif riski olanları çıkar
+# 🔎 Ürün araştırma
+## Trend ürün bulma
+- **Meta Ad Library**: son 1–3 ayda çok reklam verilen ürünler = talep var demektir.
+- TikTok ve Pinterest’te kendi nişindeki tarzlara bak (kaydedilen / paylaşılan içerik).
+- Etsy aramasında otomatik tamamlama önerileri ve “Bestseller” rozetli rakipler.
+- eRank / Alura gibi araçlarla arama hacmi ve rekabeti kontrol et.
+- [ ] 20 ürün fikri listesi çıkar
+- [ ] Her fikir için 3 rakip ilanı kaydet (fiyat, yorum sayısı, satış)
+- [ ] En güçlü 5 ürünü seç
+## Tedarik & numune
+Seçtiğin ürünlerin tedarikçisini bul: varyant, beden tablosu, gramaj ve kargo maliyetini not et. Order Hub’da her siparişe tedarik linki eklenir, siparişi Ivy hazırlar.
+- [ ] 5 ürün için tedarik linki bul
+- [ ] Maliyet + kargo tablosunu doldur
+- [ ] 1–2 numune sipariş et, kaliteyi kontrol et
+# 💰 Fiyatlandırma & kâr
+## Kâr formülü
+**Satış fiyatı** = ürün + kargo + paketleme + Etsy kesintileri + reklam payı + hedef net kâr.
+- Etsy kesintileri (yaklaşık): ilan $0.20, işlem %6.5, ödeme ~%3 + sabit ücret, Offsite Ads satışlarında %12–15.
+- **Sürekli indirim** kullanacaksan liste fiyatı = hedef fiyat ÷ 0.65 (sürekli %35 indirimle hedefe iner).
+- ABD’de ücretsiz kargo çok daha iyi satar; kargoyu fiyata göm.
+- [ ] Her ürün için kâr tablosu hazırla
+- [ ] Ürün başı minimum net kâr hedefini belirle (ör. $10)
+- [ ] Fiyatları ve indirim stratejini yaz
+## Rakip bazlı fiyat
+Rakiplerin fiyatına bak: çok altında kalma (değer algısı düşer), çok üstünde de kalma. Formül fiyatın ile rakip fiyatının ortasını hedefle.
+- [ ] 5 ürün için rakip fiyat ortalamasını çıkar
+- [ ] Son fiyatı belirle
+# 📸 İlan oluşturma
+## Fotoğraf & kapak görseli
+Kapak fotoğrafı tıklamayı getirir: ürünü değil **tarzı / havayı** satar. Toplam 10 fotoğraf: kapak, kombin/kullanım, detay, ölçü, varyantlar; mümkünse video.
+- [ ] İlk ürün için 10 fotoğraf hazırla
+- [ ] 3 farklı kapak fotoğrafı dene, en çok tıklananı seç
+## Başlık, 13 etiket, açıklama
+- Başlığın ilk kelimeleri en önemli arama kelimesi olsun; doğal ve okunur yaz.
+- **13 etiketin hepsini** doldur (her biri en fazla 20 karakter, farklı aramalar).
+- Özellikler (renk, malzeme, stil) ve ölçü/gramaj alanlarını eksiksiz doldur.
+- Açıklamanın ilk 2 satırı: ürün ne, kime, hangi durumda.
+- [ ] İlk 10 ilanı yayınla
+- [ ] Her ilanda 13 etiket + tüm özellikler dolu
+- [ ] Ölçü tablosu / gramaj bilgisi eklendi
+# 📣 Trafik & reklam
+## Etsy Ads
+- Küçük günlük bütçeyle başla, 10–14 gün veri topla.
+- ROAS = ciro ÷ reklam harcaması. 2’nin altındaki ilanları reklamdan çıkar, kazananlara bütçe kaydır.
+- Hangi gün daha çok sattığına bak; bütçeyi o günlere ağırlık ver.
+- [ ] Etsy Ads’i aç
+- [ ] 14 gün sonra ROAS tablosunu çıkar
+- [ ] Kazanan 3 ilanı belirle, bütçeyi onlara kaydır
+## Sosyal medya
+Pinterest pinleri ve TikTok/Reels kısa videoları ücretsiz trafik getirir. Haftada 3–5 paylaşım hedefle.
+- [ ] Pinterest hesabı aç, 10 pin paylaş
+- [ ] 3 kısa ürün videosu çek
+# 🎯 İndirim & kampanyalar
+## Nabız indirimleri
+30 günlük düz indirim yerine kısa dalgalar: 2–3 gün düşük indirim → 1 gün derin “flaş” indirim. Sepete ekleyenleri flaş günü yakalarsın. Her indirimde minimum kârını kontrol et.
+- Özel günleri önceden planla (Black Friday, Noel son sipariş tarihi, Sevgililer Günü, Cadılar Bayramı…).
+- Otomatik teklifler: sepette bırakanlara ve favorileyenlere indirim kodu.
+- [ ] Önümüzdeki 30 günün indirim planını yaz
+- [ ] Sepet / favori tekliflerini kur
+- [ ] Planlanan indirimlerde kârı kontrol et
+# 📦 Sipariş & müşteri
+## Order Hub ile sipariş akışı
+Sipariş Etsy’ye düşer → **Etsy senkron** ile Order Hub’a gelir → Ivy tedarik edip kargolar → takip numarası panelde görünür → Etsy’de “Mark as shipped” yaparsın.
+- [ ] Siparişlerim → “Etsy senkron” yer imini kur
+- [ ] İlk siparişi uçtan uca takip et
+- [ ] Takip no gelince Etsy’de “Mark as shipped” yap
+## Müşteri iletişimi & yorumlar
+Mesajlara 24 saat içinde cevap ver. Gecikme varsa müşteriye sen önce yaz. Hazır mesaj şablonları zaman kazandırır.
+- [ ] 5 hazır mesaj şablonu yaz (teşekkür, kargo, gecikme, beden, iade)
+- [ ] İlk 5 yorumu topla
+# 📊 Analiz & büyüme
+## Haftalık rakamlar
+Her hafta: ziyaret, sipariş, dönüşüm oranı (sipariş ÷ ziyaret), ciro, reklam harcaması. Haftalık raporu her Pazar gir; gidişatı birlikte görürüz.
+- [ ] 4 hafta üst üste haftalık rapor gir
+- [ ] Dönüşümü en düşük 5 ilanı yenile (kapak, başlık, fiyat)
+## Kazananı çoğalt
+Satan ürünü renk, desen ve varyasyonlarla çoğalt; benzer ürünleri ayrı ilan olarak aç. Hedef: 60+ aktif ilan.
+- [ ] 1 kazanan ürünü 3 yeni ilana çoğalt
+- [ ] 60 aktif ilana ulaş`;
+const DEFAULT_RES_TEXT=`Etsy | Etsy Seller Handbook (resmî rehber) | https://www.etsy.com/seller-handbook | Etsy’nin satıcı makaleleri
+Etsy | Satıcı politikası | https://www.etsy.com/legal/sellers/ | Mutlaka oku
+Etsy | Etsy ücretleri | https://www.etsy.com/legal/fees/ | Kesinti oranları
+Araştırma | Meta Ad Library | https://www.facebook.com/ads/library/ | Son 1–3 ayın reklamları = trend ürünler
+Araştırma | eRank | https://erank.com | Anahtar kelime ve etiket araştırması
+Araştırma | Pinterest Trends | https://trends.pinterest.com | Sezon trendleri
+Tasarım | Canva | https://www.canva.com | Logo, banner, görseller
+Kargo | 17TRACK | https://www.17track.net/en | Takip numarası sorgulama`;
+const _curMemo={};
+function h6(s){let h=5381;for(const c of String(s))h=((h<<5)+h+c.codePointAt(0))|0;return (h>>>0).toString(36);}
+function parseCur(txt){
+  if(_curMemo[txt])return _curMemo[txt];
+  const mods=[];let m=null,l=null;
+  String(txt||'').split('\n').forEach(raw=>{const line=raw.replace(/\s+$/,'');
+    if(/^# /.test(line)){const tt=line.slice(2).trim();const mm=tt.match(/^(\p{Extended_Pictographic}\uFE0F?)\s*(.*)$/u);m={id:'m'+h6(tt),icon:mm?mm[1]:'📘',title:mm?mm[2]:tt,lessons:[]};mods.push(m);l=null;return;}
+    if(/^## /.test(line)&&m){const tt=line.slice(3).trim();l={id:'l'+h6(m.id+tt),title:tt,body:'',link:'',tasks:[]};m.lessons.push(l);return;}
+    if(!l)return;
+    if(/^link:\s*/i.test(line)){l.link=line.replace(/^link:\s*/i,'').trim();return;}
+    if(/^- \[ ?\] /.test(line)){const tt=line.replace(/^- \[ ?\] /,'').trim();l.tasks.push({id:'t'+h6(tt),t:tt});return;}
+    l.body+=(l.body?'\n':'')+line;});
+  return (_curMemo[txt]=mods);
+}
+const curText=()=>(S.mentor&&S.mentor.curriculum&&S.mentor.curriculum.text)||DEFAULT_CUR_TEXT;
+const cur=()=>parseCur(curText());
+const resText=()=>(S.mentor&&S.mentor.resources&&S.mentor.resources[0]&&S.mentor.resources[0].text)||DEFAULT_RES_TEXT;
+function resList(){return resText().split('\n').map(x=>x.split('|').map(y=>y.trim())).filter(a=>a.length>=3&&a[2]).map(([cat,title,url,note])=>({cat,title,url,note:note||''}));}
+function md(s){const lines=esc(String(s||'').trim()).split('\n');let out='',ul=false;
+  lines.forEach(x=>{const b=x.replace(/\*\*(.+?)\*\*/g,'<b>$1</b>');if(/^- /.test(x)){if(!ul){out+='<ul>';ul=true;}out+='<li>'+b.slice(2)+'</li>';}else{if(ul){out+='</ul>';ul=false;}if(b)out+='<p style="margin:4px 0">'+b+'</p>';}});
+  if(ul)out+='</ul>';return out;}
+async function loadMentor(force){
+  if(S.mentor&&!force)return S.mentor;
+  try{S.mentor=await api('mentorLoad',S.pass);}catch(e){S.mentor={students:[],curriculum:null,resources:[]};toast('Mentörlük: '+(e.message||e));}
+  return S.mentor;
+}
+async function mSave(action,p){try{S.mentor=await api('mentorSave',S.pass,action,p||{});return true;}catch(e){alert(e.message||e);return false;}}
+const me=()=>(S.mentor&&S.mentor.me)||S.me;
+const curStu=()=>S.role==='admin'?((S.mentor&&S.mentor.students)||[]).find(x=>x.id===S.mSid):me();
+function allTasks(){const out=[];cur().forEach(m=>m.lessons.forEach(l=>l.tasks.forEach(tk=>out.push({key:m.id+'.'+l.id+'.'+tk.id,m,l,t:tk}))));return out;}
+function progressOf(s){const T=allTasks(),P=(s&&s.progress)||{};const d=T.filter(x=>P[x.key]).length;return {done:d,total:T.length,pct:T.length?Math.round(d*100/T.length):0,next:T.find(x=>!P[x.key])};}
+function isoWeek(d){d=new Date(Date.UTC(d.getFullYear(),d.getMonth(),d.getDate()));const day=d.getUTCDay()||7;d.setUTCDate(d.getUTCDate()+4-day);const y=new Date(Date.UTC(d.getUTCFullYear(),0,1));return d.getUTCFullYear()+'-W'+String(Math.ceil(((d-y)/864e5+1)/7)).padStart(2,'0');}
+const money=v=>v===''||v==null||isNaN(+v)?'—':'$'+(+v).toLocaleString('en-US',{maximumFractionDigits:0});
+const fmtDT=iso=>{const d=new Date(iso);return isNaN(d)?String(iso||''):d.toLocaleString('tr-TR',{weekday:'short',day:'numeric',month:'short',hour:'2-digit',minute:'2-digit'});};
+const pbar=(p,color)=>`<div class="pbar"><i style="width:${Math.max(0,Math.min(100,p))}%;${color?'background:'+color:''}"></i></div>`;
+const lastAudit=s=>((s&&s.audits)||[]).slice().sort((a,b)=>String(b.at).localeCompare(String(a.at)))[0];
+function auditAvg(a){const v=Object.values((a&&a.scores)||{}).map(Number).filter(x=>x>0);return v.length?v.reduce((x,y)=>x+y,0)/v.length:0;}
+function stuFlags(s){
+  const hw=(s.homework||[]).filter(h=>h.status==='submitted').length;
+  const q=(s.questions||[]).filter(x=>!x.answer).length;
+  const lastC=(s.checkins||[]).slice(-1)[0];
+  const days=lastC?Math.floor((Date.now()-new Date(lastC.at))/864e5):null;
+  const since=Math.floor((Date.now()-new Date(s.createdAt||Date.now()))/864e5);
+  const late=(s.status||'active')==='active'&&(days==null?since>7:days>8);
+  return {hw,q,late,days,lastC};
+}
+function mentorBadge(){if(!S.mentor||!S.mentor.students)return 0;return S.mentor.students.filter(s=>s.status!=='archived').reduce((a,s)=>{const f=stuFlags(s);return a+f.hw+f.q;},0);}
+const seenKey=v=>'oh_seen_'+((me()||{}).id||'')+'_'+v;
+const seenAt=v=>store.get(seenKey(v))||'';
+function stuBadges(){
+  const s=me();if(!s)return {};
+  const wk=isoWeek(new Date()),dow=new Date().getDay();
+  return {sHw:(s.homework||[]).filter(h=>h.status==='open'||h.status==='revise').length,
+    sQa:(s.questions||[]).filter(q=>q.answeredAt&&q.answeredAt>seenAt('sQa')).length,
+    sCheck:(s.checkins||[]).filter(c=>c.commentAt&&c.commentAt>seenAt('sCheck')).length+(((dow===0||dow>=5)&&!(s.checkins||[]).some(c=>c.week===wk))?1:0),
+    sSessions:(s.sessions||[]).filter(x=>x.createdAt>seenAt('sSessions')).length,
+    sAudit:(s.audits||[]).filter(x=>x.at>seenAt('sAudit')).length};
+}
+function svgWeeks(C){
+  C=(C||[]).slice(-12);if(!C.length)return '';
+  const H=170,P=22,bw=Math.min(64,(640-P*2)/C.length),W=Math.max(320,P*2+bw*C.length),mx=Math.max(1,...C.map(c=>+c.revenue||0));
+  const bars=C.map((c,i)=>{const v=+c.revenue||0,h=(v/mx)*(H-P*2-10),x=P+i*bw;
+    return `<rect x="${x+4}" y="${H-P-h}" width="${Math.max(4,bw-8)}" height="${h}" rx="5" fill="#6d4aff" opacity=".85"><title>${esc(c.week)}: ${money(c.revenue)} · ${c.orders===''?'—':c.orders} sipariş</title></rect>
+     <text x="${x+bw/2}" y="${H-6}" font-size="10" text-anchor="middle" fill="#7d8396">${esc(String(c.week).slice(-3))}</text>
+     ${v?`<text x="${x+bw/2}" y="${H-P-h-4}" font-size="10" text-anchor="middle" fill="#141826">$${Math.round(v)}</text>`:''}`;}).join('');
+  return `<svg viewBox="0 0 ${W} ${H}" style="width:100%;max-width:${W*1.4}px;height:auto">${bars}</svg>`;
+}
+const conv=c=>(+c.orders&&+c.visits)?((+c.orders/+c.visits)*100).toFixed(1)+'%':'—';
+const roas=c=>(+c.revenue&&+c.adSpend)?' · ROAS '+(+c.revenue/+c.adSpend).toFixed(1):'';
+const weekOrders=w=>S.orders.filter(o=>o.created&&isoWeek(new Date(o.created))===w).length;
+
+/* ---------- shared blocks (admin + student) ---------- */
+function roadHTML(s){
+  const P=(s&&s.progress)||{};
+  return cur().map(m=>{const T=m.lessons.flatMap(l=>l.tasks.map(tk=>m.id+'.'+l.id+'.'+tk.id));const d=T.filter(k=>P[k]).length;const pct=T.length?Math.round(d*100/T.length):0;
+    return `<div class="mod"><div class="modh"><span class="modi">${esc(m.icon)}</span><div style="flex:1;min-width:0"><b>${esc(m.title)}</b>${pbar(pct,pct===100?'var(--green)':'')}</div><span class="modp">${d}/${T.length}</span></div>
+     ${m.lessons.map(l=>{const keys=l.tasks.map(tk=>m.id+'.'+l.id+'.'+tk.id);const ld=keys.filter(k=>P[k]).length;
+       return `<details class="les" ${S.openLesson===l.id?'open':''}><summary><span>${keys.length&&ld===keys.length?'✅':'📖'} ${esc(l.title)}</span><span class="modp">${ld}/${keys.length} ▾</span></summary>
+        <div class="lesb">${md(l.body)}${l.link?`<div style="margin-top:6px"><a href="${esc(l.link)}" target="_blank">🔗 Kaynak ↗</a></div>`:''}
+        <div class="tasks">${l.tasks.map(tk=>{const k=m.id+'.'+l.id+'.'+tk.id,on=P[k];return `<label class="task ${on?'on':''}"><input type="checkbox" data-act="task" data-k="${esc(k)}" ${on?'checked':''}><span>${esc(tk.t)}</span>${on?`<small>${esc(fmtDate(on))}</small>`:''}</label>`;}).join('')}</div></div></details>`;}).join('')}</div>`;}).join('');
+}
+function hwHTML(s,admin){
+  const ST={open:['Yapılacak','b'],submitted:['Teslim edildi · inceleniyor','o'],approved:['Onaylandı ✓','g'],revise:['Düzeltme istendi','r']};
+  const ord={revise:0,open:1,submitted:2,approved:3};
+  const L=(s.homework||[]).slice().sort((a,b)=>admin?String(b.createdAt).localeCompare(String(a.createdAt)):(ord[a.status]-ord[b.status])||String(b.createdAt).localeCompare(String(a.createdAt)));
+  const form=admin?`<div class="hcard"><h3>＋ Ödev ver</h3><div class="g2"><input id="hwT" placeholder="Başlık (ör. İlk 10 ilanı yayınla)"><input id="hwDue" type="date"></div>
+    <textarea id="hwD" rows="3" style="margin-top:8px" placeholder="Açıklama / beklenen çıktı"></textarea>
+    <div class="kv" style="margin-top:8px"><select id="hwL" style="flex:1;min-width:180px"><option value="">— derse bağla (isteğe bağlı) —</option>${cur().flatMap(m=>m.lessons.map(l=>`<option value="${esc(l.id)}">${esc(m.icon+' '+l.title)}</option>`)).join('')}</select><button class="pri" data-act="hwAdd">📝 Ödev ver</button></div></div>`:'';
+  const items=L.map(h=>{const [st,c]=ST[h.status]||ST.open;const due=h.due?daysTo(h.due):null;const les=h.lesson?allTasks().find(x=>x.l.id===h.lesson):null;
+    return `<div class="item"><div class="kv" style="justify-content:space-between"><b>${esc(h.title)}</b><span class="chip ${c}">${st}</span></div>
+     <div class="meta">${esc(fmtDate(h.createdAt))}${h.due?` · son gün ${esc(h.due)}${due!=null&&h.status!=='approved'?` (${due<0?(-due)+' gün geçti':due===0?'bugün':due+' gün kaldı'})`:''}`:''}${les?` · ${esc(les.m.icon+' '+les.l.title)}`:''}</div>
+     ${h.desc?`<div style="white-space:pre-wrap">${esc(h.desc)}</div>`:''}
+     ${h.submission||h.link?`<div class="box" style="margin-top:8px"><div class="k">Teslim · ${esc(fmtDate(h.submittedAt))}</div>${esc(h.submission)}${h.link?`<div><a href="${esc(h.link)}" target="_blank">🔗 ${esc(h.link)}</a></div>`:''}</div>`:''}
+     ${h.feedback?`<div class="fb ${h.status==='revise'?'rev':''}"><b>Mentör:</b> ${esc(h.feedback)}</div>`:''}
+     ${admin?`${h.status!=='open'?`<textarea data-hwf="${esc(h.id)}" rows="2" style="margin-top:8px" placeholder="Geri bildirim">${esc(h.feedback||'')}</textarea>`:''}<div class="kv" style="margin-top:6px">${h.status!=='open'?`<button class="pri sm" data-act="hwOk" data-id="${esc(h.id)}">✅ Onayla</button><button class="sm" data-act="hwRev" data-id="${esc(h.id)}">✏️ Düzeltme iste</button>`:''}<button class="sm ghost" data-act="hwDel" data-id="${esc(h.id)}" style="margin-left:auto">🗑</button></div>`
+      :(h.status==='open'||h.status==='revise'?`<textarea data-hws="${esc(h.id)}" rows="3" style="margin-top:8px" placeholder="Ne yaptın? Kısaca anlat">${esc(h.submission||'')}</textarea><div class="kv" style="margin-top:6px"><input data-hwl="${esc(h.id)}" placeholder="Link (ilan, Drive, ekran görüntüsü…)" value="${esc(h.link||'')}" style="flex:1;min-width:180px"><button class="pri" data-act="hwSub" data-id="${esc(h.id)}">📤 Teslim et</button></div>`:'')}</div>`;}).join('');
+  return form+(items||`<div class="empty">${admin?'Henüz ödev yok.':'Şu an ödevin yok 🎉'}</div>`);
+}
+function chkHTML(s,admin){
+  const wk=isoWeek(new Date()),C=s.checkins||[],sel=S.chkWeek||wk;
+  const weeks=[0,1,2,3].map(i=>isoWeek(new Date(Date.now()-i*7*864e5)));
+  const c0=C.find(c=>c.week===sel)||{};
+  const v=k=>esc(c0[k]==null?'':c0[k]);
+  const form=!admin?`<div class="hcard"><h3>📈 Haftalık rapor</h3><div class="hint" style="margin-bottom:8px">Her hafta (tercihen Pazar) 2 dakikada doldur. Rakamlar: Etsy → Shop Manager → Stats (son 7 gün).</div>
+    <div class="grid"><label>Hafta<select id="c_week">${weeks.map(w=>`<option ${w===sel?'selected':''}>${w}</option>`).join('')}</select></label>
+     <label>Ciro ($)<input id="c_revenue" type="number" step="0.01" value="${v('revenue')}"></label>
+     <label>Sipariş<input id="c_orders" type="number" value="${v('orders')}" placeholder="Order Hub’da: ${weekOrders(sel)}"></label>
+     <label>Ziyaret<input id="c_visits" type="number" value="${v('visits')}"></label>
+     <label>Aktif ilan<input id="c_listings" type="number" value="${v('listings')}"></label>
+     <label>Reklam harcaması ($)<input id="c_adSpend" type="number" step="0.01" value="${v('adSpend')}"></label>
+     <label class="full">Bu hafta nasıldı?<div class="mood">${['😣','😕','😐','🙂','🤩'].map((e,i)=>`<button type="button" data-m="${i+1}" class="${+c0.mood===i+1?'on':''}">${e}</button>`).join('')}</div></label>
+     <label class="full">🏆 Kazanımlar<textarea id="c_wins" rows="2">${v('wins')}</textarea></label>
+     <label class="full">🧱 Takıldığın yerler<textarea id="c_blockers" rows="2">${v('blockers')}</textarea></label>
+     <label class="full">🎯 Gelecek haftanın 3 hedefi<textarea id="c_goals" rows="2">${v('goals')}</textarea></label></div>
+    <div class="kv" style="justify-content:flex-end;margin-top:10px"><button class="pri" data-act="chkSave">💾 Raporu gönder</button></div></div>`:'';
+  const l4=C.slice(-4),sum=k=>l4.reduce((a,c)=>a+(+c[k]||0),0);
+  const stats=C.length?`<div class="hcard"><h3>📊 Gidişat</h3>${svgWeeks(C)}<div class="stmeta" style="margin-top:6px"><span>Son ${l4.length} hafta: <b>${money(sum('revenue'))}</b> ciro</span><span><b>${sum('orders')}</b> sipariş</span><span>dönüşüm <b>${conv({orders:sum('orders'),visits:sum('visits')})}</b></span>${sum('adSpend')?`<span>ROAS <b>${(sum('revenue')/sum('adSpend')).toFixed(1)}</b></span>`:''}</div></div>`:'';
+  const list=C.slice().reverse().map(c=>`<div class="item"><div class="kv" style="justify-content:space-between"><b>${esc(c.week)}</b><span style="font-size:20px">${['','😣','😕','😐','🙂','🤩'][+c.mood||0]||''}</span></div>
+    <div class="stmeta"><span>💵 ${money(c.revenue)}</span><span>🛒 ${c.orders===''?'—':esc(c.orders)}</span><span>👀 ${c.visits===''?'—':esc(c.visits)}</span><span>📈 ${conv(c)}</span><span>🧾 ${c.listings===''?'—':esc(c.listings)} ilan</span><span>📣 ${money(c.adSpend)}${roas(c)}</span></div>
+    ${c.wins?`<div style="margin-top:6px">🏆 ${esc(c.wins)}</div>`:''}${c.blockers?`<div>🧱 ${esc(c.blockers)}</div>`:''}${c.goals?`<div>🎯 ${esc(c.goals)}</div>`:''}
+    ${c.comment&&!admin?`<div class="fb"><b>Mentör:</b> ${esc(c.comment)}</div>`:''}
+    ${admin?`<div class="kv" style="margin-top:8px"><input data-cc="${esc(c.id)}" placeholder="Yorum / tavsiye yaz…" value="${esc(c.comment||'')}" style="flex:1;min-width:180px"><button class="sm pri" data-act="chkCom" data-id="${esc(c.id)}">${c.comment?'Güncelle':'Gönder'}</button></div>`:''}</div>`).join('');
+  return form+stats+(list||(admin?'<div class="empty">Henüz haftalık rapor yok.</div>':''));
+}
+function sesHTML(s,admin){
+  const L=s.sessions||[];const ed=admin&&S.sesEdit?L.find(x=>x.id===S.sesEdit):null;const e=ed||{};
+  const next=s.nextCall?`<div class="hcard nextcall"><div><div class="k">Sonraki görüşme</div><b style="font-size:17px">${esc(fmtDT(s.nextCall))}</b></div>${s.callLink?`<a class="btnlink" href="${esc(s.callLink)}" target="_blank">🎥 Katıl</a>`:''}</div>`:'';
+  const form=admin?`<div class="hcard"><h3>${ed?'✏️ Görüşmeyi düzenle':'＋ Görüşme notu'}</h3><div class="g2"><input id="s_date" type="date" value="${esc(e.date||new Date().toISOString().slice(0,10))}"><input id="s_title" placeholder="Başlık (ör. 3. hafta: reklam ve fiyat)" value="${esc(e.title||'')}"></div>
+    <textarea id="s_notes" rows="4" style="margin-top:8px" placeholder="Notlar: konuştuklarımız, kararlar…">${esc(e.notes||'')}</textarea>
+    <textarea id="s_actions" rows="3" style="margin-top:8px" placeholder="Aksiyonlar (her satıra bir) — öğrenci işaretleyebilir">${esc((e.actions||[]).map(a=>a.t).join('\n'))}</textarea>
+    <input id="s_link" style="margin-top:8px" placeholder="Kayıt / doküman linki (isteğe bağlı)" value="${esc(e.link||'')}">
+    <div class="kv" style="justify-content:flex-end;margin-top:8px">${ed?'<button data-act="sesCancel">Vazgeç</button>':''}<button class="pri" data-act="sesSave">💾 Kaydet</button></div><div class="hint">Sonraki görüşme tarihini ve linkini “✏️ Düzenle”den girersin.</div></div>`:'';
+  const list=L.map(x=>`<div class="item"><div class="kv" style="justify-content:space-between"><b>${esc(x.title||'Görüşme')}</b><span class="meta" style="margin:0">${esc(x.date)}</span></div>
+    ${x.notes?`<div style="white-space:pre-wrap;margin-top:6px;color:var(--ink2)">${esc(x.notes)}</div>`:''}
+    ${(x.actions||[]).length?`<div class="tasks">${x.actions.map((a,i)=>`<div class="task ${a.done?'on':''}" data-act="sesAct" data-id="${esc(x.id)}" data-i="${i}"><span class="cb">${a.done?'☑':'☐'}</span><span>${esc(a.t)}</span></div>`).join('')}</div>`:''}
+    ${x.link?`<div style="margin-top:6px"><a href="${esc(x.link)}" target="_blank">🔗 Kayıt / doküman ↗</a></div>`:''}
+    ${admin?`<div class="kv" style="margin-top:6px;justify-content:flex-end"><button class="sm" data-act="sesEdit" data-id="${esc(x.id)}">✏️</button><button class="sm ghost" data-act="sesDel" data-id="${esc(x.id)}">🗑</button></div>`:''}</div>`).join('');
+  return next+form+(list||`<div class="empty">Henüz görüşme notu yok.</div>`);
+}
+function audHTML(s,admin){
+  const la=lastAudit(s),hist=(s.audits||[]).slice().sort((a,b)=>String(b.at).localeCompare(String(a.at)));
+  const col=v=>v>=4?'var(--green)':v>=3?'var(--amber)':'var(--red)';
+  const view=la?`<div class="hcard"><div class="kv" style="justify-content:space-between"><h3 style="margin:0">🔍 Mağaza denetimi · ${esc(fmtDate(la.at))}</h3><span class="chip ${auditAvg(la)>=4?'g':auditAvg(la)>=3?'y':'r'}" style="font-size:14px">${auditAvg(la).toFixed(1)} / 5</span></div>
+    ${AUDIT_CATS.map(([k,l])=>{const v=+((la.scores||{})[k])||0;const n=(la.notes||{})[k];return v||n?`<div class="scorebar"><span>${l}</span>${pbar(v*20,col(v))}<b>${v||'—'}</b>${n?`<div class="hint" style="grid-column:1/-1;margin-top:-2px">${esc(n)}</div>`:''}</div>`:'';}).join('')}
+    ${la.summary?`<div class="fb" style="margin-top:10px"><b>Özet & öncelikler:</b>\n${esc(la.summary)}</div>`:''}</div>`:(admin?'':`<div class="empty">Mentörün mağazanı inceleyince denetim raporun burada görünecek.</div>`);
+  const form=admin?`<div class="hcard"><h3>${la?'Denetim formu (son denetimden dolu gelir)':'＋ İlk mağaza denetimi'}</h3><div class="hint" style="margin-bottom:6px">1 = çok zayıf · 5 = mükemmel. ${s.shopUrl?`<a href="${esc(s.shopUrl)}" target="_blank">Mağazayı aç ↗</a>`:''}</div>
+    ${AUDIT_CATS.map(([k,l])=>{const v=(la&&la.scores||{})[k]||'';return `<div class="audrow"><span>${l}</span><select id="a_${k}"><option value="">—</option>${[1,2,3,4,5].map(n=>`<option ${String(v)===String(n)?'selected':''}>${n}</option>`).join('')}</select><input id="an_${k}" placeholder="Not / öneri" value="${esc((la&&la.notes||{})[k]||'')}"></div>`;}).join('')}
+    <textarea id="a_sum" rows="4" style="margin-top:8px" placeholder="Özet: en önemli 3 düzeltme…">${esc((la&&la.summary)||'')}</textarea>
+    <div class="kv" style="justify-content:flex-end;margin-top:8px">${la?'<button data-act="audUpd">Son denetimi güncelle</button>':''}<button class="pri" data-act="audSave">💾 Yeni denetim olarak kaydet</button></div></div>`:'';
+  const h=hist.length>1?`<div class="hcard"><h3>Geçmiş</h3>${hist.map(a=>`<div class="kv" style="justify-content:space-between;padding:4px 0;border-bottom:1px solid var(--line2)"><span>${esc(fmtDate(a.at))}</span><b>${auditAvg(a).toFixed(1)} / 5</b></div>`).join('')}</div>`:'';
+  return view+form+h;
+}
+function qaHTML(s,admin){
+  const L=(s.questions||[]).slice().sort((a,b)=>admin?((a.answer?1:0)-(b.answer?1:0))||String(b.at).localeCompare(String(a.at)):String(b.at).localeCompare(String(a.at)));
+  const form=!admin?`<div class="hcard"><h3>💬 Mentörüne sor</h3><textarea id="q_text" rows="3" placeholder="Sorunu yaz: ne denedin, nerede takıldın?"></textarea><div class="kv" style="margin-top:8px"><input id="q_link" placeholder="Link / ekran görüntüsü (isteğe bağlı)" style="flex:1;min-width:180px"><button class="pri" data-act="qAsk">Gönder</button></div></div>`:'';
+  const list=L.map(q=>`<div class="item"><div class="meta">${esc(fmtDate(q.at))} · ${esc(ago(q.at))}</div><div style="white-space:pre-wrap;font-weight:600">${esc(q.text)}</div>${q.link?`<div><a href="${esc(q.link)}" target="_blank">🔗 ${esc(q.link)}</a></div>`:''}
+    ${q.answer?`<div class="fb"><b>Mentör:</b> ${esc(q.answer)}</div>`:(admin?'':`<div class="hint" style="margin-top:6px">⏳ Cevap bekleniyor</div>`)}
+    ${admin?`<textarea data-qa="${esc(q.id)}" rows="2" style="margin-top:8px" placeholder="Cevabın…">${esc(q.answer||'')}</textarea><div class="kv" style="justify-content:flex-end;margin-top:6px"><button class="sm pri" data-act="qAns" data-id="${esc(q.id)}">${q.answer?'Güncelle':'Cevapla'}</button></div>`:''}</div>`).join('');
+  return form+(list||`<div class="empty">${admin?'Soru yok.':'Henüz soru sormadın.'}</div>`);
+}
+function resHTML(){
+  const R=resList(),cats=[...new Set(R.map(r=>r.cat))];
+  return cats.map(c=>`<div class="hcard"><h3>${esc(c)}</h3>${R.filter(r=>r.cat===c).map(r=>`<a class="resl" href="${esc(r.url)}" target="_blank"><b>${esc(r.title)} ↗</b>${r.note?`<span>${esc(r.note)}</span>`:''}</a>`).join('')}</div>`).join('')||'<div class="empty">—</div>';
+}
+
+/* ---------- admin: 🎓 Mentörlük ---------- */
+async function mentorAdminView(){
+  await loadMentor();
+  if(S.mSid){const s=curStu();if(s)return studentDetailAdmin(s);S.mSid=null;}
+  const all=S.mentor.students||[],L=all.filter(s=>S.mShowArch||s.status!=='archived'),act=all.filter(s=>(s.status||'active')==='active');
+  const F=act.map(stuFlags),pend=F.reduce((a,f)=>a+f.hw,0),qs=F.reduce((a,f)=>a+f.q,0),late=F.filter(f=>f.late).length;
+  const grid=L.map(s=>{const p=progressOf(s),f=stuFlags(s),ords=S.orders.filter(o=>o.store===s.store),open=ords.filter(VIEWS.todo).length;
+    return `<div class="stu" data-sid="${esc(s.id)}"><div class="kv" style="justify-content:space-between;align-items:flex-start"><div><div class="stn">${esc(s.name)}</div><div class="sts">${esc(s.store)}${s.plan?' · '+esc(s.plan):''}</div></div><span class="stbadge st-${esc(s.status||'active')}">${STATUS_TR[s.status||'active']}</span></div>
+      <div class="k" style="margin-top:10px">Yol haritası · %${p.pct}</div>${pbar(p.pct)}
+      <div class="stmeta"><span>📈 ${f.lastC?esc(f.lastC.week)+' · '+money(f.lastC.revenue):'rapor yok'}</span><span>📦 ${ords.length} sipariş${open?` · ${open} açık`:''}</span>${s.nextCall?`<span>📅 ${esc(fmtDT(s.nextCall))}</span>`:''}</div>
+      <div class="kv" style="margin-top:8px">${f.hw?`<span class="chip o">📝 ${f.hw} ödev bekliyor</span>`:''}${f.q?`<span class="chip r">❓ ${f.q} soru</span>`:''}${f.late?`<span class="chip y">⏰ ${f.days==null?'hiç rapor yok':f.days+' gündür rapor yok'}</span>`:''}${!f.hw&&!f.q&&!f.late?'<span class="chip g">✓ her şey yolunda</span>':''}</div></div>`;}).join('');
+  return `<div class="vtitle">🎓 Mentörlük</div><div class="vhint">Öğrencilerin: yol haritası, ödevler, haftalık raporlar, görüşmeler, mağaza denetimi ve soruları. Siparişlerini Ivy hazırlar.</div>
+   <div class="cards"><div class="sc blue"><span class="v">${act.length}</span><span class="l">🎓 Aktif öğrenci</span></div><div class="sc orange"><span class="v">${pend}</span><span class="l">📝 Onay bekleyen ödev</span></div><div class="sc red"><span class="v">${qs}</span><span class="l">❓ Cevapsız soru</span></div><div class="sc teal"><span class="v">${late}</span><span class="l">⏰ Rapor vermeyen (8+ gün)</span></div></div>
+   <div class="tool"><button class="pri" data-act="mAdd">＋ Öğrenci ekle</button><button data-act="mCur">📘 Müfredat</button><button data-act="mRes">📎 Kaynaklar</button><label class="chk" style="margin-left:auto"><input type="checkbox" id="mArch" ${S.mShowArch?'checked':''}> Arşivi göster</label></div>
+   ${L.length?`<div class="stgrid">${grid}</div>`:`<div class="empty">Henüz öğrenci yok. “＋ Öğrenci ekle” ile başla: ad, mağaza adı ve öğrencinin şifresini sen belirlersin.</div>`}
+   <div class="hcard" style="margin-top:14px"><h3>ℹ️ Sistem nasıl çalışır?</h3><ol style="margin:0;padding-left:20px;line-height:1.7;color:var(--ink2)">
+    <li><b>Öğrenci ekle</b> → ona ayrı bir mağaza adı ve şifre ver. “📤 Davet mesajı” ile linki gönder, şifreyi kendin ilet.</li>
+    <li>Öğrenci aynı linkten girer: <b>Panom, Yol haritası (müfredat), Ödevler, Haftalık rapor, Görüşmeler, Mağaza denetimi, Soru-cevap, Kaynaklar</b> ve kendi siparişleri.</li>
+    <li>Öğrencinin Etsy siparişleri (yer imi ya da elle) Order Hub’a düşer → <b>Ivy hazırlar</b>, takip no’yu öğrenci görür. Senin finans/katalog/1688 verilerini göremez.</li>
+    <li>Ödev teslimi, soru ve haftalık rapor gelince 🔔 bildirim alırsın; senin geri bildirimin öğrenciye bildirim olarak gider.</li>
+    <li>Kartlardaki uyarılar: 📝 bekleyen ödev, ❓ cevapsız soru, ⏰ 8+ gündür rapor yok (hesap verebilirlik).</li></ol></div>`;
+}
+function studentDetailAdmin(s){
+  const f=stuFlags(s),p=progressOf(s),T=S.mTab||'gen';
+  const tabs=[['gen','👤 Genel',0],['road','🗺️ Yol haritası',0],['hw','📝 Ödevler',f.hw],['chk','📈 Raporlar',f.late?1:0],['ses','📅 Görüşmeler',0],['aud','🔍 Denetim',0],['qa','❓ Sorular',f.q]];
+  const body=T==='road'?roadHTML(s):T==='hw'?hwHTML(s,true):T==='chk'?chkHTML(s,true):T==='ses'?sesHTML(s,true):T==='aud'?audHTML(s,true):T==='qa'?qaHTML(s,true):genHTML(s);
+  return `<button class="sm" data-act="mBack">← Öğrenciler</button>
+   <div class="kv" style="justify-content:space-between;margin-top:10px;align-items:flex-start"><div><div class="vtitle" style="margin:0">${esc(s.name)} <span class="stbadge st-${esc(s.status||'active')}">${STATUS_TR[s.status||'active']}</span></div><div class="vhint" style="margin:2px 0 0">${esc(s.store)}${s.plan?' · '+esc(s.plan):''}${s.shopUrl?` · <a href="${esc(s.shopUrl)}" target="_blank">Etsy mağazası ↗</a>`:''}</div></div>
+    <div class="kv"><button data-act="stuEdit">✏️ Düzenle</button><button data-act="stuInvite">📤 Davet mesajı</button><button data-act="stuOrders">📦 Siparişleri</button></div></div>
+   <div style="margin-top:10px">${pbar(p.pct)}<div class="hint" style="margin-top:3px">Yol haritası %${p.pct} · ${p.done}/${p.total} görev${p.next?` · sıradaki: ${esc(p.next.t.t)}`:''}</div></div>
+   <div class="mtabs">${tabs.map(([k,l,n])=>`<button class="${T===k?'on':''}" data-act="mTab" data-t="${k}">${l}${n?`<span class="n">${n}</span>`:''}</button>`).join('')}</div>${body}`;
+}
+function genHTML(s){
+  const ords=S.orders.filter(o=>o.store===s.store),C=s.checkins||[],l4=C.slice(-4),la=lastAudit(s);
+  const rev4=l4.reduce((a,c)=>a+(+c.revenue||0),0),ord4=l4.reduce((a,c)=>a+(+c.orders||0),0);
+  const kv=(k,v)=>v?`<div class="kvrow"><span class="k">${k}</span><span>${v}</span></div>`:'';
+  const f=stuFlags(s),todo=[];
+  if(f.hw)todo.push(['hw',`📝 ${f.hw} teslim edilmiş ödevi incele`]);
+  if(f.q)todo.push(['qa',`❓ ${f.q} soruyu cevapla`]);
+  const lc=f.lastC;if(lc&&!lc.comment)todo.push(['chk',`💬 ${lc.week} raporuna yorum yaz`]);
+  if(f.late)todo.push(['chk',`⏰ Rapor gelmiyor — öğrenciye hatırlat`]);
+  if(!s.nextCall||new Date(s.nextCall)<new Date())todo.push(['edit','📅 Sonraki görüşmeyi planla']);
+  if(!la||(Date.now()-new Date(la.at))>30*864e5)todo.push(['aud','🔍 Mağaza denetimi yap (30+ gün)']);
+  if(!(s.homework||[]).some(h=>h.status==='open'||h.status==='revise'))todo.push(['hw','📝 Yeni ödev ver']);
+  return `<div class="fin2"><div>
+    <div class="cards" style="grid-template-columns:repeat(2,1fr)">
+     <div class="sc teal"><span class="v">${money(rev4)}</span><span class="l">💵 Son ${l4.length||0} rapor ciro</span></div>
+     <div class="sc blue"><span class="v">${ord4||'—'}</span><span class="l">🛒 Son ${l4.length||0} rapor sipariş</span></div>
+     <div class="sc orange"><span class="v">${ords.filter(VIEWS.todo).length} / ${ords.length}</span><span class="l">📦 Ivy: açık / toplam sipariş</span></div>
+     <div class="sc"><span class="v">${la?auditAvg(la).toFixed(1):'—'}</span><span class="l">🔍 Son denetim /5</span></div></div>
+    ${C.length?`<div class="hcard"><h3>📊 Haftalık ciro</h3>${svgWeeks(C)}</div>`:''}
+    <div class="hcard"><h3>🔒 Özel notların <span class="hint">(öğrenci görmez)</span></h3><div style="white-space:pre-wrap;color:var(--ink2)">${esc(s.notes||'—')}</div></div></div>
+   <div><div class="hcard"><h3>✅ Senin yapacakların</h3>${todo.length?todo.map(([tab,l])=>`<button class="todo-a" data-act="${tab==='edit'?'stuEdit':'mTab'}" data-t="${tab}">${l} →</button>`).join(''):'<div class="hint">Her şey güncel 👌</div>'}</div>
+    <div class="hcard"><h3>👤 Profil</h3>${kv('Program',esc(s.plan))}${kv('Odak',esc(s.focus))}${kv('İletişim',esc(s.contact))}${kv('Başlangıç',esc(s.startDate))}${kv('Bitiş',esc(s.endDate))}${kv('Aylık hedef',s.goalMonthly?money(s.goalMonthly):'')}${kv('Sonraki görüşme',s.nextCall?esc(fmtDT(s.nextCall))+(s.callLink?` · <a href="${esc(s.callLink)}" target="_blank">Katıl ↗</a>`:''):'')}${kv('Giriş',s.hasPass?'✓ şifre tanımlı':'⚠️ şifre yok')}${kv('Telefon bildirimi',s.topic?'✓ açık':'kapalı')}</div></div></div>`;
+}
+function studentForm(s){
+  s=s||{};const isNew=!s.id;
+  const f=(k,l,type,ph)=>`<label>${l}<input data-sf="${k}" type="${type||'text'}" value="${esc(type==='datetime-local'?String(s[k]||'').slice(0,16):(s[k]||''))}" placeholder="${esc(ph||'')}"></label>`;
+  modal(`<h2>${isNew?'＋ Yeni öğrenci':'✏️ '+esc(s.name)}</h2>
+   <div class="grid">${f('name','Ad soyad *')}${f('store','Mağaza adı * (Order Hub’da bu adla görünür)','text','ör. AylinStudio')}
+    ${f('shopUrl','Etsy mağaza linki','url','https://www.etsy.com/shop/...')}${f('contact','İletişim (tel / e-posta / IG)')}
+    ${f('plan','Program','text','ör. 3 ay birebir koçluk')}${f('goalMonthly','Aylık ciro hedefi ($)','number')}
+    ${f('startDate','Başlangıç','date')}${f('endDate','Bitiş','date')}
+    ${f('nextCall','Sonraki görüşme','datetime-local')}${f('callLink','Görüşme linki (Zoom / Meet)','url','https://')}
+    <label class="full">Odak / niş<input data-sf="focus" value="${esc(s.focus||'')}" placeholder="ör. Y2K giyim, takı"></label>
+    <label>Durum<select data-sf="status">${[['active','Aktif'],['paused','Durduruldu (giriş kapalı)'],['archived','Arşiv (giriş kapalı)']].map(([v,l])=>`<option value="${v}" ${(s.status||'active')===v?'selected':''}>${l}</option>`).join('')}</select></label>
+    <label>${isNew?'Öğrenci şifresi *':'Yeni şifre (boş = değişmez)'}<div class="pw"><input data-sf="newPass" type="password" autocomplete="new-password" placeholder="en az 6 karakter"><button type="button" id="sfeye">👁</button></div></label>
+    <label class="full">🔒 Özel notların (öğrenci görmez)<textarea data-sf="notes" rows="3">${esc(s.notes||'')}</textarea></label></div>
+   <div class="hint" style="margin-top:8px">Şifreyi sen belirlersin ve öğrenciye kendin iletirsin. Öğrenci aynı Order Hub linkinden bu şifreyle girer; sadece kendi panelini ve kendi mağazasının siparişlerini görür.</div>
+   <div class="err" id="sferr"></div>
+   <div class="kv" style="justify-content:flex-end;margin-top:6px"><button id="sfc">Vazgeç</button><button class="pri" id="sfs">💾 Kaydet</button></div>`);
+  $('#sfeye').onclick=()=>{const i=$('#sheet [data-sf=newPass]');i.type=i.type==='password'?'text':'password';};
+  $('#sfc').onclick=closeModal;
+  $('#sfs').onclick=async()=>{
+    const d={};$$('#sheet [data-sf]').forEach(e=>d[e.dataset.sf]=e.value.trim());
+    if(!d.newPass)delete d.newPass;
+    if(!d.name||!d.store){$('#sferr').textContent='Ad ve mağaza adı gerekli';return;}
+    if(isNew&&!d.newPass){$('#sferr').textContent='Öğrenci şifresi gerekli';return;}
+    $('#sfs').disabled=true;
+    try{S.mentor=await api('mentorSave',S.pass,'student.save',{sid:s.id||'',student:d});
+      if(isNew){const ns=(S.mentor.students||[]).find(x=>x.store===d.store);if(ns){S.mSid=ns.id;S.mTab='gen';}}
+      closeModal();toast('✓ Kaydedildi');await reload();
+    }catch(e){$('#sferr').textContent=e.message||String(e);$('#sfs').disabled=false;}
+  };
+}
+function inviteText(s){
+  const tx=`Merhaba ${s.name.split(' ')[0]}! 🎓\nKoçluk panelin hazır:\n${HUB_URL}\n\nŞifreni ayrıca iletiyorum.\n\nPanelde: 🗺️ yol haritası, 📝 ödevler, 📈 haftalık rapor, 📅 görüşme notları, 🔍 mağaza denetimi, 💬 soru-cevap, 📎 kaynaklar ve 📦 Ivy’nin hazırladığı siparişlerin.\n\n📲 iPhone: linki Safari’de aç → Paylaş → Ana Ekrana Ekle.\n🔔 Sağ üstteki zilden telefon bildirimlerini aç.\n📈 Her Pazar haftalık raporunu girmeyi unutma!`;
+  modal(`<h2>📤 Davet mesajı</h2><div class="hint">Şifre mesajda yok — onu ayrıca sen ilet.</div><div class="sharebox" style="margin-top:8px">${esc(tx)}</div>
+   <div class="bigbtns" style="margin-top:12px"><button class="pri" id="ivs">📤 Paylaş</button><a class="wa" target="_blank" href="https://wa.me/?text=${encodeURIComponent(tx)}">WhatsApp</a><button id="ivc">📋 Kopyala</button></div>
+   <div class="kv" style="justify-content:flex-end;margin-top:10px"><button id="ivx">${t('close')}</button></div>`);
+  $('#ivs').onclick=()=>doShare(tx,'Order Hub');$('#ivc').onclick=()=>navigator.clipboard.writeText(tx).then(()=>toast(t('copied')+' ✓'));$('#ivx').onclick=closeModal;
+}
+function curEditor(){
+  modal(`<h2>📘 Müfredat (yol haritası)</h2>
+   <div class="hint" style="line-height:1.6"><b># Modül</b> (başına emoji koyabilirsin) · <b>## Ders</b> · <b>link:</b> URL · <b>- [ ] görev</b> · diğer satırlar ders metni (<b>- madde</b>, <b>**kalın**</b>). Bir ders ya da görevin adını değiştirirsen o görevdeki ilerleme sıfırlanır.</div>
+   <textarea id="curt" rows="22" style="font:12.5px/1.5 ui-monospace,Consolas,monospace;margin-top:8px">${esc(curText())}</textarea>
+   <div class="err" id="curerr"></div>
+   <div class="kv" style="justify-content:space-between;margin-top:8px"><button id="curd">↺ Varsayılan</button><span class="kv"><button id="curc">Vazgeç</button><button class="pri" id="curs">💾 Kaydet</button></span></div>`);
+  $('#curc').onclick=closeModal;$('#curd').onclick=()=>{$('#curt').value=DEFAULT_CUR_TEXT;};
+  $('#curs').onclick=async()=>{const tx=$('#curt').value;const p=parseCur(tx);if(!p.length||!p.some(m=>m.lessons.length)){$('#curerr').textContent='En az bir “# Modül” ve “## Ders” olmalı';return;}
+    $('#curs').disabled=true;if(await mSave('curriculum.save',{curriculum:tx===DEFAULT_CUR_TEXT?null:{text:tx}})){closeModal();toast('✓ Müfredat kaydedildi');render();}else $('#curs').disabled=false;};
+}
+function resEditor(){
+  modal(`<h2>📎 Kaynaklar</h2><div class="hint">Her satır: <b>Kategori | Başlık | URL | Not</b></div>
+   <textarea id="rest" rows="16" style="font:12.5px/1.5 ui-monospace,Consolas,monospace;margin-top:8px">${esc(resText())}</textarea>
+   <div class="kv" style="justify-content:space-between;margin-top:8px"><button id="resd">↺ Varsayılan</button><span class="kv"><button id="resc">Vazgeç</button><button class="pri" id="ress">💾 Kaydet</button></span></div>`);
+  $('#resc').onclick=closeModal;$('#resd').onclick=()=>{$('#rest').value=DEFAULT_RES_TEXT;};
+  $('#ress').onclick=async()=>{const tx=$('#rest').value.trim();$('#ress').disabled=true;if(await mSave('resources.save',{resources:tx&&tx!==DEFAULT_RES_TEXT?[{text:tx}]:[]})){closeModal();toast('✓');render();}else $('#ress').disabled=false;};
+}
+
+/* ---------- student panel ---------- */
+async function studentView(){
+  await loadMentor();const s=me();
+  if(!s)return '<div class="empty">Profil yüklenemedi. Çıkış yapıp tekrar dene.</div>';
+  const v=S.view,head=(ic,ti,hi)=>`<div class="vtitle">${ic} ${ti}</div><div class="vhint">${hi}</div>`;
+  if(['sQa','sCheck','sSessions','sAudit'].includes(v))setTimeout(()=>{store.set(seenKey(v),new Date().toISOString());renderTabbar(counts());},1200);
+  if(v==='sRoad'){const p=progressOf(s);return head('🗺️','Yol haritası','Adım adım ilerle: dersi oku, görevleri bitirdikçe işaretle. İlerlemen mentörüne görünür.')+`<div class="hcard" style="padding:12px 16px"><div class="kv" style="justify-content:space-between"><b>Toplam ilerleme</b><b>%${p.pct}</b></div>${pbar(p.pct)}</div>`+roadHTML(s);}
+  if(v==='sHw')return head('📝','Ödevler','Mentörünün verdiği ödevler. Teslim et → mentörün onaylar ya da düzeltme ister.')+hwHTML(s,false);
+  if(v==='sCheck')return head('📈','Haftalık rapor','Hesap verebilirlik: rakamlarını her hafta gir, gidişatı birlikte izleyelim.')+chkHTML(s,false);
+  if(v==='sSessions')return head('📅','Görüşmeler','Birebir görüşme notların ve aksiyon listen.')+sesHTML(s,false);
+  if(v==='sAudit')return head('🔍','Mağaza denetimi','Mentörünün mağazan için puan kartı ve öncelikli düzeltmeler.')+audHTML(s,false);
+  if(v==='sQa')return head('💬','Soru-cevap','Takıldığın her şeyi sor; cevap gelince bildirim alırsın.')+qaHTML(s,false);
+  if(v==='sRes')return head('📎','Kaynaklar','İşine yarayacak araçlar ve rehberler.')+resHTML();
+  return sHomeHTML(s);
+}
+function sHomeHTML(s){
+  const p=progressOf(s),wk=isoWeek(new Date()),done=(s.checkins||[]).some(c=>c.week===wk);
+  const hwOpen=(s.homework||[]).filter(h=>h.status==='open'||h.status==='revise');
+  const month=new Date().toISOString().slice(0,7),rev=(s.checkins||[]).filter(c=>String(c.at).slice(0,7)===month).reduce((a,c)=>a+(+c.revenue||0),0),goal=+s.goalMonthly||0;
+  const O=S.orders,open=O.filter(VIEWS.todo).length,shipNE=O.filter(VIEWS.shippedDs).length;
+  const feed=[...(s.homework||[]).filter(h=>h.reviewedAt).map(h=>({at:h.reviewedAt,ic:h.status==='approved'?'✅':'✏️',tx:'Ödev: '+h.title,v:'sHw'})),
+    ...(s.questions||[]).filter(q=>q.answeredAt).map(q=>({at:q.answeredAt,ic:'💡',tx:'Cevap: '+q.answer,v:'sQa'})),
+    ...(s.checkins||[]).filter(c=>c.commentAt).map(c=>({at:c.commentAt,ic:'💬',tx:c.week+': '+c.comment,v:'sCheck'})),
+    ...(s.sessions||[]).map(x=>({at:x.createdAt,ic:'📅',tx:'Görüşme: '+x.title,v:'sSessions'})),
+    ...(s.audits||[]).map(a=>({at:a.at,ic:'🔍',tx:'Mağaza denetimi: '+auditAvg(a).toFixed(1)+'/5',v:'sAudit'}))].sort((a,b)=>String(b.at).localeCompare(String(a.at))).slice(0,5);
+  const nx=p.next;
+  return `<div class="vtitle">👋 Merhaba ${esc(String(s.name||'').split(' ')[0])}</div><div class="vhint">${esc(s.store)}${s.plan?' · '+esc(s.plan):''}</div>
+   <div class="cards">
+    <button class="sc blue" data-v="sRoad"><span class="v">%${p.pct}</span><span class="l">🗺️ Yol haritası · ${p.done}/${p.total}</span></button>
+    <button class="sc orange" data-v="sHw"><span class="v">${hwOpen.length}</span><span class="l">📝 Yapılacak ödev</span></button>
+    <button class="sc teal" data-v="sCheck"><span class="v">${goal?Math.round(rev*100/goal)+'%':money(rev)}</span><span class="l">🎯 Bu ay ${goal?'hedef '+money(goal):'ciro'}</span></button>
+    <button class="sc ${open?'red':'blue'}" data-v="all"><span class="v">${O.length}</span><span class="l">📦 Sipariş · ${open} hazırlanıyor</span></button></div>
+   <div class="fin2"><div>
+    ${nx?`<div class="hcard nextstep"><div class="k">👉 Sıradaki adımın</div><b style="font-size:16px">${esc(nx.t.t)}</b><div class="hint">${esc(nx.m.icon+' '+nx.m.title+' › '+nx.l.title)}</div><button class="pri" style="margin-top:10px" data-act="goLesson" data-l="${esc(nx.l.id)}">Derse git →</button></div>`:`<div class="hcard nextstep"><b>🏆 Yol haritasını bitirdin!</b></div>`}
+    ${!done?`<div class="hcard warnc"><b>📈 Bu haftanın raporu eksik (${wk})</b><div class="hint">2 dakika sürer: ciro, sipariş, ziyaret, kazanımlar.</div><button style="margin-top:8px" data-v="sCheck" class="sc-like">Raporu doldur →</button></div>`:''}
+    ${hwOpen.length?`<div class="hcard"><h3>📝 Ödevlerin</h3>${hwOpen.slice(0,4).map(h=>{const d=h.due?daysTo(h.due):null;return `<div class="kvrow"><span>${h.status==='revise'?'✏️ ':''}${esc(h.title)}</span>${d!=null?`<span class="chip ${d<0?'r':d<=2?'o':'b'}">${d<0?(-d)+' gün geçti':d===0?'bugün':d+' gün'}</span>`:''}</div>`;}).join('')}<button class="sm" style="margin-top:8px" data-v="sHw">Ödevlere git →</button></div>`:''}
+    ${shipNE?`<div class="hcard"><b>🚚 ${shipNE} sipariş kargoda ama Etsy’de “shipped” değil</b><div class="hint">Takip no’yu kopyala → Etsy’de “Mark as shipped”.</div><button class="sm" style="margin-top:8px" data-v="shippedDs">Göster →</button></div>`:''}
+   </div><div>
+    ${s.nextCall?`<div class="hcard nextcall"><div><div class="k">📅 Sonraki görüşme</div><b style="font-size:17px">${esc(fmtDT(s.nextCall))}</b></div>${s.callLink?`<a class="btnlink" href="${esc(s.callLink)}" target="_blank">🎥 Katıl</a>`:''}</div>`:''}
+    <div class="hcard"><h3>🔔 Son geri bildirimler</h3>${feed.length?feed.map(x=>`<button class="todo-a" data-v="${x.v}">${x.ic} ${esc(String(x.tx).slice(0,90))} <span class="hint">· ${esc(ago(x.at))}</span></button>`).join(''):'<div class="hint">Henüz yok.</div>'}</div>
+    <div class="hcard"><h3>🎯 Hedefim</h3><div class="g2"><label><div class="k">Aylık ciro hedefi ($)</div><input id="p_goal" type="number" value="${esc(s.goalMonthly||'')}"></label><label><div class="k">Etsy mağaza linkim</div><input id="p_shop" value="${esc(s.shopUrl||'')}" placeholder="https://www.etsy.com/shop/..."></label></div>${goal?`<div style="margin-top:8px">${pbar(rev*100/goal,'var(--teal)')}<div class="hint">${money(rev)} / ${money(goal)} (haftalık raporlarından)</div></div>`:''}<button class="sm" style="margin-top:8px" data-act="profSave">💾 Kaydet</button></div>
+    <div class="hcard"><h3>❓ Nasıl kullanılır?</h3><ol style="margin:0;padding-left:18px;line-height:1.7;color:var(--ink2)"><li><b>Yol haritası</b>: dersleri sırayla bitir, görevleri işaretle.</li><li><b>Ödevler</b>: teslim et, geri bildirim al.</li><li><b>Haftalık rapor</b>: her Pazar rakamlarını gir.</li><li><b>Siparişlerim</b>: “🔗 Etsy senkron” ile Etsy siparişlerin buraya gelir, Ivy hazırlar; takip no gelince Etsy’de “shipped” yap.</li><li>🔔 <b>Zil</b>: telefon bildirimlerini aç.</li></ol></div>
+   </div></div>`;
+}
+function stuWelcome(){
+  if(store.get('oh_stu_welcome_'+((me()||{}).id||''))==='1')return;
+  modal(`<div class="welcome"><h2>🎓 Hoş geldin${me()&&me().name?' '+esc(me().name.split(' ')[0]):''}!</h2><div style="color:var(--soft)">Burası senin koçluk panelin.</div>
+   <ol style="margin-top:12px"><li>🗺️ <b>Yol haritası</b>’ndan ilk derse başla.</li><li>📝 Ödevlerini teslim et, geri bildirim al.</li><li>📈 Her Pazar <b>haftalık rapor</b> gir.</li><li>💬 Takıldığında <b>Soru-cevap</b>’tan sor.</li><li>📦 Siparişlerin Ivy tarafından hazırlanır; takip no burada görünür.</li><li>🔔 Sağ üstteki zilden <b>telefon bildirimlerini</b> aç.</li></ol>
+   <div class="kv" style="justify-content:flex-end;margin-top:12px"><button class="pri" id="swgo">Başlayalım →</button></div></div>`);
+  $('#swgo').onclick=()=>{store.set('oh_stu_welcome_'+((me()||{}).id||''),'1');closeModal();S.view='sRoad';render();};
+}
+
+/* ---------- mentor click / change delegation ---------- */
+async function mentorClick(e){
+  const st=e.target.closest('.stu[data-sid]');if(st){S.mSid=st.dataset.sid;S.mTab='gen';S.sesEdit=null;render();window.scrollTo(0,0);return;}
+  const mo=e.target.closest('.mood [data-m]');if(mo){$$('.mood [data-m]').forEach(x=>x.classList.toggle('on',x===mo));return;}
+  const vb=e.target.closest('[data-v]');if(vb&&!e.target.closest('[data-act]')&&!vb.classList.contains('nv')&&!vb.classList.contains('sc')){S.view=vb.dataset.v;render();window.scrollTo(0,0);return;}
+  const b=e.target.closest('[data-act]');if(!b||b.dataset.act==='task')return;
+  const a=b.dataset.act,id=b.dataset.id||'',sid=S.mSid||'';
+  const val=sel=>{const x=document.querySelector(sel);return x?String(x.value).trim():'';};
+  const go=async(act,p)=>{b.disabled=true;const ok=await mSave(act,Object.assign({sid},p||{}));b.disabled=false;if(ok){toast('✓');render();}return ok;};
+  switch(a){
+    case 'mBack':S.mSid=null;render();break;
+    case 'mTab':S.mTab=b.dataset.t;S.sesEdit=null;render();break;
+    case 'mAdd':studentForm(null);break;
+    case 'mCur':curEditor();break;
+    case 'mRes':resEditor();break;
+    case 'stuEdit':studentForm(curStu());break;
+    case 'stuInvite':inviteText(curStu());break;
+    case 'stuOrders':S.store=curStu().store;S.view='all';render();window.scrollTo(0,0);break;
+    case 'goLesson':S.view='sRoad';S.openLesson=b.dataset.l;render().then(()=>{const d=document.querySelector('details.les[open]');if(d)d.scrollIntoView({behavior:'smooth',block:'start'});});break;
+    case 'hwAdd':{const tt=val('#hwT');if(!tt){toast('Başlık yaz');return;}await go('hw.add',{title:tt,desc:val('#hwD'),due:val('#hwDue'),lesson:val('#hwL')});break;}
+    case 'hwSub':{const tx=val(`[data-hws="${id}"]`),ln=val(`[data-hwl="${id}"]`);if(!tx&&!ln){toast('Ne yaptığını yaz ya da link ekle');return;}await go('hw.submit',{id,text:tx,link:ln});break;}
+    case 'hwOk':case 'hwRev':await go('hw.review',{id,status:a==='hwOk'?'approved':'revise',feedback:val(`[data-hwf="${id}"]`)});break;
+    case 'hwDel':if(confirm('Ödev silinsin mi?'))await go('hw.delete',{id});break;
+    case 'chkSave':{const p={week:val('#c_week')};['revenue','orders','visits','listings','adSpend','wins','blockers','goals'].forEach(k=>p[k]=val('#c_'+k));const m=document.querySelector('.mood .on');p.mood=m?m.dataset.m:'';await go('checkin.add',p);break;}
+    case 'chkCom':await go('checkin.comment',{id,text:val(`[data-cc="${id}"]`)});break;
+    case 'sesSave':{const p={id:S.sesEdit||'',date:val('#s_date'),title:val('#s_title'),link:val('#s_link'),notes:val('#s_notes'),actions:val('#s_actions').split('\n').map(x=>x.trim()).filter(Boolean).map(x=>({t:x,done:false}))};
+      if(!p.title){toast('Başlık yaz');return;}
+      const old=S.sesEdit&&(curStu().sessions||[]).find(x=>x.id===S.sesEdit);if(old)p.actions=p.actions.map(x=>({t:x.t,done:!!(old.actions||[]).find(y=>y.t===x.t&&y.done)}));
+      if(await go('session.save',p)){S.sesEdit=null;render();}break;}
+    case 'sesEdit':S.sesEdit=id;render();window.scrollTo(0,0);break;
+    case 'sesCancel':S.sesEdit=null;render();break;
+    case 'sesDel':if(confirm('Görüşme notu silinsin mi?'))await go('session.delete',{id});break;
+    case 'sesAct':await go('session.action',{id,idx:b.dataset.i});break;
+    case 'audSave':case 'audUpd':{const scores={},notes={};AUDIT_CATS.forEach(([k])=>{scores[k]=val('#a_'+k);notes[k]=val('#an_'+k);});const la=lastAudit(curStu());await go('audit.save',{id:a==='audUpd'&&la?la.id:'',scores,notes,summary:val('#a_sum')});break;}
+    case 'qAsk':{const tx=val('#q_text');if(!tx){toast('Sorunu yaz');return;}await go('q.ask',{text:tx,link:val('#q_link')});break;}
+    case 'qAns':{const tx=val(`[data-qa="${id}"]`);if(!tx){toast('Cevap yaz');return;}await go('q.answer',{id,text:tx});break;}
+    case 'profSave':await go('profile',{goalMonthly:val('#p_goal'),shopUrl:val('#p_shop')});break;
+  }
+}
+async function mentorChange(e){
+  const x=e.target;
+  if(x.dataset&&x.dataset.act==='task'){
+    const k=x.dataset.k,s=curStu(),[mid,lid]=k.split('.');
+    const m=cur().find(z=>z.id===mid),les=m&&m.lessons.find(l=>l.id===lid);
+    let lessonDone='';
+    if(x.checked&&les&&S.role==='student'){const keys=les.tasks.map(tk=>mid+'.'+lid+'.'+tk.id);if(keys.every(kk=>kk===k||(s.progress&&s.progress[kk])))lessonDone=les.title;}
+    S.openLesson=lid;x.disabled=true;
+    if(await mSave('progress.toggle',{sid:S.mSid||'',task:k,lessonDone})){if(lessonDone){toast('🎉 Ders tamamlandı!');chime('mentor',true);}render();}else x.disabled=false;
+    return;
+  }
+  if(x.id==='c_week'){S.chkWeek=x.value;render();}
+  if(x.id==='mArch'){S.mShowArch=x.checked;render();}
+}
+
+function stuSideHTML(c){const b=stuBadges();
+  return `<nav class="side"><div class="navbox"><h4>🎓 Koçluk</h4>${STU_VIEWS.map(v=>`<button class="nv ${S.view===v?'on':''}" data-v="${v}"><span class="dot" style="background:#7c3aed"></span>${STU_NAV[v][0]} ${STU_NAV[v][1]}${b[v]?`<span class="n alert">${b[v]}</span>`:''}</button>`).join('')}</div>
+   <div class="navbox"><h4>📦 Siparişlerim · Ivy</h4>${['todo','ordered','shippedDs','shipped','delivered','all'].map(v=>navBtn(v,c)).join('')}</div></nav>`;}
+function stuOrderInfo(o){
+  const trks=String(o.tracking||'').split(/[\s,]+/).filter(Boolean);const ap=String(o.agentPhotos||'').split('\n').filter(Boolean);
+  return `<div class="upd"><div style="font-weight:800">📦 Ivy’nin durumu</div><div><span class="pill p-${esc(o.status||'new')}">${t('st_'+(o.status||'new'))}</span></div>
+   ${trks.length?`<div class="kv">${trks.map(n=>`<a class="trk" href="https://t.17track.net/en#nums=${encodeURIComponent(n)}" target="_blank">🚚 ${esc(n)} ↗</a><button class="sm" data-copy="${esc(n)}">${t('copy')}</button>`).join(' ')}</div><div class="hint">Takip no’yu kopyala → Etsy’de siparişi “Mark as shipped” yap.</div>`:'<div class="hint">Takip numarası, Ivy kargoya verince burada görünür.</div>'}
+   ${(+o.costProduct||+o.costShip)?`<div><div class="k">Maliyet</div>${esc(o.costProduct||0)} + ${esc(o.costShip||0)} kargo · ${esc(o.costCurrency||'CNY')}</div>`:''}
+   ${ap.length?`<div><div class="k">📷 Ivy’nin fotoğrafları</div><div class="ph">${ap.map(u=>`<img src="${esc(u)}" data-z="${esc(u)}" alt="">`).join('')}</div></div>`:''}
+   <div class="kv"><button class="sm" data-sedit="${esc(o.id)}">✏️ Sipariş bilgisini düzenle</button></div></div>`;
+}
 
 boot();
 </script>
