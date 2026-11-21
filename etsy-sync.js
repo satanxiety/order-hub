@@ -91,6 +91,77 @@
     });
   }
 
+  /* ---------- read Etsy finances (payment ledger, pending releases, balance, stats) ---------- */
+  const cents = m => m && typeof m.value === 'number' ? m.value / 100 : 0;
+  const strip = s => String(s || '').replace(/<[^>]+>/g, '').replace(/\s+/g, ' ').trim();
+  async function ledgerTab(tab) {
+    const g = p => fetch('/api/v3/ajax/shop/' + shop + '/payments/ledger-entry-groups?ledger_tab=' + tab + '&page_number=' + p).then(r => { if (!r.ok) throw new Error('ledger ' + r.status); return r.json(); });
+    const first = await g(1);
+    const tp = (first.pagination && first.pagination.total_pages) || 1;
+    const out = [...(first.groups || [])];
+    for (let p = 2; p <= tp; p += 4) {
+      const batch = await Promise.all([p, p + 1, p + 2, p + 3].filter(x => x <= tp).map(g));
+      batch.forEach(b => out.push(...(b.groups || [])));
+      say('reading Etsy finances… ' + tab + ' ' + Math.min(p + 3, tp) + '/' + tp);
+    }
+    return out.map(x => ({
+      d: x.create_date, cat: x.parent_category, ref: x.leader_reference_type,
+      amt: cents(x.amount), fee: cents(x.fee), tax: cents(x.tax), net: cents(x.net),
+      cur: (x.net && x.net.currencyCode) || (x.amount && x.amount.currencyCode) || '',
+      rid: String((x.activity && x.activity.receipt_id) || ''),
+      t: x.parent_category === 'sale' ? '' : strip(x.activity && x.activity.title).slice(0, 70),
+      edd: x.earliest_disburse_date || 0, eed: x.exposure_end_date || 0, pen: !!x.is_pending, cu: !!x.is_current,
+      ml: ((x.funds_status && x.funds_status.money_locations) || []).map(m => ({
+        amt: cents(m.amount), st: m.state || '', cap: strip(m.caption),
+        res: /reserve/i.test(m.caption || '') || m.tooltip_key === 'tooltip_reserve_amount'
+      }))
+    }));
+  }
+  async function readBalance() {
+    const html = await (await fetch('/your/account/payments')).text();
+    const money = key => { const m = html.match(new RegExp('"' + key + '":\\{"amount":(-?\\d+),"divisor":(\\d+)')); return m ? +m[1] / +m[2] : null; };
+    const str = key => (html.match(new RegExp('"' + key + '":"([^"]{0,40})"')) || [])[1] || '';
+    return {
+      total: money('currentBalance'), current: money('availableBalance'), pending: money('pendingBalance'),
+      pendingFees: money('pendingFees'), pendingSales: money('pendingSalesAmount'), depositMinimum: money('depositMinimum'),
+      schedule: str('disbursementFrequency'), cardProblem: /unable to charge the card/i.test(html)
+    };
+  }
+  async function readStats() {
+    const html = await (await fetch('/your/shops/me/stats?date_range=last_30')).text();
+    const i = html.indexOf('"initial_data"');
+    if (i < 0) return null;
+    let j = html.indexOf('{', i), k = j, depth = 0, inStr = false;
+    for (; k < html.length; k++) {
+      const c = html[k];
+      if (inStr) { if (c === '\\') { k++; continue; } if (c === '"') inStr = false; continue; }
+      if (c === '"') inStr = true; else if (c === '{') depth++; else if (c === '}') { depth--; if (!depth) break; }
+    }
+    let d; try { d = JSON.parse(html.slice(j, k + 1)); } catch (e) { return null; }
+    const ms = d.metrics_summary || {}, out = { start: d.start_date, end: d.end_date, series: {} };
+    Object.keys(ms).forEach(key => { const e = ms[key] && ms[key].entries; if (Array.isArray(e)) out.series[key] = { total: ms[key].total, entries: e.map(x => [x.timestamp, x.value]) }; });
+    const tb = d.traffic_breakdown || {};
+    out.traffic = [].concat(((tb.etsy_traffic || {}).traffic_sources) || [], ((tb.user_traffic || {}).traffic_sources) || []).map(x => [x.short_key || x.source_key, x.visits]);
+    return out;
+  }
+  let finBusy = false;
+  async function financeRound() {
+    if (finBusy) return; finBusy = true;
+    try {
+      if (!w || w.closed) return;
+      say('reading Etsy finances…');
+      const [ledger, pending, balance, stats] = [await ledgerTab('all'), await ledgerTab('pending'), await readBalance().catch(() => null), await readStats().catch(() => null)];
+      await waitReady();
+      w.postMessage({ type: 'oh-finance', store, shopId: shop, at: Date.now(), ledger, pending, balance, stats }, HUB_ORIGIN);
+      say('💰 finances sent (' + ledger.length + ' ledger rows) · ' + hhmm(new Date()));
+    } catch (err) { say('⚠ finance: ' + (err.message || err)); }
+    finally { finBusy = false; }
+  }
+  window.addEventListener('message', e => {
+    if (e.origin !== HUB_ORIGIN) return;
+    if ((e.data || {}).type === 'oh-req-finance') { if (!w || w.closed) w = e.source; ready = true; financeRound(); }
+  });
+
   /* ---------- one sync round ---------- */
   let busy = false, timer = null, nextAt = null;
   async function round(manual) {
@@ -116,13 +187,15 @@
     }
   }
   timer = setInterval(() => round(false), EVERY_MIN * 60000);
+  const finTimer = setInterval(() => financeRound(), 60 * 60000);
   window.__ohAuto = {
-    now: m => round(m),
-    stop: () => { clearInterval(timer); window.__ohAuto = null; say('Auto-sync stopped.'); next(''); setTimeout(() => box.remove(), 4000); }
+    now: m => round(m).then(() => financeRound()),
+    finance: () => financeRound(),
+    stop: () => { clearInterval(timer); clearInterval(finTimer); window.__ohAuto = null; say('Auto-sync stopped.'); next(''); setTimeout(() => box.remove(), 4000); }
   };
   box.querySelector('#__ohnow').onclick = () => round(true);
   box.querySelector('#__ohstop').onclick = () => window.__ohAuto && window.__ohAuto.stop();
   box.querySelector('#__ohmin').onclick = () => { const s = box.querySelector('#__ohs'), n = box.querySelector('#__ohn'); const hid = s.style.display === 'none'; s.style.display = n.style.display = hid ? '' : 'none'; };
   if (!w) say('⚠ Pop-up blocked: allow pop-ups for etsy.com, then click “Sync now”.');
-  round(false);
+  round(false).then(() => financeRound());
 })();
