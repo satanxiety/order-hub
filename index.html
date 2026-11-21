@@ -3,6 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob: https://i.etsystatic.com https://drive.google.com https://*.googleusercontent.com; connect-src 'self' https://script.google.com https://script.googleusercontent.com https://ntfy.sh https://api.frankfurter.dev https://open.er-api.com; object-src 'none'; base-uri 'none'; form-action 'none'">
+<meta name="referrer" content="no-referrer">
 <meta name="theme-color" content="#15122b">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="mobile-web-app-capable" content="yes">
@@ -267,6 +269,7 @@ header .bell{position:relative;font-size:15px;padding:3px 9px}
 .bn{background:#fff;border-radius:14px;box-shadow:0 10px 30px #0003;padding:12px 14px;border-left:6px solid var(--acc);cursor:pointer;animation:bnin .25s ease-out;transition:opacity .5s,transform .5s}
 .bn.out{opacity:0;transform:translateX(30px)}
 .bn b{display:block;font-size:14px}.bn div{font-size:12.5px;color:var(--ink2);margin-top:2px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.bn-security,.ev-security{border-left-color:var(--red)!important;background:#fff5f5}
 .bn-order,.ev-order{border-left-color:var(--green)!important}.bn-issue,.ev-issue{border-left-color:var(--red)!important}.bn-status,.ev-status{border-left-color:var(--teal)!important}.bn-msg,.ev-msg{border-left-color:var(--amber)!important}.bn-mentor,.ev-mentor{border-left-color:var(--purple)!important}
 @keyframes bnin{from{opacity:0;transform:translateY(-10px)}}
 .evlist{max-height:40vh;overflow:auto;margin-top:10px}
@@ -380,6 +383,11 @@ header .bell{position:relative;font-size:15px;padding:3px 9px}
 <div id="zoom" onclick="this.style.display='none'"><img alt=""></div>
 
 <script>
+/* 🛡️ anti-clickjacking + clone/phishing guard */
+(function(){try{if(window.top!==window.self){document.documentElement.innerHTML='';window.top.location=window.self.location.href;}}catch(e){document.documentElement.innerHTML='';}})();
+const OFFICIAL_HOST='satanxiety.github.io';
+const FAKE_HOST=location.protocol==='https:'&&location.hostname!==OFFICIAL_HOST;
+const su=u=>{u=String(u==null?'':u).trim();return /^https?:\/\//i.test(u)?esc(u):'#';};
 const API_URL='https://script.google.com/macros/s/AKfycbxcL7aDesUjUH22yMh18IZK9eL8J--DX0ts114PmPOQPyJvnAdNMuqTNJzMOdBmxBeb9A/exec';
 const HUB_TITLE='Order Hub';
 
@@ -531,7 +539,9 @@ async function boot(){
   $('#logout').onclick=()=>{forget();location.reload();};
   $('#app').innerHTML=`<div class="center"><div>${t('loading')}</div></div>`;
   const p=savedPass();
-  if(p){S.pass=p;try{await reload();afterLogin();return;}catch(e){forget();}}
+  if(p){S.pass=p;try{await reload();afterLogin();
+      if(!/^tk_/.test(p)){api('login',p).then(r=>{if(r&&r.token){S.pass=r.token;(store.get('oh_pass')?store:sess).set('oh_pass',r.token);}}).catch(()=>{});}
+      return;}catch(e){forget();}}
   let st={configured:true};try{st=await api('status');}catch(e){}
   if(!st.configured){$('#app').innerHTML='<div class="center">Setup: open the old Apps Script link once to set passwords.</div>';return;}
   loginView();
@@ -539,14 +549,17 @@ async function boot(){
 function loginView(){
   $('#app').innerHTML=`<div class="center">
    <h2>📦 Order Hub</h2>
+   ${FAKE_HOST?`<div class="err" style="font-weight:800">⚠️ Bu sayfa resmi Order Hub adresi değil (${esc(location.hostname)}). Şifreni GİRME. Doğru adres: ${OFFICIAL_HOST}</div>`:''}
+   <input id="hpu" name="username" type="text" tabindex="-1" autocomplete="off" aria-hidden="true" style="position:absolute;left:-9999px;width:1px;height:1px;opacity:0">
    <div class="pw"><input id="pw" type="password" placeholder="${t('password')}" autocomplete="current-password"><button type="button" id="eye" title="show">👁</button></div>
    <label class="chk"><input type="checkbox" id="rem" checked> ${t('remember')}</label>
    <button class="pri" id="lb">${t('login')}</button>
    <div class="err" id="msg"></div></div>`;
   $('#eye').onclick=()=>{const i=$('#pw');i.type=i.type==='password'?'text':'password';$('#eye').textContent=i.type==='password'?'👁':'🙈';i.focus();};
-  const go=async()=>{S.pass=$('#pw').value;$('#lb').disabled=true;$('#msg').textContent='';
-    try{await reload();forget();($('#rem')&&$('#rem').checked?store:sess).set('oh_pass',S.pass);afterLogin(true);}
-    catch(e){$('#msg').textContent=t('wrong');$('#lb').disabled=false;}};
+  const go=async()=>{if(FAKE_HOST)return;if($('#hpu').value){$('#msg').textContent=t('wrong');return;}
+    const pw=$('#pw').value;if(!pw)return;$('#lb').disabled=true;$('#msg').textContent='';
+    try{const r=await api('login',pw);S.pass=r.token||pw;await reload();forget();($('#rem')&&$('#rem').checked?store:sess).set('oh_pass',S.pass);afterLogin(true);}
+    catch(e){$('#msg').textContent=/LOCKED/.test(e.message||'')?'🛡️ Çok fazla hatalı deneme — 15 dk sonra tekrar dene.':t('wrong');setTimeout(()=>{$('#lb').disabled=false;},1500);}};
   $('#lb').onclick=go;$('#pw').onkeydown=e=>{if(e.key==='Enter')go();};$('#pw').focus();
 }
 async function reload(){
@@ -554,7 +567,7 @@ async function reload(){
   Object.assign(S,{role:d.role,stores:d.stores,orders:d.orders,statuses:d.statuses,sheetUrl:d.sheetUrl,unread:d.unread||0,me:d.me||null,topic:d.topic||'',notify:d.notify||null,evLast:d.evLast||''});
   if(S.role==='student'&&S.mentor&&S.mentor.me&&d.me)S.mentor.me=Object.assign({},S.mentor.me,d.me);
   if(!S._init){S._init=true;if(S.role==='student')S.view='sHome';const hv=decodeURIComponent((location.hash.match(/v=([^&]+)/)||[])[1]||'');
-    if(hv){if(hv.indexOf('mentor:')===0&&S.role==='admin'){S.view='mentor';S.mSid=hv.slice(7);}else if(hv==='sOrders')S.view='all';else if(VIEWS[hv]||STU_VIEWS.includes(hv)||['help','msgs','finance','catalog','calendar','mentor'].includes(hv))S.view=hv;try{history.replaceState(null,'',location.pathname);}catch(e){}}}
+    if(hv){if(hv.indexOf('mentor:')===0&&S.role==='admin'){S.view='mentor';S.mSid=hv.slice(7);}else if(hv==='sOrders')S.view='all';else if(VIEWS[hv]||STU_VIEWS.includes(hv)||['help','msgs','finance','catalog','calendar','mentor','calc','security'].includes(hv))S.view=hv;try{history.replaceState(null,'',location.pathname);}catch(e){}}}
   $('#bell').style.display='';$('#bell').onclick=bellPanel;
   $('#who').textContent=S.role==='admin'?'Admin':S.role==='student'?'Öğrenci':'Agent';$('#who').style.display='';$('#logout').style.display='';$('#trw').style.display='';
   render();
@@ -583,12 +596,13 @@ async function render(){
       <button class="nv ${S.view==='help'?'on':''}" data-v="help"><span class="dot" style="background:#0ea5e9"></span>❓ ${t('nav_help')}${S.role==='agent'&&S.unread?`<span class="n alert">${S.unread}</span>`:''}</button>
       ${S.role==='admin'?`<button class="nv ${S.view==='catalog'?'on':''}" data-v="catalog"><span class="dot" style="background:#c2410c"></span>📚 ${t('nav_catalog')}</button>`:''}
       ${S.role==='admin'?`<button class="nv ${S.view==='finance'?'on':''}" data-v="finance"><span class="dot" style="background:#0e9f8b"></span>📊 Finans</button><button class="nv ${S.view==='calendar'?'on':''}" data-v="calendar"><span class="dot" style="background:#ea580c"></span>📅 Takvim & kampanyalar${calendarItems(400).filter(e=>e.alert).length?`<span class="n alert">${calendarItems(400).filter(e=>e.alert).length}</span>`:''}</button>`:''}
-      ${S.role==='admin'?`<button class="nv ${S.view==='mentor'?'on':''}" data-v="mentor"><span class="dot" style="background:#7c3aed"></span>🎓 Mentörlük<span class="n ${mentorBadge()?'alert':''}">${mentorBadge()}</span></button><button class="nv ${S.view==='calc'?'on':''}" data-v="calc"><span class="dot" style="background:#15803d"></span>💰 Kâr hesaplama</button>`:''}
+      ${S.role==='admin'?`<button class="nv ${S.view==='mentor'?'on':''}" data-v="mentor"><span class="dot" style="background:#7c3aed"></span>🎓 Mentörlük<span class="n ${mentorBadge()?'alert':''}">${mentorBadge()}</span></button><button class="nv ${S.view==='calc'?'on':''}" data-v="calc"><span class="dot" style="background:#15803d"></span>💰 Kâr hesaplama</button><button class="nv ${S.view==='security'?'on':''}" data-v="security"><span class="dot" style="background:#141826"></span>🛡️ Güvenlik</button>`:''}
       ${S.role==='admin'?`<button class="nv ${S.view==='msgs'?'on':''}" data-v="msgs"><span class="dot" style="background:#f59e0b"></span>💬 ${t('nav_msgs')}<span class="n ${S.unread?'alert':''}">${S.unread}</span></button>`:''}
     </div></nav>`;
   let main='';
   if(S.view==='mentor'&&S.role==='admin')main=await mentorAdminView();
   else if(S.view==='calc'&&S.role==='admin')main=calcHTML();
+  else if(S.view==='security'&&S.role==='admin')main=await securityView();
   else if(STU_VIEWS.includes(S.view)&&S.role==='student')main=await studentView();
   else if(S.view==='catalog'&&S.role==='admin')main=await catalogView();
   else if(S.view==='finance'&&S.role==='admin')main=await financeView();
@@ -616,7 +630,7 @@ async function ordersView(c){
     <button class="sc red" data-v="urgent"><span class="v">${c.urgent}</span><span class="l">🔥 ${t('sum_urgent')}</span></button>
     <button class="sc orange" data-v="todo" data-sort="urgent"><span class="v">${soon}</span><span class="l">⏳ ${t('sum_soon')}</span></button>
     <button class="sc teal" data-v="shippedDs"><span class="v">${c.shippedDs}</span><span class="l">🚚 ${t('sum_notEtsy')}</span></button></div>`;
-  const admin=S.role==='student'?`<button class="pri" id="no">＋ Sipariş ekle</button><button id="esy">🔗 Etsy senkron</button>`:S.role==='admin'?`<button class="pri" id="no">${t('newOrder')}</button><button id="esy">${t('etsySync')}</button><button id="imp">${t('jsonImport')}</button>${S.sheetUrl?`<a href="${esc(S.sheetUrl)}" target="_blank" style="font-size:12px">Sheet ↗</a>`:''}`:'';
+  const admin=S.role==='student'?`<button class="pri" id="no">＋ Sipariş ekle</button><button id="esy">🔗 Etsy senkron</button>`:S.role==='admin'?`<button class="pri" id="no">${t('newOrder')}</button><button id="esy">${t('etsySync')}</button><button id="imp">${t('jsonImport')}</button>${S.sheetUrl?`<a href="${su(S.sheetUrl)}" target="_blank" style="font-size:12px">Sheet ↗</a>`:''}`:'';
   return `${S.role==='admin'?alertsHTML(2):''}${cards}
    <div class="vtitle">${t('nav_'+S.view)} <span style="color:var(--soft);font-weight:600;font-size:15px">· ${L.length}</span></div>
    <div class="vhint">${t('v_'+S.view)}</div>
@@ -652,7 +666,7 @@ function row(o){
 function body(o){
   const ph=String(o.photos||'').split('\n').filter(Boolean);
   const L1688=String(o.links1688||'').split('\n').filter(Boolean);
-  const links=String(o.productLink||'').split('\n').filter(Boolean).map((u,i,a)=>`<a href="${esc(u)}" target="_blank">Etsy${a.length>1?' '+(i+1):''} ↗</a>`).join('')+L1688.map((u,i)=>`<a class="l1688" href="${esc(u)}" target="_blank">1688${L1688.length>1?' '+(i+1):''} ↗</a>`).join('');
+  const links=String(o.productLink||'').split('\n').filter(Boolean).map((u,i,a)=>`<a href="${su(u)}" target="_blank">Etsy${a.length>1?' '+(i+1):''} ↗</a>`).join('')+L1688.map((u,i)=>`<a class="l1688" href="${su(u)}" target="_blank">1688${L1688.length>1?' '+(i+1):''} ↗</a>`).join('');
   const addr=(o.buyerName&&!String(o.address).startsWith(o.buyerName)?o.buyerName+'\n':'')+(o.address||'');
   const trks=String(o.tracking||'').split(/[\s,]+/).filter(Boolean);
   const st=o.status||'new';
@@ -696,6 +710,7 @@ function bind(){
   const mv=S.view==='mentor'||STU_VIEWS.includes(S.view);$('#app').onclick=mv?mentorClick:null;$('#app').onchange=mv?mentorChange:null;$('#app').oninput=null;
   if(S.view==='calc'||S.view==='sCalc')bindCalc();
   if(S.view==='sHome')tickTimer();
+  if(S.view==='security')bindSecurity();
   {const cb=$('#chatbox');if(cb)cb.scrollTop=cb.scrollHeight;}
   $$('.nv[data-v],.sc[data-v]').forEach(b=>b.onclick=()=>{if(b.dataset.v==='mentor')S.mSid=null;S.view=b.dataset.v;if(b.dataset.sort)S.sort=b.dataset.sort;S.open.clear();render();window.scrollTo(0,0);});
   $$('.storesel button[data-s]').forEach(b=>b.onclick=()=>{S.store=b.dataset.s;render();});
@@ -1176,7 +1191,7 @@ function moreSheet(){
   const extra=S.role==='student'
     ?STU_VIEWS.map(v=>`<button class="nv ${S.view===v?'on':''}" data-mv="${v}"><span class="dot" style="background:#7c3aed"></span>${STU_NAV[v][0]} ${STU_NAV[v][1]}${sb[v]?`<span class="n alert">${sb[v]}</span>`:''}</button>`).join('')+`<button class="nv" id="mbell"><span class="dot" style="background:#f59e0b"></span>🔔 Bildirimler & ayarlar</button>`
     :S.role==='admin'
-    ?`<button class="nv" data-mv="mentor"><span class="dot" style="background:#7c3aed"></span>🎓 Mentörlük${mentorBadge()?`<span class="n alert">${mentorBadge()}</span>`:''}</button><button class="nv" id="mbell"><span class="dot" style="background:#f59e0b"></span>🔔 Bildirimler & ayarlar</button><button class="nv" data-mv="calc"><span class="dot" style="background:#15803d"></span>💰 Kâr hesaplama</button><button class="nv" data-mv="catalog"><span class="dot" style="background:#c2410c"></span>📚 ${t('nav_catalog')}</button><button class="nv" data-mv="finance"><span class="dot" style="background:#0e9f8b"></span>📊 Finans</button><button class="nv" data-mv="calendar"><span class="dot" style="background:#ea580c"></span>📅 Takvim & kampanyalar</button><button class="nv" data-mv="msgs"><span class="dot" style="background:#f59e0b"></span>💬 ${t('nav_msgs')}${S.unread?`<span class="n alert">${S.unread}</span>`:''}</button>`
+    ?`<button class="nv" data-mv="mentor"><span class="dot" style="background:#7c3aed"></span>🎓 Mentörlük${mentorBadge()?`<span class="n alert">${mentorBadge()}</span>`:''}</button><button class="nv" id="mbell"><span class="dot" style="background:#f59e0b"></span>🔔 Bildirimler & ayarlar</button><button class="nv" data-mv="calc"><span class="dot" style="background:#15803d"></span>💰 Kâr hesaplama</button><button class="nv" data-mv="security"><span class="dot" style="background:#141826"></span>🛡️ Güvenlik</button><button class="nv" data-mv="catalog"><span class="dot" style="background:#c2410c"></span>📚 ${t('nav_catalog')}</button><button class="nv" data-mv="finance"><span class="dot" style="background:#0e9f8b"></span>📊 Finans</button><button class="nv" data-mv="calendar"><span class="dot" style="background:#ea580c"></span>📅 Takvim & kampanyalar</button><button class="nv" data-mv="msgs"><span class="dot" style="background:#f59e0b"></span>💬 ${t('nav_msgs')}${S.unread?`<span class="n alert">${S.unread}</span>`:''}</button>`
     :`<button class="nv" data-mv="help"><span class="dot" style="background:#0ea5e9"></span>❓ ${t('nav_help')}</button><button class="nv" id="mbell"><span class="dot" style="background:#f59e0b"></span>🔔 ${nt('title')}</button>`;
   modal(`<h2>${t('more_t')}</h2>
    ${S.role==='student'?`<div class="k">🎓 Koçluk</div><div class="morelist">${extra}</div><div class="k" style="margin-top:10px">📦 Siparişlerim</div>`:`<div class="k">${t('h_stores')}</div>`}<div class="storesel" style="padding:0 0 10px;${S.role==='student'?'display:none':''}">${['*',...S.stores].map(s=>`<button class="${S.store===s?'on':''}" data-ms="${esc(s)}">${s==='*'?t('all'):esc(s)}</button>`).join('')}</div>
@@ -1257,7 +1272,7 @@ function productSheet(x){
   modal(`<div class="kv" style="justify-content:space-between;align-items:flex-start"><div style="font-weight:800;font-size:16px;line-height:1.3;flex:1">${esc(x.title||'')}</div><button id="px" class="sm">✕</button></div>
    ${catImg(x)?`<img src="${esc(catImg(x))}" alt="" style="width:100%;max-height:340px;object-fit:contain;border-radius:12px;background:var(--line2);margin:10px 0">`:''}
    <div class="kv" style="margin-bottom:8px">${x.sku?`<span class="b1688" style="color:var(--ink);background:var(--line2);border-color:var(--line)">SKU ${esc(x.sku)}</span>`:''}${x.price?`<b>${esc(x.price)}</b>`:''}${x.state?`<span style="color:var(--soft)">${esc(x.state)}</span>`:''}</div>
-   <div class="lk" style="margin-bottom:10px">${L.map((u,i)=>`<a class="l1688" href="${esc(u)}" target="_blank">1688${L.length>1?' '+(i+1):''} ↗ ${esc(offerId(u))}</a>`).join('')||'<span class="b1688 no">1688 linki yok</span>'}${x.url?`<a href="${esc(x.url)}" target="_blank">Etsy ↗</a>`:''}</div>
+   <div class="lk" style="margin-bottom:10px">${L.map((u,i)=>`<a class="l1688" href="${su(u)}" target="_blank">1688${L.length>1?' '+(i+1):''} ↗ ${esc(offerId(u))}</a>`).join('')||'<span class="b1688 no">1688 linki yok</span>'}${x.url?`<a href="${su(x.url)}" target="_blank">Etsy ↗</a>`:''}</div>
    <div class="g2"><label><div class="k">Renk / beden (isteğe bağlı)</div><input id="pv" placeholder="ör. Black / M"></label><label><div class="k">Adet</div><input id="pq" type="number" min="1" placeholder="1"></label></div>
    <label><div class="k" style="margin-top:8px">Not (isteğe bağlı)</div><input id="pn" placeholder="ör. stoğu kontrol et / fiyat sor"></label>
    <div class="k" style="margin-top:10px">Gidecek mesaj</div><div class="sharebox" id="pt"></div>
@@ -1333,7 +1348,7 @@ document.addEventListener('visibilitychange',()=>{if(!document.hidden&&S.role&&S
 function onEvents(evs){
   S.events=[...evs.slice().reverse(),...(S.events||[])].slice(0,60);
   S.bell=(S.bell||0)+evs.length;setTitle();
-  const kind=evs.some(e=>e.type==='order')?'order':evs.some(e=>e.type==='issue')?'issue':evs[evs.length-1].type;
+  const kind=evs.some(e=>e.type==='security'||e.type==='issue')?'issue':evs.some(e=>e.type==='order')?'order':evs[evs.length-1].type;
   chime(kind);
   try{navigator.vibrate&&navigator.vibrate(kind==='order'?[220,80,220,80,320]:[160,70,160]);}catch(e){}
   evs.slice(-3).forEach(banner);
@@ -1369,7 +1384,7 @@ function goView(v){
   if(!v)return;closeModal();
   if(v.indexOf('mentor:')===0){if(S.role!=='admin')return;S.view='mentor';S.mPanel=null;S.mSid=v.slice(7);S.mTab='gen';}
   else if(v==='sOrders')S.view='all';
-  else if(VIEWS[v]||['help','msgs','finance','catalog','calendar','mentor','calc'].includes(v)||STU_VIEWS.includes(v))S.view=v;
+  else if(VIEWS[v]||['help','msgs','finance','catalog','calendar','mentor','calc','security'].includes(v)||STU_VIEWS.includes(v))S.view=v;
   S.open.clear();render();window.scrollTo(0,0);
 }
 function ntfySend(topic,title,body,view,type){
@@ -1395,7 +1410,7 @@ function drawNotifSettings(){
   const topicRow=(key,topic,label)=>`<div class="trow"><div class="k" style="margin:0">${label}</div>
      <div class="kv" style="margin-top:4px">${topic?`<span class="topic">${esc(topic)}</span><button class="sm" data-tcopy="${esc(topic)}">📋 ${nt('copy')}</button><button class="sm pri" data-ttest="${esc(topic)}">🔔 ${nt('sendTest')}</button><button class="sm ghost" data-tnew="${key}">↻ ${nt('renew')}</button>`:`<span class="hint">${nt('none')}</span><button class="sm pri" data-tnew="${key}">＋ ${nt('create')}</button>`}</div></div>`;
   const off=(S.notify&&S.notify.off)||{};
-  const TY=[['order','🛒 Yeni sipariş'],['status','🚚 Ivy durum güncellemesi'],['issue','⚠️ Sorun (stok yok / gecikme)'],['msg','💬 Mesajlar'],['mentor','🎓 Öğrenci (ödev, soru, rapor)']];
+  const TY=[['security','🛡️ Güvenlik uyarısı'],['order','🛒 Yeni sipariş'],['status','🚚 Ivy durum güncellemesi'],['issue','⚠️ Sorun (stok yok / gecikme)'],['msg','💬 Mesajlar'],['mentor','🎓 Öğrenci (ödev, soru, rapor)']];
   w.innerHTML=`<div class="nbox"><h3 style="margin:0 0 4px">⚙️ ${nt('settings')}</h3>
    <div class="nset"><div><b>${nt('sound')}</b><div class="hint">${nt('soundHint')}</div></div><label class="chk"><input type="checkbox" id="nsnd" ${NT.sound?'checked':''}></label><button class="sm" id="ntest">${nt('test')}</button></div>
    <div class="nset"><div><b>${nt('desktop')}</b><div class="hint">${nt('desktopHint')}</div></div>${perm==='granted'?`<span class="chip g">${nt('granted')}</span>`:perm==='default'?`<button class="sm pri" id="nperm">${nt('allow')}</button>`:`<span class="hint" style="max-width:260px">${nt(perm==='denied'?'denied':'unsupported')}</span>`}</div>
@@ -1570,7 +1585,7 @@ function roadHTML(s){
     return `<div class="mod"><div class="modh"><span class="modi">${esc(m.icon)}</span><div style="flex:1;min-width:0"><b>${esc(m.title)}</b>${pbar(pct,pct===100?'var(--green)':'')}</div><span class="modp">${d}/${T.length}</span></div>
      ${m.lessons.map(l=>{const keys=l.tasks.map(tk=>m.id+'.'+l.id+'.'+tk.id);const ld=keys.filter(k=>P[k]).length;
        return `<details class="les" ${S.openLesson===l.id?'open':''}><summary><span>${keys.length&&ld===keys.length?'✅':'📖'} ${esc(l.title)}</span><span class="modp">${ld}/${keys.length} ▾</span></summary>
-        <div class="lesb">${md(l.body)}${l.link?`<div style="margin-top:6px"><a href="${esc(l.link)}" target="_blank">🔗 Kaynak ↗</a></div>`:''}
+        <div class="lesb">${md(l.body)}${l.link?`<div style="margin-top:6px"><a href="${su(l.link)}" target="_blank">🔗 Kaynak ↗</a></div>`:''}
         <div class="tasks">${l.tasks.map(tk=>{const k=m.id+'.'+l.id+'.'+tk.id,on=P[k];return `<label class="task ${on?'on':''}"><input type="checkbox" data-act="task" data-k="${esc(k)}" ${on?'checked':''}><span>${esc(tk.t)}</span>${on?`<small>${esc(fmtDate(on))}</small>`:''}</label>`;}).join('')}</div></div></details>`;}).join('')}</div>`;}).join('');
 }
 function hwHTML(s,admin){
@@ -1584,7 +1599,7 @@ function hwHTML(s,admin){
     return `<div class="item"><div class="kv" style="justify-content:space-between"><b>${esc(h.title)}</b><span class="chip ${c}">${st}</span></div>
      <div class="meta">${esc(fmtDate(h.createdAt))}${h.due?` · son gün ${esc(h.due)}${due!=null&&h.status!=='approved'?` (${due<0?(-due)+' gün geçti':due===0?'bugün':due+' gün kaldı'})`:''}`:''}${les?` · ${esc(les.m.icon+' '+les.l.title)}`:''}</div>
      ${h.desc?`<div style="white-space:pre-wrap">${esc(h.desc)}</div>`:''}
-     ${h.submission||h.link?`<div class="box" style="margin-top:8px"><div class="k">Teslim · ${esc(fmtDate(h.submittedAt))}</div>${esc(h.submission)}${h.link?`<div><a href="${esc(h.link)}" target="_blank">🔗 ${esc(h.link)}</a></div>`:''}</div>`:''}
+     ${h.submission||h.link?`<div class="box" style="margin-top:8px"><div class="k">Teslim · ${esc(fmtDate(h.submittedAt))}</div>${esc(h.submission)}${h.link?`<div><a href="${su(h.link)}" target="_blank">🔗 ${esc(h.link)}</a></div>`:''}</div>`:''}
      ${h.feedback?`<div class="fb ${h.status==='revise'?'rev':''}"><b>Mentör:</b> ${esc(h.feedback)}</div>`:''}
      ${admin?`${h.status!=='open'?`<textarea data-hwf="${esc(h.id)}" rows="2" style="margin-top:8px" placeholder="Geri bildirim">${esc(h.feedback||'')}</textarea>`:''}<div class="kv" style="margin-top:6px">${h.status!=='open'?`<button class="pri sm" data-act="hwOk" data-id="${esc(h.id)}">✅ Onayla</button><button class="sm" data-act="hwRev" data-id="${esc(h.id)}">✏️ Düzeltme iste</button>`:''}<button class="sm ghost" data-act="hwDel" data-id="${esc(h.id)}" style="margin-left:auto">🗑</button></div>`
       :(h.status==='open'||h.status==='revise'?`<textarea data-hws="${esc(h.id)}" rows="3" style="margin-top:8px" placeholder="Ne yaptın? Kısaca anlat">${esc(h.submission||'')}</textarea><div class="kv" style="margin-top:6px"><input data-hwl="${esc(h.id)}" placeholder="Link (ilan, Drive, ekran görüntüsü…)" value="${esc(h.link||'')}" style="flex:1;min-width:180px"><button class="pri" data-act="hwSub" data-id="${esc(h.id)}">📤 Teslim et</button></div>`:'')}</div>`;}).join('');
@@ -1618,7 +1633,7 @@ function chkHTML(s,admin){
 }
 function sesHTML(s,admin){
   const L=s.sessions||[];const ed=admin&&S.sesEdit?L.find(x=>x.id===S.sesEdit):null;const e=ed||{};
-  const next=s.nextCall?`<div class="hcard nextcall"><div><div class="k">Sonraki görüşme</div><b style="font-size:17px">${esc(fmtDT(s.nextCall))}</b></div>${s.callLink?`<a class="btnlink" href="${esc(s.callLink)}" target="_blank">🎥 Katıl</a>`:''}</div>`:'';
+  const next=s.nextCall?`<div class="hcard nextcall"><div><div class="k">Sonraki görüşme</div><b style="font-size:17px">${esc(fmtDT(s.nextCall))}</b></div>${s.callLink?`<a class="btnlink" href="${su(s.callLink)}" target="_blank">🎥 Katıl</a>`:''}</div>`:'';
   const form=admin?`<div class="hcard"><h3>${ed?'✏️ Görüşmeyi düzenle':'＋ Görüşme notu'}</h3><div class="g2"><input id="s_date" type="date" value="${esc(e.date||new Date().toISOString().slice(0,10))}"><input id="s_title" placeholder="Başlık (ör. 3. hafta: reklam ve fiyat)" value="${esc(e.title||'')}"></div>
     <textarea id="s_notes" rows="4" style="margin-top:8px" placeholder="Notlar: konuştuklarımız, kararlar…">${esc(e.notes||'')}</textarea>
     <textarea id="s_actions" rows="3" style="margin-top:8px" placeholder="Aksiyonlar (her satıra bir) — öğrenci işaretleyebilir">${esc((e.actions||[]).map(a=>a.t).join('\n'))}</textarea>
@@ -1627,7 +1642,7 @@ function sesHTML(s,admin){
   const list=L.map(x=>`<div class="item"><div class="kv" style="justify-content:space-between"><b>${esc(x.title||'Görüşme')}</b><span class="meta" style="margin:0">${esc(x.date)}</span></div>
     ${x.notes?`<div style="white-space:pre-wrap;margin-top:6px;color:var(--ink2)">${esc(x.notes)}</div>`:''}
     ${(x.actions||[]).length?`<div class="tasks">${x.actions.map((a,i)=>`<div class="task ${a.done?'on':''}" data-act="sesAct" data-id="${esc(x.id)}" data-i="${i}"><span class="cb">${a.done?'☑':'☐'}</span><span>${esc(a.t)}</span></div>`).join('')}</div>`:''}
-    ${x.link?`<div style="margin-top:6px"><a href="${esc(x.link)}" target="_blank">🔗 Kayıt / doküman ↗</a></div>`:''}
+    ${x.link?`<div style="margin-top:6px"><a href="${su(x.link)}" target="_blank">🔗 Kayıt / doküman ↗</a></div>`:''}
     ${admin?`<div class="kv" style="margin-top:6px;justify-content:flex-end"><button class="sm" data-act="sesEdit" data-id="${esc(x.id)}">✏️</button><button class="sm ghost" data-act="sesDel" data-id="${esc(x.id)}">🗑</button></div>`:''}</div>`).join('');
   return next+form+(list||`<div class="empty">Henüz görüşme notu yok.</div>`);
 }
@@ -1637,7 +1652,7 @@ function audHTML(s,admin){
   const view=la?`<div class="hcard"><div class="kv" style="justify-content:space-between"><h3 style="margin:0">🔍 Mağaza denetimi · ${esc(fmtDate(la.at))}</h3><span class="chip ${auditAvg(la)>=4?'g':auditAvg(la)>=3?'y':'r'}" style="font-size:14px">${auditAvg(la).toFixed(1)} / 5</span></div>
     ${AUDIT_CATS.map(([k,l])=>{const v=+((la.scores||{})[k])||0;const n=(la.notes||{})[k];return v||n?`<div class="scorebar"><span>${l}</span>${pbar(v*20,col(v))}<b>${v||'—'}</b>${n?`<div class="hint" style="grid-column:1/-1;margin-top:-2px">${esc(n)}</div>`:''}</div>`:'';}).join('')}
     ${la.summary?`<div class="fb" style="margin-top:10px"><b>Özet & öncelikler:</b>\n${esc(la.summary)}</div>`:''}</div>`:(admin?'':`<div class="empty">Mentörün mağazanı inceleyince denetim raporun burada görünecek.</div>`);
-  const form=admin?`<div class="hcard"><h3>${la?'Denetim formu (son denetimden dolu gelir)':'＋ İlk mağaza denetimi'}</h3><div class="hint" style="margin-bottom:6px">1 = çok zayıf · 5 = mükemmel. ${s.shopUrl?`<a href="${esc(s.shopUrl)}" target="_blank">Mağazayı aç ↗</a>`:''}</div>
+  const form=admin?`<div class="hcard"><h3>${la?'Denetim formu (son denetimden dolu gelir)':'＋ İlk mağaza denetimi'}</h3><div class="hint" style="margin-bottom:6px">1 = çok zayıf · 5 = mükemmel. ${s.shopUrl?`<a href="${su(s.shopUrl)}" target="_blank">Mağazayı aç ↗</a>`:''}</div>
     ${AUDIT_CATS.map(([k,l])=>{const v=(la&&la.scores||{})[k]||'';return `<div class="audrow"><span>${l}</span><select id="a_${k}"><option value="">—</option>${[1,2,3,4,5].map(n=>`<option ${String(v)===String(n)?'selected':''}>${n}</option>`).join('')}</select><input id="an_${k}" placeholder="Not / öneri" value="${esc((la&&la.notes||{})[k]||'')}"></div>`;}).join('')}
     <textarea id="a_sum" rows="4" style="margin-top:8px" placeholder="Özet: en önemli 3 düzeltme…">${esc((la&&la.summary)||'')}</textarea>
     <div class="kv" style="justify-content:flex-end;margin-top:8px">${la?'<button data-act="audUpd">Son denetimi güncelle</button>':''}<button class="pri" data-act="audSave">💾 Yeni denetim olarak kaydet</button></div></div>`:'';
@@ -1647,14 +1662,14 @@ function audHTML(s,admin){
 function qaHTML(s,admin){
   const L=(s.questions||[]).slice().sort((a,b)=>admin?((a.answer?1:0)-(b.answer?1:0))||String(b.at).localeCompare(String(a.at)):String(b.at).localeCompare(String(a.at)));
   const form=!admin?`<div class="hcard"><h3>💬 Mentörüne sor</h3><textarea id="q_text" rows="3" placeholder="Sorunu yaz: ne denedin, nerede takıldın?"></textarea><div class="kv" style="margin-top:8px"><input id="q_link" placeholder="Link / ekran görüntüsü (isteğe bağlı)" style="flex:1;min-width:180px"><button class="pri" data-act="qAsk">Gönder</button></div></div>`:'';
-  const list=L.map(q=>`<div class="item"><div class="meta">${esc(fmtDate(q.at))} · ${esc(ago(q.at))}</div><div style="white-space:pre-wrap;font-weight:600">${esc(q.text)}</div>${q.link?`<div><a href="${esc(q.link)}" target="_blank">🔗 ${esc(q.link)}</a></div>`:''}
+  const list=L.map(q=>`<div class="item"><div class="meta">${esc(fmtDate(q.at))} · ${esc(ago(q.at))}</div><div style="white-space:pre-wrap;font-weight:600">${esc(q.text)}</div>${q.link?`<div><a href="${su(q.link)}" target="_blank">🔗 ${esc(q.link)}</a></div>`:''}
     ${q.answer?`<div class="fb"><b>Mentör:</b> ${esc(q.answer)}</div>`:(admin?'':`<div class="hint" style="margin-top:6px">⏳ Cevap bekleniyor</div>`)}
     ${admin?`<textarea data-qa="${esc(q.id)}" rows="2" style="margin-top:8px" placeholder="Cevabın…">${esc(q.answer||'')}</textarea><div class="kv" style="justify-content:flex-end;margin-top:6px"><button class="sm pri" data-act="qAns" data-id="${esc(q.id)}">${q.answer?'Güncelle':'Cevapla'}</button></div>`:''}</div>`).join('');
   return form+(list||`<div class="empty">${admin?'Soru yok.':'Henüz soru sormadın.'}</div>`);
 }
 function resHTML(){
   const R=resList(),cats=[...new Set(R.map(r=>r.cat))];
-  return cats.map(c=>`<div class="hcard"><h3>${esc(c)}</h3>${R.filter(r=>r.cat===c).map(r=>`<a class="resl" href="${esc(r.url)}" target="_blank"><b>${esc(r.title)} ↗</b>${r.note?`<span>${esc(r.note)}</span>`:''}</a>`).join('')}</div>`).join('')||'<div class="empty">—</div>';
+  return cats.map(c=>`<div class="hcard"><h3>${esc(c)}</h3>${R.filter(r=>r.cat===c).map(r=>`<a class="resl" href="${su(r.url)}" target="_blank"><b>${esc(r.title)} ↗</b>${r.note?`<span>${esc(r.note)}</span>`:''}</a>`).join('')}</div>`).join('')||'<div class="empty">—</div>';
 }
 
 /* ---------- admin: 🎓 Mentörlük ---------- */
@@ -1682,7 +1697,7 @@ function studentDetailAdmin(s){
   const tabs=[['gen','👤 Genel',0],['road','🗺️ Yol haritası',0],['hw','📝 Ödevler',f.hw],['chk','📈 Raporlar',f.late?1:0],['ses','📅 Görüşmeler',f.bk],['aud','🔍 Denetim',0],['qa','💬 Mesajlar',f.q],['cal','📅 Takvim',0]];
   const body=T==='road'?roadHTML(s):T==='hw'?hwHTML(s,true):T==='chk'?chkHTML(s,true):T==='ses'?bookHTML(s,true)+sesHTML(s,true):T==='aud'?audHTML(s,true):T==='qa'?chatHTML(s,true):T==='cal'?tasksAdminHTML(s)+calHTML([s],s.plan):genHTML(s);
   return `<button class="sm" data-act="mBack">← Öğrenciler</button>
-   <div class="kv" style="justify-content:space-between;margin-top:10px;align-items:flex-start"><div><div class="vtitle" style="margin:0">${esc(s.name)} <span class="stbadge st-${esc(s.status||'active')}">${STATUS_TR[s.status||'active']}</span></div><div class="vhint" style="margin:2px 0 0">${esc(s.store)}${s.plan?' · '+esc(s.plan):''}${s.shopUrl?` · <a href="${esc(s.shopUrl)}" target="_blank">Etsy mağazası ↗</a>`:''}</div></div>
+   <div class="kv" style="justify-content:space-between;margin-top:10px;align-items:flex-start"><div><div class="vtitle" style="margin:0">${esc(s.name)} <span class="stbadge st-${esc(s.status||'active')}">${STATUS_TR[s.status||'active']}</span></div><div class="vhint" style="margin:2px 0 0">${esc(s.store)}${s.plan?' · '+esc(s.plan):''}${s.shopUrl?` · <a href="${su(s.shopUrl)}" target="_blank">Etsy mağazası ↗</a>`:''}</div></div>
     <div class="kv"><button data-act="stuEdit">✏️ Düzenle</button><button data-act="stuInvite">📤 Davet mesajı</button><button data-act="stuOrders">📦 Siparişleri</button></div></div>
    <div style="margin-top:10px">${pbar(p.pct)}<div class="hint" style="margin-top:3px">Yol haritası %${p.pct} · ${p.done}/${p.total} görev${p.next?` · sıradaki: ${esc(p.next.t.t)}`:''}</div></div>
    <div class="mtabs">${tabs.map(([k,l,n])=>`<button class="${T===k?'on':''}" data-act="mTab" data-t="${k}">${l}${n?`<span class="n">${n}</span>`:''}</button>`).join('')}</div>${body}`;
@@ -1712,7 +1727,7 @@ function genHTML(s){
     ${badgesHTML(s,false)}
     <div class="hcard"><h3>🔒 Özel notların <span class="hint">(öğrenci görmez)</span></h3><div style="white-space:pre-wrap;color:var(--ink2)">${esc(s.notes||'—')}</div></div></div>
    <div><div class="hcard"><h3>✅ Senin yapacakların</h3>${todo.length?todo.map(([tab,l])=>`<button class="todo-a" data-act="${tab==='edit'?'stuEdit':'mTab'}" data-t="${tab}">${l} →</button>`).join(''):'<div class="hint">Her şey güncel 👌</div>'}</div>
-    <div class="hcard"><h3>👤 Profil</h3>${kv('Program',esc(s.plan))}${kv('Odak',esc(s.focus))}${kv('İletişim',esc(s.contact))}${kv('Başlangıç',esc(s.startDate))}${kv('Bitiş',esc(s.endDate))}${kv('Aylık hedef',s.goalMonthly?money(s.goalMonthly):'')}${kv('Sonraki görüşme',s.nextCall?esc(fmtDT(s.nextCall))+(s.callLink?` · <a href="${esc(s.callLink)}" target="_blank">Katıl ↗</a>`:''):'')}${kv('Giriş',s.hasPass?'✓ şifre tanımlı':'⚠️ şifre yok')}${kv('Telefon bildirimi',s.topic?'✓ açık':'kapalı')}</div></div></div>`;
+    <div class="hcard"><h3>👤 Profil</h3>${kv('Program',esc(s.plan))}${kv('Odak',esc(s.focus))}${kv('İletişim',esc(s.contact))}${kv('Başlangıç',esc(s.startDate))}${kv('Bitiş',esc(s.endDate))}${kv('Aylık hedef',s.goalMonthly?money(s.goalMonthly):'')}${kv('Sonraki görüşme',s.nextCall?esc(fmtDT(s.nextCall))+(s.callLink?` · <a href="${su(s.callLink)}" target="_blank">Katıl ↗</a>`:''):'')}${kv('Giriş',s.hasPass?'✓ şifre tanımlı':'⚠️ şifre yok')}${kv('Telefon bildirimi',s.topic?'✓ açık':'kapalı')}</div></div></div>`;
 }
 function studentForm(s){
   s=s||{};const isNew=!s.id;
@@ -1814,7 +1829,7 @@ function sHomeHTML(s){
     ${badgesHTML(s,true)}
    </div><div>
     ${timerHTML(s)}
-    ${s.nextCall?`<div class="hcard nextcall"><div><div class="k">📅 Sonraki görüşme</div><b style="font-size:17px">${esc(fmtDT(s.nextCall))}</b></div>${s.callLink?`<a class="btnlink" href="${esc(s.callLink)}" target="_blank">🎥 Katıl</a>`:''}</div>`:''}
+    ${s.nextCall?`<div class="hcard nextcall"><div><div class="k">📅 Sonraki görüşme</div><b style="font-size:17px">${esc(fmtDT(s.nextCall))}</b></div>${s.callLink?`<a class="btnlink" href="${su(s.callLink)}" target="_blank">🎥 Katıl</a>`:''}</div>`:''}
     <div class="hcard"><h3>🔔 Son geri bildirimler</h3>${feed.length?feed.map(x=>`<button class="todo-a" data-v="${x.v}">${x.ic} ${esc(String(x.tx).slice(0,90))} <span class="hint">· ${esc(ago(x.at))}</span></button>`).join(''):'<div class="hint">Henüz yok.</div>'}</div>
     <div class="hcard"><h3>🎯 Hedefim</h3><div class="g2"><label><div class="k">Aylık ciro hedefi ($)</div><input id="p_goal" type="number" value="${esc(s.goalMonthly||'')}"></label><label><div class="k">Etsy mağaza linkim</div><input id="p_shop" value="${esc(s.shopUrl||'')}" placeholder="https://www.etsy.com/shop/..."></label></div>${goal?`<div style="margin-top:8px">${pbar(rev*100/goal,'var(--teal)')}<div class="hint">${money(rev)} / ${money(goal)} (haftalık raporlarından)</div></div>`:''}<label style="display:block;margin-top:8px"><div class="k">Haftalık çalışma hedefi (saat)</div><input id="p_wk" type="number" value="${esc(s.weeklyHours||10)}"></label><button class="sm" style="margin-top:8px" data-act="profSave">💾 Kaydet</button></div>
    </div></div>`;
@@ -2074,7 +2089,7 @@ function chatItems(s){const L=[];(s.questions||[]).forEach(q=>{L.push({at:q.at,f
 function chatUnread(s){const L=chatItems(s);let n=0;for(let i=L.length-1;i>=0&&L[i].from==='s';i--)n++;return n;}
 function chatHTML(s,admin){
   const L=chatItems(s),mine=admin?'m':'s';
-  return `<div class="chat" id="chatbox">${L.map(x=>`<div class="bub ${x.from===mine?'me':''}">${x.order?`<div class="k">⚠️ Sipariş #${esc(x.order)}</div>`:''}<div>${esc(x.text)}</div>${x.link?`<a href="${esc(x.link)}" target="_blank">🔗 ${esc(x.link.slice(0,40))}</a>`:''}<small>${esc(fmtDT(x.at))}</small></div>`).join('')||'<div class="hint" style="text-align:center;padding:24px">Henüz mesaj yok.</div>'}</div>
+  return `<div class="chat" id="chatbox">${L.map(x=>`<div class="bub ${x.from===mine?'me':''}">${x.order?`<div class="k">⚠️ Sipariş #${esc(x.order)}</div>`:''}<div>${esc(x.text)}</div>${x.link?`<a href="${su(x.link)}" target="_blank">🔗 ${esc(x.link.slice(0,40))}</a>`:''}<small>${esc(fmtDT(x.at))}</small></div>`).join('')||'<div class="hint" style="text-align:center;padding:24px">Henüz mesaj yok.</div>'}</div>
    <div class="chatin"><textarea id="ch_t" rows="2" placeholder="Mesaj yaz…"></textarea><button class="pri" data-act="chatSend">Gönder</button></div>`;
 }
 /* tasks */
@@ -2150,6 +2165,20 @@ async function mentorClick3(a,b,id,sid,val,go){
 
 function hwRate(s){const H=(s.homework||[]).filter(h=>h.status!=='open'||(h.due&&daysTo(h.due)<0));if(!H.length)return '—';return Math.round(H.filter(h=>h.status==='approved').length*100/H.length)+'%';}
 function tasksAdminHTML(s){const L=(s.tasks||[]).slice().sort((a,b)=>(a.done?1:0)-(b.done?1:0));return `<div class="hcard"><h3>✅ Görevleri</h3><div class="kv"><input id="tk_t" placeholder="Görev ver" style="flex:1;min-width:160px"><input id="tk_d" type="date" style="width:auto"><button class="pri" data-act="taskAdd">Ekle</button></div><div class="tasks">${L.map(t=>`<div class="task ${t.done?'on':''}"><span class="cb">${t.done?'☑':'☐'}</span><span>${esc(t.title)}</span>${t.date?`<small>${esc(fmtDate(t.date))}</small>`:''}<button class="sm ghost" data-act="taskDel" data-id="${esc(t.id)}">✕</button></div>`).join('')||'<div class="hint">Görev yok.</div>'}</div>${(s.plan||[]).length?`<div class="hint" style="margin-top:8px">⏱ Çalışma planı: ${s.plan.map(b=>WD[b.day]+' '+b.time+' ('+b.mins+' dk)').join(' · ')}</div>`:''}</div>`;}
+
+
+/* ================= 🛡️ Güvenlik (admin) ================= */
+const SEC_TR={'bad-password':'Hatalı şifre denemeleri','bad-token':'Geçersiz oturum anahtarı','lockdown':'🔒 Kilit açıldı (15 dk)','honeypot-password':'🪤 Tuzak: yaygın şifre denendi','honeypot-api':'🪤 Tuzak: sahte API çağrıldı','unknown-fn':'Bilinmeyen istek','logout-all':'Tüm oturumlar kapatıldı','passwords-changed':'Şifreler değişti'};
+async function securityView(){
+  let d={log:[],fails:0,locked:false,sessions:{}};try{d=await api('getSecurity',S.pass);}catch(e){}
+  const traps=d.log.filter(x=>/honeypot/.test(x.kind)).length;
+  return `<div class="vtitle">🛡️ Güvenlik</div>
+   <div class="cards"><div class="sc ${d.locked?'red':'teal'}"><span class="v">${d.locked?'KİLİTLİ':'Normal'}</span><span class="l">Giriş durumu</span></div><div class="sc ${d.fails>=5?'orange':'blue'}"><span class="v">${d.fails}</span><span class="l">Hatalı deneme (10 dk)</span></div><div class="sc ${traps?'red':'blue'}"><span class="v">${traps}</span><span class="l">🪤 Tuzak tetiklenmesi</span></div><div class="sc"><span class="v">${(d.sessions.admin||0)+(d.sessions.agent||0)+(d.sessions.student||0)}</span><span class="l">Açık oturum · admin ${d.sessions.admin||0} · Ivy ${d.sessions.agent||0} · öğrenci ${d.sessions.student||0}</span></div></div>
+   <div class="fin2"><div class="hcard"><h3>Kayıt</h3>${d.log.map(x=>`<div class="kvrow"><span>${esc(SEC_TR[x.kind]||x.kind)} <span class="hint">${esc(x.detail)}</span></span><span class="hint">${esc(fmtDT(x.at))}</span></div>`).join('')||'<div class="hint">Temiz — kayıt yok.</div>'}</div>
+    <div><div class="hcard"><h3>Koruma</h3><div class="hint" style="line-height:1.8">✓ Tarayıcılar şifre yerine oturum anahtarı saklar<br>✓ 30 hatalı denemede şifre girişleri 15 dk kilitlenir<br>✓ Tuzak şifreler ve sahte API uçları saldırganı yakalar<br>✓ Linklerde sadece http/https<br>✓ Başka sitede açılırsa / kopya sitede uyarı</div></div>
+     <div class="hcard"><h3>Acil durum</h3><div class="hint">Şüphelenirsen tüm cihazlardaki oturumları kapat (sen de dahil, tekrar giriş yaparsın).</div><button class="pri" style="margin-top:8px;background:var(--red);border-color:var(--red)" id="secOut">Tüm oturumları kapat</button></div></div></div>`;
+}
+function bindSecurity(){if($('#secOut'))$('#secOut').onclick=async()=>{if(!confirm('Tüm cihazlardaki oturumlar kapatılsın mı?'))return;try{const n=await api('logoutAll',S.pass);toast(n+' oturum kapatıldı');setTimeout(()=>{forget();location.reload();},1200);}catch(e){alert(e.message||e);}};}
 
 boot();
 </script>
