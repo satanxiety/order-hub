@@ -176,7 +176,7 @@
       const recs = await readEtsy();
       if (!ready) say(recs.length + ' orders ready — log in to Order Hub (admin) in the other window…');
       await waitReady();
-      w.postMessage({ type: 'oh-etsy', orders: recs }, HUB_ORIGIN);
+      w.postMessage({ type: 'oh-etsy', v: 2, orders: recs }, HUB_ORIGIN);
       say(recs.length + ' orders sent, Order Hub is saving…');
     } catch (err) {
       say('⚠ ' + (err.message || err));

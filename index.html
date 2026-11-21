@@ -776,7 +776,7 @@ async function financeView(){
   const store=S.finStore||'Novelle';
   if(!S.fin[store]){try{S.fin[store]=await api('getFinance',S.pass,store);}catch(e){S.fin[store]={error:e.message};}}
   const F=S.fin[store],snap=F&&F.snapshot,data=snap&&snap.data;
-  const head=`<div class="vtitle">📊 Finans · ${esc(store)} <span style="font-size:13px;color:var(--soft);font-weight:600">sadece sen görürsün</span></div>`;
+  const head=`<div class="vtitle">📊 Finans · ${esc(store)} <span style="font-size:13px;color:var(--soft);font-weight:600">sadece sen görürsün</span></div>`+(S.oldBookmark?`<div class="box note" style="margin:8px 0">⚠️ Etsy’deki yer imin <b>eski sürüm</b> — finans verisini çekemiyor. Siparişler → <b>🔗 Etsy senkron</b>’dan mor butonu yer imleri çubuğuna <b>yeniden sürükle</b> (eskisini sil), Etsy sayfasını yenile ve yeni yer imine bas.</div>`:'');
   const updBtn=`<button class="pri" id="finupd">🔄 Güncelle (Etsy’den çek)</button>`;
   const storeSel=`<select id="finstore" style="width:auto">${(S.stores.length?S.stores:['Novelle']).map(s=>`<option ${s===store?'selected':''}>${esc(s)}</option>`).join('')}</select>`;
   if(!data)return `${head}<div class="hcard"><p>Bu mağaza için henüz finans verisi yok.</p><ol style="line-height:1.7"><li>Etsy’de bu mağazanın Shop Manager sayfasını aç.</li><li>Yer imindeki <b>📦 Etsy → Order Hub</b>’a bas (yoksa Siparişler → “🔗 Etsy senkron”dan yer imini ekle).</li><li>Açılan Order Hub penceresinde bu sekme kendiliğinden dolar; sonra “🔄 Güncelle” her basışta yeniler.</li></ol><div class="kv">${storeSel} ${updBtn}</div></div>`;
@@ -829,7 +829,8 @@ async function financeView(){
      ${data.stats?`<p style="font-size:12px;color:var(--soft)">Etsy istatistik: ${esc(data.stats.start||'')} – ${esc(data.stats.end||'')} · toplam ziyaret ${esc((data.stats.series.visits||{}).total||'')} · sipariş ${esc((data.stats.series.orders||{}).total||'')}</p>`:''}</div>`;
 }
 function requestFinance(){
-  if(window.opener&&!window.opener.closed){try{window.opener.postMessage({type:'oh-req-finance'},'*');toast('🔄 Etsy’den isteniyor…');return;}catch(e){}}
+  if(S.oldBookmark){render();toast('⚠️ Yer imin eski sürüm — yeniden sürükle');return;}
+  if(window.opener&&!window.opener.closed){try{window.opener.postMessage({type:'oh-req-finance'},'*');toast('🔄 Etsy’den isteniyor… (20–40 sn)');clearTimeout(S._finTO);S._finTO=setTimeout(()=>{if(!S._finGot){S.oldBookmark=true;if(S.view==='finance')render();}},90000);S._finGot=false;return;}catch(e){}}
   modal(`<h2>🔄 Güncelle</h2><p>Güncel veri Etsy sekmesinden gelir. Bu Order Hub penceresi Etsy’den açılmadığı için doğrudan isteyemiyorum.</p>
    <ol style="line-height:1.7"><li>Etsy’de Shop Manager’ı aç.</li><li>Yer imindeki <b>📦 Etsy → Order Hub</b>’a bas.</li><li>Açılan Order Hub penceresinde 📊 Finans’a gel; “🔄 Güncelle” artık her basışta doğrudan çalışır (ve saatte bir kendiliğinden yenilenir).</li></ol>
    <div class="kv" style="justify-content:flex-end"><button class="pri" id="mok">Tamam</button></div>`);
@@ -846,6 +847,7 @@ window.addEventListener('message',async e=>{
   if(S.role!=='admin')return;
   const store=d.store||'Novelle';
   const data={shopId:d.shopId,at:d.at,ledger:d.ledger||[],pending:d.pending||[],balance:d.balance||null,stats:d.stats||null};
+  S._finGot=true;S.oldBookmark=false;
   try{const r=await api('saveFinance',S.pass,store,data);
     S.fin[store]=Object.assign({},S.fin[store]||{},{snapshot:{store,savedAt:r.savedAt,data}});
     toast('💰 Finans güncellendi · '+store);if(S.view==='finance')render();}
@@ -869,6 +871,7 @@ window.addEventListener('message',async e=>{
   const reply=m=>{try{e.source.postMessage(Object.assign({type:'oh-res'},m),e.origin);}catch(x){}};
   if(S.role!=='admin'){reply({error:'log in to Order Hub as admin'});return;}
   const L=d.orders||[];let c=0,u=0;
+  S.oldBookmark=(d.v||1)<2;if(S.oldBookmark&&S.view==='finance')render();
   try{
     for(let i=0;i<L.length;i+=40){const r=await api('importOrders',S.pass,L.slice(i,i+40),true);c+=r.created;u+=r.updated;}
     reply({ok:true,total:L.length,created:c,updated:u});
