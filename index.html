@@ -1023,7 +1023,7 @@ async function shopsView(){
     const st=live?['g','Şu an bağlı']:h<0?['r','Henüz bağlanmadı']:h>48?['y','Bağlantı eskidi · '+agoTR(last)]:['g','Bağlı · '+agoTR(last)];
     return `<div class="shopc"><div class="shoph"><h3>${esc(s)}</h3><span class="chip ${st[0]}">${esc(st[1])}</span></div>
       <div class="trio"><div><b>${open}</b><span>açık sipariş</span></div><div><b>${O.length}</b><span>tüm sipariş</span></div><div><b>${act}</b><span>aktif ilan</span></div></div>
-      <div class="hint">${L.length?`Katalogda ${L.length} ilan · son senkron ${agoTR(last)}`:'Bu mağazanın Etsy sekmesinde senkron butonuna bir kez basınca siparişler ve ilanlar buraya gelir.'}${ETSY_SHOPS[s]?` · Etsy mağaza no ${ETSY_SHOPS[s]}`:''}</div></div>`;};
+      <div class="hint">${L.length?`Katalogda ${L.length} ilan · 1688 linki olan ${L.filter(x=>x.links1688).length} · ${last?'son senkron '+agoTR(last):'elle yüklendi, Etsy senkronu bekliyor'}`:'Bu mağazanın Etsy sekmesinde senkron butonuna bir kez basınca siparişler ve ilanlar buraya gelir.'}${ETSY_SHOPS[s]?` · Etsy mağaza no ${ETSY_SHOPS[s]}`:''}</div></div>`;};
   return `<div class="vtitle">🏬 Mağazalar & Etsy bağlantıları</div>
    <div class="vhint">Her mağazanın Order Hub ile bağlantı durumu. Bir mağazayı bağlamak için o mağazanın açık olduğu tarayıcıda aşağıdaki üç adımı bir kez yap.</div>
    <div class="shopgrid">${S.stores.map(card).join('')}</div>
