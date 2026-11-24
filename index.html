@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob: https://i.etsystatic.com https://drive.google.com https://*.googleusercontent.com; connect-src 'self' https://script.google.com https://script.googleusercontent.com https://ntfy.sh https://api.frankfurter.dev https://open.er-api.com; object-src 'none'; base-uri 'none'; form-action 'none'">
 <meta name="referrer" content="no-referrer">
-<meta name="theme-color" content="#15122b">
+<meta name="theme-color" content="#ffffff">
 <script>try{var th=localStorage.getItem('oh_theme');if(th==='dark'||th==='light')document.documentElement.setAttribute('data-theme',th);}catch(e){}</script>
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="mobile-web-app-capable" content="yes">
@@ -365,7 +365,7 @@ header .bell{position:relative;font-size:15px;padding:3px 9px}
 .prow{display:grid;grid-template-columns:90px 1fr 110px;gap:8px;align-items:center;padding:4px 0}
 @media(max-width:760px){.cday{min-height:58px;padding:3px}.cev{font-size:0;padding:0;height:6px;border-radius:3px}.cev:first-letter{font-size:0}.bub{max-width:88%}}
 
-/* ================= v21 design refresh: tokens, dark mode, search palette, catalog, health, automation ================= */
+/* ================= v21 design refresh (v22 sade tema dosya sonunda bunun üstüne yazar): tokens, dark mode, search palette, catalog, health, automation ================= */
 :root{--panel2:#f8f9fc;--panel3:#fafbff;--line3:#c9cdd8;--note-bg:#fffbea;--note-line:#f5e3a3;--info-bg:#f2f6ff;--info-line:#dbe5ff;
   --l1688:#c2410c;--l1688-bg:#fff7ed;--l1688-line:#fed7aa;--tint-orange:#fff3ea;--tint-red:#ffe9e9;--tint-amber:#fff8e8;--tabbar:#ffffffee;--overlay:#0b0a1a99;
   --acc-ink:#3b2a8f;--acc-line:#d9cfff;--acc2h:#e4dcff;--amber-ink:#b45309;--warn-ink:#b4441b;--warn-bg:#fde7dc;--gift-ink:#be185d;--gift-bg:#fde7f1;--sec-bg:#fff5f5;--pin-bg:#fffdf5;--shh:0 4px 10px #1018281a,0 14px 30px #10182814;color-scheme:light}
@@ -469,6 +469,82 @@ code{font:12.5px ui-monospace,Consolas,monospace;background:var(--line2);border-
   header{flex-wrap:nowrap}
 }
 @media (prefers-reduced-motion: reduce){*{animation:none!important;transition:none!important}}
+
+/* ================= v22 sade tema (24.11.2026): düz yüzey, ince çizgi, tek vurgu rengi. Renkleri buradan değiştir. ================= */
+:root{--bg:#f5f6f9;--panel:#fff;--panel2:#f7f8fa;--panel3:#fafbfc;--ink:#1a2330;--ink2:#3f4b5b;--soft:#5a6877;--line:#dde2e9;--line2:#eceff3;--line3:#c2c9d3;
+  --acc:#2d5bd1;--acc2:#e7edfb;--acc-ink:#1f3f95;--acc-line:#c4d2f4;--acc2h:#d8e2f9;--head:#1a2330;--blue:#2d5bd1;--blue-bg:#e7edfb;
+  --info-bg:#f1f5fd;--info-line:#d5e0f7;--overlay:#1a233080;--r:10px;--sh:none;--shh:0 6px 18px #1a23301f}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){--bg:#11151b;--panel:#19202a;--panel2:#1e2631;--panel3:#1c232d;--ink:#e7ecf2;--ink2:#c0c9d4;--soft:#98a6b5;--line:#2a333f;--line2:#222b36;--line3:#3b4756;--acc:#5d86f0;--acc2:#1d2b4a;--acc-ink:#c7d6ff;--acc-line:#34508f;--acc2h:#253760;--head:#0c0f14;--blue:#7ea2ff;--blue-bg:#1b2743;--info-bg:#18233a;--info-line:#2b3d63;--overlay:#000000b0;--sh:none;--shh:0 8px 22px #0009}}
+:root[data-theme="dark"]{--bg:#11151b;--panel:#19202a;--panel2:#1e2631;--panel3:#1c232d;--ink:#e7ecf2;--ink2:#c0c9d4;--soft:#98a6b5;--line:#2a333f;--line2:#222b36;--line3:#3b4756;--acc:#5d86f0;--acc2:#1d2b4a;--acc-ink:#c7d6ff;--acc-line:#34508f;--acc2h:#253760;--head:#0c0f14;--blue:#7ea2ff;--blue-bg:#1b2743;--info-bg:#18233a;--info-line:#2b3d63;--overlay:#000000b0;--sh:none;--shh:0 8px 22px #0009}
+html,body{-webkit-font-smoothing:antialiased}
+button{border-radius:8px}
+button.sm{border-radius:7px}
+button.pri{background:var(--acc);border-color:var(--acc);color:#fff}
+input,select,textarea{border-radius:8px}
+/* üst çubuk: açık yüzey. Ana ekrana eklenen uygulamada (standalone) durum çubuğu yazısı beyaz kaldığı için koyu kalır. */
+header{--hbg:var(--panel);--hink:var(--ink);--hsoft:var(--soft);--hline:var(--line);--hchip:var(--line2);--hfield:var(--bg);
+  background:var(--hbg);color:var(--hink);box-shadow:none;border-bottom:1px solid var(--hline)}
+header .logo{font-weight:700;letter-spacing:-.01em}
+header .logo .lg{background:var(--hchip);box-shadow:none;border-radius:8px}
+header .role{background:var(--hchip);color:var(--hsoft)}
+header .sync{background:var(--hchip);border-color:var(--hline);color:var(--hsoft)}
+header .lang button,header .hb{color:var(--hsoft);border-color:var(--hline)}
+header .lang button:hover,header .hb:hover{color:var(--hink);border-color:var(--line3)}
+header .lang button.on{background:var(--hink);color:var(--hbg);border-color:var(--hink)}
+header label.tr{color:var(--hsoft)}
+.hsearch{background:var(--hfield);border-color:var(--hline);color:var(--hsoft)}
+.hsearch:hover{background:var(--hchip);border-color:var(--line3)}
+.hsearch kbd{border-color:var(--hline)}
+@media (display-mode: standalone){header{--hbg:#1a2330;--hink:#fff;--hsoft:#c9d0d9;--hline:#ffffff2a;--hchip:#ffffff1a;--hfield:#ffffff14;border-bottom-color:transparent}}
+/* sol menü */
+.navbox{border:1px solid var(--line);box-shadow:none}
+.navbox h4{font-weight:600;letter-spacing:.04em}
+.nv{font-weight:500;border-radius:8px}
+.nv.on{background:var(--line2);color:var(--ink);font-weight:650}
+.nv.on::before{display:none}
+.nv .n{font-variant-numeric:tabular-nums}
+.nv.on .n{background:var(--ink);color:var(--bg)}
+.nv .n.alert,.nv.on .n.alert{background:var(--red);color:#fff}
+a.nv{text-decoration:none}
+.storesel button.on{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+/* kartlar ve satırlar: gölge yerine ince çerçeve */
+.sc,.hcard,.citem,.empty,.stu,.mod,.chat,.center{border:1px solid var(--line);box-shadow:none}
+.sc.red,.sc.orange,.sc.teal,.sc.blue{border-top-color:var(--line)}
+.sc .v{font-weight:650;font-variant-numeric:tabular-nums}
+.sc .l{font-weight:500}
+.sc:hover,.citem:hover,.stu:hover{transform:none;box-shadow:none;border-color:var(--line3)}
+.ord{border:1px solid var(--line);border-left:4px solid var(--gray);box-shadow:none}
+.ord:hover{box-shadow:none}
+.ord.u-d12,.ord.s-shipped,.ord.s-delivered{background:var(--panel)}
+.ord.u-late,.ord.u-today{background:linear-gradient(90deg,var(--tint-red),var(--panel) 28%)}
+.hc{border:1px solid var(--line);border-left:4px solid var(--green);box-shadow:none}
+.bn{border:1px solid var(--line);border-left:4px solid var(--acc);box-shadow:var(--shh)}
+#toast{box-shadow:var(--shh)}
+.vtitle{font-weight:700;letter-spacing:-.01em}
+.pill{background:var(--gray-bg);color:var(--gray);font-weight:650}
+.p-new{background:var(--blue-bg);color:var(--blue)}.p-ordered{background:var(--purple-bg);color:var(--purple)}.p-warehouse{background:var(--amber-bg);color:var(--amber-ink)}
+.p-shipped{background:var(--teal-bg);color:var(--teal)}.p-delivered{background:var(--green-bg);color:var(--green)}.p-cancelled{background:var(--gray-bg);color:var(--gray)}
+.p-delayed{background:var(--orange-bg);color:var(--orange)}.p-outofstock,.p-problem{background:var(--red-bg);color:var(--red)}
+.chips button.on,.mtabs button.on{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.seg button.on{background:var(--ink);color:var(--bg)}
+.a2hs{background:var(--ink);color:var(--bg)}
+.a2hs button{background:#ffffff26;color:inherit}
+.pbar i{background:var(--acc)}
+.btnlink{background:var(--acc);border-radius:8px}
+@media(min-width:761px){.sheet{border:1px solid var(--line);border-radius:14px}.vtitle{font-size:22px}.sc{padding:12px 14px}.sc .v{font-size:26px}}
+/* mağazalar & pano */
+.shopgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:12px;margin-bottom:14px}
+.shopc{background:var(--panel);border:1px solid var(--line);border-radius:var(--r);padding:16px;display:flex;flex-direction:column;gap:12px;min-width:0}
+.shoph{display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap}
+.shopc h3{margin:0;font-size:17px;font-weight:650;overflow-wrap:anywhere}
+.trio{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.trio div{background:var(--line2);border-radius:8px;padding:8px 10px;min-width:0}
+.trio b{display:block;font-size:22px;font-weight:650;font-variant-numeric:tabular-nums;line-height:1.2}
+.trio span{display:block;color:var(--soft);font-size:12px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.stepsl{margin:8px 0 0;padding-left:20px;line-height:1.7;color:var(--ink2)}
+.bml{display:inline-block;background:var(--ink);color:var(--bg);padding:11px 18px;border-radius:8px;font-weight:650;text-decoration:none;cursor:grab}
+.panoc{display:flex;align-items:center;justify-content:space-between;gap:14px;flex-wrap:wrap}
+.panoc h3{margin:0 0 4px}
 </style>
 </head>
 <body>
@@ -622,7 +698,7 @@ const VIEWS={
   cancelled:o=>o.status==='cancelled',
   all:o=>true
 };
-const VIEW_DOT={ship:'#0e9f8b',todo:'#6d4aff',urgent:'#dc2626',ordered:'#7c3aed',shippedDs:'#ea580c',shipped:'#0e9f8b',delivered:'#15803d',cancelled:'#8a90a0',all:'#141826'};
+const VIEW_DOT={ship:'#0e9f8b',todo:'#2d5bd1',urgent:'#dc2626',ordered:'#7c3aed',shippedDs:'#ea580c',shipped:'#0e9f8b',delivered:'#15803d',cancelled:'#8a90a0',all:'#5a6877'};
 const FLAG={'United States':'US','United Kingdom':'GB','Germany':'DE','France':'FR','Austria':'AT','Canada':'CA','Australia':'AU','Netherlands':'NL','The Netherlands':'NL','Italy':'IT','Spain':'ES','Belgium':'BE','Ireland':'IE','Sweden':'SE','Denmark':'DK','Finland':'FI','Norway':'NO','Switzerland':'CH','Poland':'PL','Portugal':'PT','Czech Republic':'CZ','Czechia':'CZ','Greece':'GR','New Zealand':'NZ','Japan':'JP','Romania':'RO','Hungary':'HU','Slovakia':'SK','Slovenia':'SI','Croatia':'HR','Bulgaria':'BG','Luxembourg':'LU','Lithuania':'LT','Latvia':'LV','Estonia':'EE','Malta':'MT','Cyprus':'CY','Israel':'IL','Singapore':'SG','Mexico':'MX','Türkiye':'TR','Turkey':'TR'};
 const flag=c=>{const k=FLAG[c];return k?'<b title="'+esc(c)+'">'+k+'</b>':esc(c||'');};
 const inStore=o=>S.store==='*'||o.store===S.store;
@@ -677,7 +753,7 @@ async function reload(){
   {const g=$('#gs');if(g){g.style.display='';g.onclick=openPal;g.querySelector('.gst').textContent=pt('btn');$('#gsk').textContent=/Mac|iPhone|iPad/.test(navigator.platform||navigator.userAgent)?'⌘K':'Ctrl K';}}
   if(S.role==='student'&&S.mentor&&S.mentor.me&&d.me)S.mentor.me=Object.assign({},S.mentor.me,d.me);
   if(!S._init){S._init=true;if(S.role==='student')S.view='sHome';const hv=decodeURIComponent((location.hash.match(/v=([^&]+)/)||[])[1]||'');
-    if(hv){if(hv.indexOf('mentor:')===0&&S.role==='admin'){S.view='mentor';S.mSid=hv.slice(7);}else if(hv==='sOrders')S.view='all';else if(VIEWS[hv]||STU_VIEWS.includes(hv)||['help','msgs','finance','catalog','calendar','mentor','calc','security','health','auto'].includes(hv))S.view=hv;try{history.replaceState(null,'',location.pathname);}catch(e){}}}
+    if(hv){if(hv.indexOf('mentor:')===0&&S.role==='admin'){S.view='mentor';S.mSid=hv.slice(7);}else if(hv==='sOrders')S.view='all';else if(VIEWS[hv]||STU_VIEWS.includes(hv)||['help','msgs','finance','catalog','calendar','mentor','calc','security','health','auto','shops'].includes(hv))S.view=hv;try{history.replaceState(null,'',location.pathname);}catch(e){}}}
   $('#bell').style.display='';$('#bell').onclick=bellPanel;
   $('#who').textContent=S.role==='admin'?'Admin':S.role==='student'?'Öğrenci':'Agent';$('#who').style.display='';$('#logout').style.display='';$('#trw').style.display='';
   render();
@@ -703,6 +779,7 @@ async function render(){
   const side=S.role==='student'?stuSideHTML(c):`<nav class="side">
     <div class="navbox"><h4>${t('h_stores')}</h4><div class="storesel">${stores}</div></div>
     <div class="navbox"><h4>${t('h_orders')}</h4>${['todo','urgent','ordered','shippedDs','shipped','delivered','cancelled','all'].map(v=>navBtn(v,c)).join('')}</div>
+    ${S.role==='admin'?`<div class="navbox"><h4>Mağazalar</h4><button class="nv ${S.view==='shops'?'on':''}" data-v="shops"><span class="dot" style="background:#2d5bd1"></span>🏬 Mağazalar & Etsy</button><a class="nv" href="${PANO_URL}" target="_blank" rel="noopener"><span class="dot" style="background:#1c7f55"></span>📋 Yayın panosu<span class="n">↗</span></a></div>`:''}
     <div class="navbox"><h4>${t('h_more')}</h4>
       <button class="nv ${S.view==='help'?'on':''}" data-v="help"><span class="dot" style="background:#0ea5e9"></span>❓ ${t('nav_help')}${S.role==='agent'&&S.unread?`<span class="n alert">${S.unread}</span>`:''}</button>
       ${S.role==='admin'?`<button class="nv ${S.view==='catalog'?'on':''}" data-v="catalog"><span class="dot" style="background:#c2410c"></span>📚 ${t('nav_catalog')}</button><button class="nv ${S.view==='health'?'on':''}" data-v="health"><span class="dot" style="background:#dc2626"></span>🩺 Eksikler<span class="n ${healthCritical()?'alert':''}">${healthCritical()}</span></button><button class="nv ${S.view==='auto'?'on':''}" data-v="auto"><span class="dot" style="background:#0ea5e9"></span>🤖 Otomasyonlar</button>`:''}
@@ -715,6 +792,7 @@ async function render(){
   else if(S.view==='calc'&&S.role==='admin')main=calcHTML();
   else if(S.view==='security'&&S.role==='admin')main=await securityView();
   else if(STU_VIEWS.includes(S.view)&&S.role==='student')main=await studentView();
+  else if(S.view==='shops'&&S.role==='admin')main=await shopsView();
   else if(S.view==='catalog'&&S.role==='admin')main=await catalogView();
   else if(S.view==='health'&&S.role==='admin')main=await healthView();
   else if(S.view==='auto'&&S.role==='admin')main=await autoView();
@@ -852,6 +930,7 @@ function bind(){
   if(S.view==='catalog')bindCatalog();
   if(S.view==='health')bindHealth();
   if(S.view==='auto')bindAuto();
+  if(S.view==='shops')bindShops();
   $$('.hstrip[data-v]').forEach(b=>b.onclick=()=>goView(b.dataset.v));
 }
 function bindCommon(root){
@@ -911,7 +990,7 @@ function importModal(){
 async function syncModal(){
   modal(`<h2>🔗 Etsy → Order Hub</h2>
    <ol style="line-height:1.7;padding-left:20px">
-    <li>Aşağıdaki mor butonu <b>yer imleri çubuğuna sürükle</b> (çubuk yoksa Ctrl+Shift+B). Her tarayıcıda bir kere.</li>
+    <li>Aşağıdaki butonu <b>yer imleri çubuğuna sürükle</b> (çubuk yoksa Ctrl+Shift+B). Her tarayıcıda bir kere.</li>
     <li>Etsy’de <b>Shop Manager → Orders</b> sayfasını aç (hangi mağaza açıksa o gelir).</li>
     <li>Yer imine tıkla → bu Order Hub penceresi açılır, siparişler aktarılır.</li>
     <li><b>Oto-senkron:</b> O Etsy sekmesini ve açılan Order Hub penceresini açık bırak → her <b>15 dakikada</b> bir kendiliğinden tekrar senkronlar. Etsy sayfasını yenilersen yer imine tekrar bas.</li></ol>
@@ -919,12 +998,44 @@ async function syncModal(){
    <p style="color:var(--soft);font-size:13px">Etsy “açılır pencere” izni isterse “izin ver” de. Takip numaraları Etsy’den gelmez; Ivy girer. Ivy’nin girdikleri asla silinmez.</p>
    <div class="kv" style="justify-content:flex-end"><button id="bmc">${t('close')}</button></div>`);
   $('#bmc').onclick=closeModal;
-  try{const code=await (await fetch('etsy-sync.js',{cache:'no-store'})).text();
-    $('#bmw').innerHTML='<a id="bml" style="display:inline-block;background:#6d4aff;color:#fff;padding:12px 20px;border-radius:12px;font-weight:800;text-decoration:none;cursor:grab;box-shadow:0 6px 16px #6d4aff55">📦 Etsy → Order Hub</a>';
-    $('#bml').setAttribute('href','javascript:'+encodeURIComponent(code));
-    $('#bml').onclick=ev=>{ev.preventDefault();alert('Bu butonu yer imleri çubuğuna sürükle, sonra Etsy sayfasında tıkla.');};
-  }catch(e){$('#bmw').textContent='etsy-sync.js: '+e.message;}
+  await bmlFill($('#bmw'));
 }
+/* ================= 🏬 Mağazalar & Etsy bağlantıları + yayın panosu (admin, v22) ================= */
+const PANO_URL='https://claude.ai/artifact/U6mHyyVtcqtkixet5wQCyR';
+const ETSY_SHOPS={Novelle:68640007,Lumiva:69235788,MiniBoutique:69236512};
+async function bmlFill(el){
+  if(!el)return;
+  try{const code=await (await fetch('etsy-sync.js',{cache:'no-store'})).text();
+    el.innerHTML='<a class="bml">📦 Etsy → Order Hub</a>';
+    const a=el.querySelector('a');a.setAttribute('href','javascript:'+encodeURIComponent(code));
+    a.onclick=ev=>{ev.preventDefault();toast('Bu butonu yer imleri çubuğuna sürükle, sonra Etsy sayfasında tıkla.');};
+  }catch(e){el.textContent='etsy-sync.js: '+e.message;}
+}
+function agoTR(ms){if(!ms)return '';const h=Math.round((Date.now()-ms)/36e5);return h<1?'az önce':h<48?h+' saat önce':Math.round(h/24)+' gün önce';}
+async function shopsView(){
+  await loadCatalog();
+  const cat=S.cat||[];
+  const card=s=>{
+    const L=cat.filter(x=>x.store===s),act=L.filter(x=>!x.state||x.state==='active').length;
+    const O=S.orders.filter(o=>o.store===s),open=O.filter(o=>OPEN_ST.includes(o.status||'new')).length;
+    const last=L.reduce((m,x)=>Math.max(m,Date.parse(x.updatedAt)||0),0),h=last?(Date.now()-last)/36e5:-1;
+    const live=S.lastSync&&S.lastSync.store===s;
+    const st=live?['g','Şu an bağlı']:h<0?['r','Henüz bağlanmadı']:h>48?['y','Bağlantı eskidi · '+agoTR(last)]:['g','Bağlı · '+agoTR(last)];
+    return `<div class="shopc"><div class="shoph"><h3>${esc(s)}</h3><span class="chip ${st[0]}">${esc(st[1])}</span></div>
+      <div class="trio"><div><b>${open}</b><span>açık sipariş</span></div><div><b>${O.length}</b><span>tüm sipariş</span></div><div><b>${act}</b><span>aktif ilan</span></div></div>
+      <div class="hint">${L.length?`Katalogda ${L.length} ilan · son senkron ${agoTR(last)}`:'Bu mağazanın Etsy sekmesinde senkron butonuna bir kez basınca siparişler ve ilanlar buraya gelir.'}${ETSY_SHOPS[s]?` · Etsy mağaza no ${ETSY_SHOPS[s]}`:''}</div></div>`;};
+  return `<div class="vtitle">🏬 Mağazalar & Etsy bağlantıları</div>
+   <div class="vhint">Her mağazanın Order Hub ile bağlantı durumu. Bir mağazayı bağlamak için o mağazanın açık olduğu tarayıcıda aşağıdaki üç adımı bir kez yap.</div>
+   <div class="shopgrid">${S.stores.map(card).join('')}</div>
+   <div class="hcard"><h3>Bir mağazayı bağlama</h3>
+     <ol class="stepsl"><li>Aşağıdaki butonu <b>yer imleri çubuğuna sürükle</b> (çubuk görünmüyorsa Ctrl+Shift+B). Her tarayıcı profilinde bir kez.</li>
+     <li>O tarayıcıda Etsy’de <b>Shop Manager → Orders</b> sayfasını aç.</li>
+     <li>Yer imine tıkla. Order Hub penceresi açılır, siparişler ve ilanlar aktarılır; mağaza kendiliğinden tanınır.</li></ol>
+     <p id="bmw2" style="margin:14px 0 6px">…</p>
+     <div class="hint">Etsy sekmesi ve açılan Order Hub penceresi açık kaldıkça 15 dakikada bir yenilenir. Etsy sayfası yenilenirse yer imine tekrar bas. Bu senkron Etsy’nin resmi API’si değildir; mağaza panelinin kullandığı adresleri senin oturumunla okur.</div></div>
+   <div class="hcard panoc"><div><h3>📋 Yayın panosu</h3><div class="hint">İki mağazadaki ilan sayıları, yayına alınan taslaklar, senden beklenen işler ve sıradaki ilanlar. Claude hesabınla açılır.</div></div><a class="btnlink" href="${PANO_URL}" target="_blank" rel="noopener">Panoyu aç ↗</a></div>`;
+}
+function bindShops(){bmlFill($('#bmw2'));}
 function form(o){
   const f=(k,type='text',full)=>`<label class="${full?'full':''}">${t(k)||k}${type==='area'?`<textarea data-k="${k}" rows="${k==='address'?4:2}">${esc(o[k])}</textarea>`:`<input data-k="${k}" type="${type}" value="${esc(type==='date'?String(o[k]||'').slice(0,10):o[k])}">`}</label>`;
   modal(`<h2>${o.id?esc(o.id):t('newOrder')}</h2>
@@ -1165,7 +1276,7 @@ function recommendations(data,store,fx,cal){
 function svgDaily(D){
   const W=640,H=170,pad=24,n=D.length,bw=(W-pad*2)/n;const mx=Math.max(1,...D.map(d=>Math.max(d.sales,d.ads)));
   const y=v=>H-pad-(v/mx)*(H-pad*2);
-  const bars=D.map((d,i)=>`<rect x="${pad+i*bw+1}" y="${y(d.sales)}" width="${Math.max(1,bw-2)}" height="${H-pad-y(d.sales)}" rx="2" fill="#6d4aff" opacity=".85"><title>${d.key}: ${tl(d.sales)} satış · ${d.orders} sipariş · ${tl(d.ads)} reklam</title></rect>`).join('');
+  const bars=D.map((d,i)=>`<rect x="${pad+i*bw+1}" y="${y(d.sales)}" width="${Math.max(1,bw-2)}" height="${H-pad-y(d.sales)}" rx="2" fill="#3f6fe0" opacity=".85"><title>${d.key}: ${tl(d.sales)} satış · ${d.orders} sipariş · ${tl(d.ads)} reklam</title></rect>`).join('');
   const line=D.map((d,i)=>`${pad+i*bw+bw/2},${y(d.ads)}`).join(' ');
   const lbl=D.map((d,i)=>i%5===0||i===n-1?`<text x="${pad+i*bw+bw/2}" y="${H-6}" font-size="10" text-anchor="middle" style="fill:var(--soft)">${d.d.getDate()}.${d.d.getMonth()+1}</text>`:'').join('');
   return `<svg viewBox="0 0 ${W} ${H}" style="width:100%;height:auto">${bars}<polyline points="${line}" fill="none" stroke="#ea580c" stroke-width="2.5"/>${lbl}</svg>
@@ -1308,7 +1419,7 @@ function moreSheet(){
   const extra=S.role==='student'
     ?STU_VIEWS.map(v=>`<button class="nv ${S.view===v?'on':''}" data-mv="${v}"><span class="dot" style="background:#7c3aed"></span>${STU_NAV[v][0]} ${STU_NAV[v][1]}${sb[v]?`<span class="n alert">${sb[v]}</span>`:''}</button>`).join('')+`<button class="nv" id="mbell"><span class="dot" style="background:#f59e0b"></span>🔔 Bildirimler & ayarlar</button>`
     :S.role==='admin'
-    ?`<button class="nv" data-mv="mentor"><span class="dot" style="background:#7c3aed"></span>🎓 Mentörlük${mentorBadge()?`<span class="n alert">${mentorBadge()}</span>`:''}</button><button class="nv" id="mbell"><span class="dot" style="background:#f59e0b"></span>🔔 Bildirimler & ayarlar</button><button class="nv" data-mv="calc"><span class="dot" style="background:#15803d"></span>💰 Kâr hesaplama</button><button class="nv" data-mv="security"><span class="dot" style="background:#141826"></span>🛡️ Güvenlik</button><button class="nv" data-mv="catalog"><span class="dot" style="background:#c2410c"></span>📚 ${t('nav_catalog')}</button><button class="nv" data-mv="health"><span class="dot" style="background:#dc2626"></span>🩺 Eksikler${healthCritical()?`<span class="n alert">${healthCritical()}</span>`:''}</button><button class="nv" data-mv="auto"><span class="dot" style="background:#0ea5e9"></span>🤖 Otomasyonlar</button><button class="nv" data-mv="finance"><span class="dot" style="background:#0e9f8b"></span>📊 Finans</button><button class="nv" data-mv="calendar"><span class="dot" style="background:#ea580c"></span>📅 Takvim & kampanyalar</button><button class="nv" data-mv="msgs"><span class="dot" style="background:#f59e0b"></span>💬 ${t('nav_msgs')}${S.unread?`<span class="n alert">${S.unread}</span>`:''}</button>`
+    ?`<button class="nv" data-mv="shops"><span class="dot" style="background:#2d5bd1"></span>🏬 Mağazalar & Etsy</button><a class="nv" href="${PANO_URL}" target="_blank" rel="noopener"><span class="dot" style="background:#1c7f55"></span>📋 Yayın panosu ↗</a><button class="nv" data-mv="mentor"><span class="dot" style="background:#7c3aed"></span>🎓 Mentörlük${mentorBadge()?`<span class="n alert">${mentorBadge()}</span>`:''}</button><button class="nv" id="mbell"><span class="dot" style="background:#f59e0b"></span>🔔 Bildirimler & ayarlar</button><button class="nv" data-mv="calc"><span class="dot" style="background:#15803d"></span>💰 Kâr hesaplama</button><button class="nv" data-mv="security"><span class="dot" style="background:#141826"></span>🛡️ Güvenlik</button><button class="nv" data-mv="catalog"><span class="dot" style="background:#c2410c"></span>📚 ${t('nav_catalog')}</button><button class="nv" data-mv="health"><span class="dot" style="background:#dc2626"></span>🩺 Eksikler${healthCritical()?`<span class="n alert">${healthCritical()}</span>`:''}</button><button class="nv" data-mv="auto"><span class="dot" style="background:#0ea5e9"></span>🤖 Otomasyonlar</button><button class="nv" data-mv="finance"><span class="dot" style="background:#0e9f8b"></span>📊 Finans</button><button class="nv" data-mv="calendar"><span class="dot" style="background:#ea580c"></span>📅 Takvim & kampanyalar</button><button class="nv" data-mv="msgs"><span class="dot" style="background:#f59e0b"></span>💬 ${t('nav_msgs')}${S.unread?`<span class="n alert">${S.unread}</span>`:''}</button>`
     :`<button class="nv" data-mv="help"><span class="dot" style="background:#0ea5e9"></span>❓ ${t('nav_help')}</button><button class="nv" id="mbell"><span class="dot" style="background:#f59e0b"></span>🔔 ${nt('title')}</button>`;
   modal(`<h2>${t('more_t')}</h2>
    ${S.role==='student'?`<div class="k">🎓 Koçluk</div><div class="morelist">${extra}</div><div class="k" style="margin-top:10px">📦 Siparişlerim</div>`:`<div class="k">${t('h_stores')}</div>`}<div class="storesel" style="padding:0 0 10px;${S.role==='student'?'display:none':''}">${['*',...S.stores].map(s=>`<button class="${S.store===s?'on':''}" data-ms="${esc(s)}">${s==='*'?t('all'):esc(s)}</button>`).join('')}</div>
@@ -1612,6 +1723,8 @@ function palPages(){
   else{['todo','urgent','ordered','shippedDs','shipped','delivered','cancelled','all'].forEach(v=>add(v==='todo'?'⚡':v==='urgent'?'🔥':v==='ordered'?'🛒':v.indexOf('ship')===0?'🚚':v==='delivered'?'✅':v==='cancelled'?'↩︎':'📋',t('nav_'+v),v+' siparis order 订单',nav(v)));add('❓',t('nav_help'),'help yardim rehber guide faq 帮助',nav('help'));}
   if(S.role==='admin'){
     add('📚',t('nav_catalog'),'katalog catalog urun product 1688 link',nav('catalog'));
+    add('🏬','Mağazalar & Etsy','magaza store shop etsy senkron sync baglanti lumiva miniboutique novelle',nav('shops'));
+    add('📋','Yayın panosu','pano yayin ilan taslak tracker',()=>window.open(PANO_URL,'_blank','noopener'));
     add('🩺','Eksikler & kontrol','eksik health kontrol missing link sorun uyumsuz',nav('health'));
     add('🤖','Otomasyonlar','otomasyon automation tetikleyici trigger hatirlatma arsiv',nav('auto'));
     add('📊','Finans','finans finance kar gelir para odeme bakiye',nav('finance'));
@@ -1710,7 +1823,7 @@ function applyTheme(){
   if(th==='auto')root.removeAttribute('data-theme');else root.setAttribute('data-theme',th);
   const b=$('#thb');if(b){b.textContent=th==='dark'?'🌙':th==='light'?'☀️':'🌓';b.title='Tema: '+(th==='dark'?'koyu':th==='light'?'açık':'otomatik (cihaz ayarı)');}
   const dark=th==='dark'||(th==='auto'&&window.matchMedia&&window.matchMedia('(prefers-color-scheme: dark)').matches);
-  const m=document.querySelector('meta[name=theme-color]');if(m)m.content=dark?'#0b0d14':'#15122b';
+  const m=document.querySelector('meta[name=theme-color]');if(m)m.content=dark?'#19202a':(window.matchMedia&&window.matchMedia('(display-mode: standalone)').matches?'#1a2330':'#ffffff');
 }
 function cycleTheme(){const th=store.get('oh_theme')||'auto',nx=th==='auto'?'light':th==='light'?'dark':'auto';store.set('oh_theme',nx);applyTheme();toast(nx==='dark'?'🌙 Koyu tema':nx==='light'?'☀️ Açık tema':'🌓 Otomatik tema (cihaz ayarı)');}
 try{window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change',applyTheme);}catch(e){}
@@ -1807,7 +1920,7 @@ function goView(v){
   if(!v)return;closeModal();
   if(v.indexOf('mentor:')===0){if(S.role!=='admin')return;S.view='mentor';S.mPanel=null;S.mSid=v.slice(7);S.mTab='gen';}
   else if(v==='sOrders')S.view='all';
-  else if(VIEWS[v]||['help','msgs','finance','catalog','calendar','mentor','calc','security','health','auto'].includes(v)||STU_VIEWS.includes(v))S.view=v;
+  else if(VIEWS[v]||['help','msgs','finance','catalog','calendar','mentor','calc','security','health','auto','shops'].includes(v)||STU_VIEWS.includes(v))S.view=v;
   S.open.clear();render();window.scrollTo(0,0);
 }
 function ntfySend(topic,title,body,view,type){
@@ -1992,7 +2105,7 @@ function svgWeeks(C){
   C=(C||[]).slice(-12);if(!C.length)return '';
   const H=170,P=22,bw=Math.min(64,(640-P*2)/C.length),W=Math.max(320,P*2+bw*C.length),mx=Math.max(1,...C.map(c=>+c.revenue||0));
   const bars=C.map((c,i)=>{const v=+c.revenue||0,h=(v/mx)*(H-P*2-10),x=P+i*bw;
-    return `<rect x="${x+4}" y="${H-P-h}" width="${Math.max(4,bw-8)}" height="${h}" rx="5" fill="#6d4aff" opacity=".85"><title>${esc(c.week)}: ${money(c.revenue)} · ${c.orders===''?'—':c.orders} sipariş</title></rect>
+    return `<rect x="${x+4}" y="${H-P-h}" width="${Math.max(4,bw-8)}" height="${h}" rx="5" fill="#3f6fe0" opacity=".85"><title>${esc(c.week)}: ${money(c.revenue)} · ${c.orders===''?'—':c.orders} sipariş</title></rect>
      <text x="${x+bw/2}" y="${H-6}" font-size="10" text-anchor="middle" style="fill:var(--soft)">${esc(String(c.week).slice(-3))}</text>
      ${v?`<text x="${x+bw/2}" y="${H-P-h-4}" font-size="10" text-anchor="middle" style="fill:var(--ink)">$${Math.round(v)}</text>`:''}`;}).join('');
   return `<svg viewBox="0 0 ${W} ${H}" style="width:100%;max-width:${W*1.4}px;height:auto">${bars}</svg>`;
