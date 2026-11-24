@@ -545,6 +545,14 @@ a.nv{text-decoration:none}
 .bml{display:inline-block;background:var(--ink);color:var(--bg);padding:11px 18px;border-radius:8px;font-weight:650;text-decoration:none;cursor:grab}
 .panoc{display:flex;align-items:center;justify-content:space-between;gap:14px;flex-wrap:wrap}
 .panoc h3{margin:0 0 4px}
+
+/* ================= v23 eşleşme: "1688'de seç" kutusu ve eşleşme uyarısı ================= */
+.mapc.warn{color:var(--red);background:var(--red-bg)}
+.buy1688{border:2px solid var(--purple);background:var(--purple-bg);border-radius:10px;padding:10px 12px}
+.buy1688 .b1{display:flex;flex-wrap:wrap;gap:4px 10px;align-items:baseline;margin-top:6px;font-size:13px}
+.buy1688 .b1 span{color:var(--soft)}
+.buy1688 .b1 b{font-size:16px;color:var(--purple)}
+.buy1688 .b1 b.warn{color:var(--red)}
 </style>
 </head>
 <body>
@@ -1471,13 +1479,55 @@ function catById(){if(S._cby&&S._cbyKey===S.cat)return S._cby;const m={};(S.cat|
 function catLinkFor(o){const by=catById(),L=[];lidsOf(o).forEach(id=>{const x=by[id];if(x&&x.links1688)String(x.links1688).split('\n').forEach(u=>{if(u&&!L.includes(u))L.push(u);});});return L.join('\n');}
 /* "S (US 0-2) = S" lines -> the supplier option for this order's variant */
 function mapLines(note){return String(note||'').split('\n').map(l=>l.trim()).filter(Boolean).map(l=>{const p=l.split(/\s*(?:=|→|->)\s*/);return {l,from:p.length>1?p[0].trim():'',to:p.length>1?p.slice(1).join(' = ').trim():''};});}
-function mapHit(note,variant){if(!note||!variant)return '';const v=nrm(variant);return mapLines(note).filter(m=>m.from&&v.includes(nrm(m.from))).map(m=>m.to).join(' / ');}
-function supInfo(o){const N=S.supNotes||{};for(const id of lidsOf(o)){if(N[id])return N[id];}const x=S.cat&&lidsOf(o).map(id=>catById()[id]).find(Boolean);return x&&(x.supNote||x.alt1688)?{s:x.supNote||'',a:x.alt1688||''}:null;}
-function mapChip(o){const n=supInfo(o);const h=n&&mapHit(n.s,o.variant);return h?` <span class="mapc" title="${esc(t('supmap'))}">→ ${esc(h)}</span>`:'';}
+/* ===== v23 eşleşme (24.11.2026) =====
+   Sipariş varyantı: her ürün için bir satır, "Özellik: Değer, Özellik: Değer [SKU x]".
+   Not satırı "Size: XS = S": özellik adı "size" içeren çiftte değer tam "XS" ise ya da "XS" + boşluk/parantez ile başlıyorsa tutar
+   ("XS US women's letter", "S (US 0-2)"). "XXS" ya da "S/M" içinde TUTMAZ. Özelliksiz satır ("Custom = ...") kelime olarak aranır.
+   Hiç "Özellik: Değer" satırı olmayan eski notlarda önceki metin araması geçerlidir. */
+const SIZEY=/size|beden|length|numara|尺|码/;
+function varLines(variant){return String(variant||'').split('\n').map(x=>x.trim()).filter(Boolean).map(line=>{
+  const sku=(line.match(/\[SKU ([^\]]+)\]/)||[])[1]||'';
+  const body=line.replace(/\s*\[SKU [^\]]+\]/,'').trim();
+  const pairs=body?body.split(/,\s+(?=[^,:]{1,40}:\s)/).map(x=>{const i=x.indexOf(':');return i<0?{p:'',v:nrm(x.trim()),t:x.trim()}:{p:nrm(x.slice(0,i).trim()),v:nrm(x.slice(i+1).trim()),t:x.trim()};}).filter(x=>x.v):[];
+  return {line,sku,body,pairs,raw:nrm(body)};});}
+function valHit(v,f){if(v===f)return true;return v.length>f.length&&v.startsWith(f)&&/[\s(\[（【:]/.test(v.charAt(f.length));}
+function reEsc(x){return x.replace(/[.*+?^${}()|[\]\\]/g,'\\$&');}
+function lineHits(note,L){
+  const ms=mapLines(note).filter(m=>m.from);if(!ms.length||!L)return [];
+  const out=[];let modern=false;
+  ms.forEach(m=>{const f=nrm(m.from),i=f.indexOf(':');
+    if(i>0){modern=true;const fp=f.slice(0,i).trim(),fv=f.slice(i+1).trim();
+      const pr=L.pairs.find(x=>x.p&&(x.p.includes(fp)||fp.includes(x.p))&&valHit(x.v,fv));if(pr)out.push({m,pr});}
+    else if(new RegExp('(^|[^a-z0-9])'+reEsc(f)+'($|[^a-z0-9])').test(L.raw)){out.push({m,pr:L.pairs.find(x=>x.v.includes(f))||null});}
+  });
+  if(!out.length&&!modern)ms.forEach(m=>{if(L.raw.includes(nrm(m.from)))out.push({m,pr:null});});
+  return out;}
+function mapHit(note,variant){if(!note||!variant)return '';return varLines(variant).map(L=>lineHits(note,L).map(h=>h.m.to).join(' · ')).filter(Boolean).join(' / ');}
+function supPick(id){const N=S.supNotes||{};if(N[id])return N[id];const x=S.cat?catById()[id]:null;return x&&(x.supNote||x.alt1688)?{s:x.supNote||'',a:x.alt1688||''}:null;}
+function supInfo(o){for(const id of lidsOf(o)){const n=supPick(id);if(n)return n;}return null;}
+function noteFor(o,L){
+  const ids=lidsOf(o);if(ids.length<=1)return ids.length?supPick(ids[0]):null;
+  if(L&&L.sku){const sk=L.sku.toLowerCase(),by=S.cat?catById():{};
+    const id=ids.find(x=>by[x]&&String(by[x].sku||'').toLowerCase()===sk);if(id){return supPick(id);}
+    for(const x of ids){const n=supPick(x);if(n&&new RegExp('(^|\\n)\\s*SKU:\\s*'+reEsc(sk)+'\\s*(\\n|$)','i').test(n.s))return n;}}
+  const c=ids.map(supPick).filter(Boolean);return c.find(n=>lineHits(n.s,L).length)||c[0]||null;}
+function orderMap(o){return varLines(o.variant).map(L=>{const n=noteFor(o,L),hits=n?lineHits(n.s,L):[];
+  const sized=L.pairs.filter(x=>SIZEY.test(x.p));
+  const miss=sized.some(x=>!hits.some(h=>h.pr===x));
+  return {L,n,hits,miss,to:hits.map(h=>h.m.to).join(' · ')};});}
+function mapChip(o){const R=orderMap(o);if(!R.some(r=>r.to||r.miss))return '';
+  const warn=R.some(r=>r.miss),txt=R.map(r=>r.to||(r.miss?'⚠':'—')).join(' // ');
+  return ` <span class="mapc${warn?' warn':''}" title="${esc(t('supmap'))}">→ ${esc(txt)}${warn?' · '+esc(t('nomap')):''}</span>`;}
 function supBox(o){
-  const n=supInfo(o);if(!n)return '';
-  const v=nrm(o.variant||''),lines=mapLines(n.s),alt=String(n.a||'').split('\n').filter(Boolean);
-  return `<div><div class="k">🔁 ${t('supmap')}</div>${lines.length?`<div class="box map">${lines.map(m=>{const hit=m.from&&v.includes(nrm(m.from));return `<div class="${hit?'hit':''}">${hit?'▶ ':''}${esc(m.l)}</div>`;}).join('')}</div>`:''}${alt.length?`<div class="lk" style="margin-top:6px">${alt.map((u,i)=>`<a class="l1688 alt" href="${su(u)}" target="_blank">${t('alt1688')} ${i+1} ↗</a>`).join('')}</div>`:''}</div>`;
+  const R=orderMap(o),n=supInfo(o);if(!n&&!R.some(r=>r.miss))return '';
+  const buy=R.filter(r=>r.to||r.miss);
+  const copy=buy.map(r=>(r.L.body||'—')+' → '+(r.to||'?')).join('\n');
+  const top=buy.length?`<div class="buy1688"><div class="kv"><span class="k" style="margin:0">🛒 ${t('buy1688')}</span><button class="sm" data-copy="${esc(copy)}">${t('copy')}</button></div>${buy.map(r=>`<div class="b1"><span>${esc(r.L.body||'—')}</span><b class="${r.miss?'warn':''}">→ ${esc(r.to||'')}${r.miss?(r.to?' · ':'')+'⚠ '+esc(t('nomap')):''}</b></div>`).join('')}</div>`:'';
+  const seen=new Set(),notes=[];R.forEach(r=>{if(r.n&&!seen.has(r.n.s)){seen.add(r.n.s);notes.push(r);}});if(n&&!notes.length)notes.push({n,hits:[]});
+  const hitSet=new Set();R.forEach(r=>r.hits.forEach(h=>hitSet.add(h.m.l)));
+  const body=notes.map(r=>{const lines=mapLines(r.n.s),alt=String(r.n.a||'').split('\n').filter(Boolean);
+    return `${lines.length?`<div class="box map">${lines.map(m=>{const hit=hitSet.has(m.l);return `<div class="${hit?'hit':''}">${hit?'▶ ':''}${esc(m.l)}</div>`;}).join('')}</div>`:''}${alt.length?`<div class="lk" style="margin-top:6px">${alt.map((u,i)=>`<a class="l1688 alt" href="${su(u)}" target="_blank">${t('alt1688')} ${i+1} ↗</a>`).join('')}</div>`:''}`;}).join('');
+  return `<div>${top}${body?`<div class="k" style="margin-top:8px">🔁 ${t('supmap')}</div>${body}`:''}</div>`;
 }
 function catScope(){return (S.cat||[]).filter(x=>S.store==='*'||!x.store||x.store===S.store);}
 function catFiltered(){
@@ -1827,9 +1877,9 @@ function applyTheme(){
 }
 function cycleTheme(){const th=store.get('oh_theme')||'auto',nx=th==='auto'?'light':th==='light'?'dark':'auto';store.set('oh_theme',nx);applyTheme();toast(nx==='dark'?'🌙 Koyu tema':nx==='light'?'☀️ Açık tema':'🌓 Otomatik tema (cihaz ayarı)');}
 try{window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change',applyTheme);}catch(e){}
-Object.assign(T.tr,{supmap:'Tedarikçi eşleşmesi (Etsy → 1688)',alt1688:'Yedek 1688'});
-Object.assign(T.en,{supmap:'Supplier mapping (Etsy → 1688)',alt1688:'Backup 1688'});
-Object.assign(T.zh,{supmap:'供应商对应 (Etsy → 1688)',alt1688:'备用1688'});
+Object.assign(T.tr,{supmap:'Tedarikçi eşleşmesi (Etsy → 1688)',alt1688:'Yedek 1688',buy1688:'1688\'de seç',nomap:'eşleşme yok, sor'});
+Object.assign(T.en,{supmap:'Supplier mapping (Etsy → 1688)',alt1688:'Backup 1688',buy1688:'Choose on 1688',nomap:'no mapping, ask first'});
+Object.assign(T.zh,{supmap:'供应商对应 (Etsy → 1688)',alt1688:'备用1688',buy1688:'1688 下单选择',nomap:'未对应，先问'});
 
 window.addEventListener('message',async e=>{
   const d=e.data||{};if(d.type!=='oh-listings')return;
