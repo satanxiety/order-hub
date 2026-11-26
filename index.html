@@ -673,6 +673,17 @@ body.dropping::after{content:'Bırak: tablo içe aktarılır, dosyalar ve klasö
 }
 @media (prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms!important;transition-duration:.01ms!important}}
 @media print{#rail,#top,#tabbar,#banners{display:none!important}#main{margin:0}}
+
+/* v24.1 vergi uyarısı */
+.taxb{display:inline-block;margin-bottom:4px;padding:2px 8px;border-radius:6px;background:#c62828;color:#fff;font-weight:800;font-size:var(--f-s);letter-spacing:.02em}
+.taxbox{margin-top:12px;padding:12px 14px;border-radius:12px;background:#fdecea;border:2px solid #c62828;color:#7f1d1d}
+.taxbox b{color:#c62828}
+.taxbox .tx1{margin-top:6px;font-size:var(--f-s)}
+.taxbox .tx2{margin-top:4px;font-weight:800;font-size:var(--f-l);color:#111;background:#fff;border-radius:8px;padding:6px 10px;word-break:break-word}
+.taxbox .tx3{margin-top:8px;font-size:var(--f-s)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .taxbox{background:#3b1212;color:#fecaca}:root:not([data-theme="light"]) .taxbox .tx2{background:#1f0a0a;color:#fff}}
+:root[data-theme="dark"] .taxbox{background:#3b1212;color:#fecaca}
+:root[data-theme="dark"] .taxbox .tx2{background:#1f0a0a;color:#fff}
 </style>
 </head>
 <body>
@@ -925,7 +936,7 @@ T.tr.etsyOrderId='Etsy sipariş no';T.tr.productName='Ürün adı';T.tr.productL
 /* ================= 📅 Satış takvimi (perakende özel günleri) ================= */
 const EVENTS=[
  ['2026-11-26','🦃 Şükran Günü (ABD) / Friendsgiving',7,'Ekose maxi etekler, ekose elbiseler, yün paltolar, örgü kazaklar (dark academia kombinleri)','Kombin fotoğraflarını öne al; Black Friday indirimine 1 gün kala ilgi en yüksek.'],
- ['2026-11-27','🖤 Black Friday',3,'Çok satanlar: suni kürk paltolar, platform botlar, Juicy tarzı şişme montlar, Mrs Claus elbiseleri','Lumiva’da HOLIDAY35 (%35) açık. Reklam bütçesini artırmadan önce kâr hesaplamada kontrol et; kuponlar indirimin üstüne biner.'],
+ ['2026-11-27','🖤 Black Friday',3,'Çok satanlar: suni kürk paltolar, platform botlar, Juicy tarzı şişme montlar, Mrs Claus elbiseleri','Lumiva’da %35 mağaza indirimi açık. Reklam bütçesini artırmadan önce kâr hesaplamada kontrol et; kuponlar indirimin üstüne biner.'],
  ['2026-11-28','🛍️ Small Business Saturday',2,'Tüm mağaza — “küçük atölye” hikâyesini öne çıkar','Etsy bu gün küçük işletmeleri öne çıkarır; sosyal medya paylaşımı yap.'],
  ['2026-11-30','💻 Cyber Monday',2,'Aksesuarlar (kemerler, yüz takısı), botlar, kürk ceketler','“Son gün” mesajı ver, reklam yüksek kalsın.'],
  ['2026-12-01','🎁 Giving Tuesday',1,'Hediye olarak alınabilecek ürünler (bere-atkı, kemer, aksesuar)','Hediye olabilecek ürünleri vitrinde öne al.'],
@@ -935,7 +946,7 @@ const EVENTS=[
  ['2026-12-14','💚 Green Monday + Free Shipping Day',3,'Tüm mağaza','Noel’e yetişmeyecek siparişler için “after Christmas gift / New Year outfit” mesajı.'],
  ['2026-12-18','🦌 Ulusal Çirkin Noel Kazağı Günü (ABD)',10,'Geyikli Noel kazakları, Noel örgüleri','Kazak ilanlarına “ugly christmas sweater party” etiketi ekle, reklamı 8 Ara’dan aç.'],
  ['2026-12-19','🛒 Super Saturday (Noel öncesi son büyük alışveriş günü)',2,'Dijital/hızlı hediye yok — kombin ürünleri','Teslimat Noel’e yetişmez; “Yılbaşı partisi için” vurgusu yap.'],
- ['2026-12-26','📦 Boxing Day (UK/CA/AU) + yıl sonu',3,'Kış stoku: paltolar, botlar, kazaklar','Lumiva’daki HOLIDAY35 19 Aralık’ta biter; yıl sonu indirimi için karar ver.'],
+ ['2026-12-26','📦 Boxing Day (UK/CA/AU) + yıl sonu',3,'Kış stoku: paltolar, botlar, kazaklar','Lumiva’daki %35 indirim 19 Aralık’ta biter; yıl sonu indirimi için karar ver.'],
  ['2026-12-31','🎆 Yılbaşı gecesi',10,'Işıltılı kadife elbiseler, suni kürk mini elbise, platform botlar, siber yüz maskesi','Parti ilanlarını ana sayfada öne al (Featured).'],
  ['2027-01-07','✝️ Ortodoks Noeli',7,'Noel elbiseleri (Doğu Avrupa alıcıları)','Kalan Noel stoku için son fırsat.'],
  ['2027-01-30','🏭 ÇİN YENİ YILI TATİLİ başlıyor (fabrikalar ~30 Oca–20 Şub kapalı)',21,'TEDARİK UYARISI','Ivy ile 1688 stoklarını Ocak ortasına kadar al; Etsy’de işlem süresini (processing time) Şubat için uzat.'],
@@ -2483,7 +2494,7 @@ const SHOPS={
 const shopMeta=s=>SHOPS[s]||{};
 /* Etsy'de kurulu indirimler. Kaynak: mağaza kayıtları. Yeni indirim kurulunca buraya eklenir. */
 const SALES_PLAN={
-  Lumiva:{at:'20.11.2026',sales:[['2026-11-20','2026-12-19','HOLIDAY35',35,'Tüm mağaza']],
+  Lumiva:{at:'20.11.2026',sales:[['2026-11-20','2026-12-19','Mağaza indirimi',35,'Tüm mağaza']],
     /* kupon kodları burada yazılmaz: bu dosya herkese açık depoda durur. Kodlar Etsy › Marketing › Sales and discounts içinde. */
     coupons:[['Sepet kuponu','%10','En az 2 ürün, süresiz'],['Pinterest kuponu','%25','Süresiz'],['Teşekkür kuponu','%10','Tekrar alışveriş, 1 yıl'],['Sepet ve favori teklifi','%10','60 gün']]},
   Novelle:{at:'21.11.2026',closed:true,sales:[['2026-11-21','2026-11-23','EARLYBF20',20,'Tüm mağaza'],['2026-11-23','2026-12-01','CYBER26',45,'Etsy Cyber Specials'],['2026-12-02','2026-12-02','FLASHWED35',35,'Çarşamba flaş'],['2026-12-03','2026-12-05','HOLIDAY20A',20,'Ara dönem'],['2026-12-06','2026-12-08','XMASSHIP35',35,'Noel’e son sipariş'],['2026-12-09','2026-12-09','FLASHWED30',30,'Çarşamba flaş'],['2026-12-10','2026-12-13','WINTER15',15,'Sakin dönem'],['2026-12-14','2026-12-16','GREENMONDAY30',30,'Green Monday'],['2026-12-17','2026-12-25','HOLIDAY20',20,'Noel haftası'],['2026-12-26','2027-01-01','BOXINGDAY40',40,'Boxing Day'],['2027-01-02','2027-01-15','NEWYEAR20',20,'Yeni yıl']],coupons:[]}
@@ -2590,7 +2601,7 @@ function ocard(o){
   const vr=o.variant?String(TX(o.variant)).split('\n').join(' / '):'';
   return `<div class="oc u-${u} s-${esc(st)} ${S.cur===o.id?'on':''}" data-a="oopen" data-id="${esc(o.id)}" role="button" tabindex="0">
     ${ph?`<img class="th" src="${esc(thumb(ph,120))}" alt="" loading="lazy" decoding="async">`:`<span class="th">${ic('box')}</span>`}
-    <div class="oc-b"><div class="oc-t">${esc(TX(o.productName))||'—'}</div>
+    <div class="oc-b">${taxPaid(o)?`<div class="taxb">⚠ ${esc(t('tax_paid'))} · ${esc(taxShort(o))}</div>`:''}<div class="oc-t">${esc(TX(o.productName))||'—'}</div>
       <div class="oc-m">${vr?`<b>${esc(vr)}</b>`:''}${S.role==='student'?'':mapChip(o)}<span>×${esc(o.qty||1)}</span><span>${flag(o.country)}</span>${S.store==='*'&&S.stores.length>1?`<span>${esc(o.store)}</span>`:''}<span>${esc(fmtDate(o.created))}</span></div></div>
     <div class="oc-r"><div>${String(o.gift)==='true'?`<span class="gift">${t('gift')}</span>`:''}<span class="pill p-${esc(st)}">${t('st_'+st)}</span>${dueBadge(o)}</div>
       ${o.etsyOrderId?`<button class="ono" data-copy="${esc(o.etsyOrderId)}" title="${esc(t('orderNo'))} · ${esc(t('copy'))}">#${esc(o.etsyOrderId)} ${ic('copy','sm')}</button>`:''}</div>
@@ -2670,6 +2681,7 @@ function orderDetail(o){
     <div class="od-h">${ph[0]?`<img class="th" src="${esc(thumb(ph[0],160))}" data-z="${esc(ph[0])}" alt="">`:`<span class="th">${ic('box','lg')}</span>`}
       <div><h2>${esc(TX(o.productName))||'—'}</h2>
         <div class="od-tags"><span class="pill p-${esc(st)}">${t('st_'+st)}</span>${dueBadge(o)}${String(o.gift)==='true'?`<span class="gift">${t('gift')}</span>`:''}${o.etsyOrderId?`<button class="ono" data-copy="${esc(o.etsyOrderId)}">#${esc(o.etsyOrderId)} ${ic('copy','sm')}</button>`:''}</div></div></div>
+    ${taxPaid(o)?`<div class="taxbox"><div class="kv" style="justify-content:space-between"><b>⚠ ${esc(t('tax_paid'))} · ${esc(taxShort(o))}</b>${cpy(taxLine(o))}</div><div class="tx1">${esc(t('tax_do'))}</div><div class="tx2">${esc(taxLine(o))}</div><div class="tx3">${esc(t('tax_warn'))}</div></div>`:''}
     <div class="oc-m" style="margin-top:12px">${o.variant?`<b>${esc(String(TX(o.variant)).split('\n').join(' / '))}</b>`:''}<span>×${esc(o.qty||1)}</span><span>${flag(o.country)}</span><span>${esc(o.store)}</span><span>${esc(t('ordDate'))}${esc(fmtDate(o.created))}</span></div>
     ${stu?'':`<div class="nextstep-b"><span class="ai acc">${ic('arrow','lg')}</span><span><b>${esc(t('next_step'))}</b>${esc(t(ns))}</span></div>`}
     ${stu?'':supBox(o)}
@@ -3040,6 +3052,15 @@ ACT.bkgo=async x=>{
   closeModal();BK.rows=[];toast(res.updated+' '+t('bulk_done')+(res.skipped&&res.skipped.length?' · '+res.skipped.length+' '+t('bulk_skip'):''));
   try{await reload();}catch(e){}
 };
+
+
+/* ---------- v24.1: Etsy'nin tahsil ettiği vergi (Kanada PST, AB IOSS, UK VAT, Norveç VOEC, İsviçre, Singapur) ---------- */
+Object.assign(T.tr,{tax_paid:'VERGİ ETSY TARAFINDAN ÖDENDİ',tax_do:'Pakete / gümrük formuna mutlaka yaz:',tax_warn:'Alıcı vergiyi Etsy’ye ödedi. Bu siparişte Dropsure’a ek vergi (Tax & Duty / DDP) ödeme. Not yazılmazsa alıcı gümrükte vergiyi ikinci kez öder.'});
+Object.assign(T.en,{tax_paid:'TAX ALREADY PAID VIA ETSY',tax_do:'You must write this on the package / customs form:',tax_warn:'The buyer already paid this tax to Etsy. Do not pay extra Tax & Duty (DDP) for this order. Without the note the buyer is charged twice at customs.'});
+Object.assign(T.zh,{tax_paid:'Etsy已代收税款',tax_do:'必须写在包裹 / 报关单上：',tax_warn:'买家已经向Etsy付过这笔税。这个订单不要再付Tax & Duty（DDP）。不写的话，买家在海关会被重复收税。'});
+function taxPaid(o){return /PAID|IOSS|VOEC/i.test(String(o&&o.taxCode||''));}
+function taxShort(o){const s=String(o.taxCode||'');return /CANADA|Provincial/i.test(s)?'CA PST':/IOSS|EU VAT/i.test(s)?'EU IOSS':/UK VAT/i.test(s)?'UK VAT':/VOEC|NORWAY/i.test(s)?'NO VOEC':/SWISS/i.test(s)?'CH VAT':/SINGAPORE|GST/i.test(s)?'SG GST':'TAX';}
+function taxLine(o){const s=String(o.taxCode||''),m=s.match(/[“"]([^”"]+)[”"]/);return m?m[1]:s.replace(/^[A-Z ]+PAID BY ETSY:\s*/,'');}
 /* ===== Order Hub v24 · 40-catalog.js =====
    Ürünler (yönetici: bütün mağazalar · öğrenci: kendi mağazası), ürün penceresi, toplu içe aktarma (Excel / CSV / yapıştır),
    ürün dosyaları (yükle, ürüne bağla, sil). Sunucu v24 değilse dosya ve öğrenci kataloğu kapalı kalır (S.cap.files === false). */

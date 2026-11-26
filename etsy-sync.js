@@ -66,10 +66,23 @@
       if (o.is_canceled || pay.is_fully_refunded) status = 'cancelled';
       else if (f.was_shipped) status = /deliver/i.test(sum) ? 'delivered' : 'shipped';
       let tax = '';
-      if (EU.includes(a.country)) tax = 'IOSS IM3720000224 (EU VAT paid via Etsy)' + (cb.euro_consignment_cost ? ' · customs value ' + cb.euro_consignment_cost.formatted_value : '');
-      else if (a.country === 'United Kingdom') tax = 'UK VAT paid via Etsy';
-      else if (a.country === 'Norway') tax = 'Norway VOEC (VAT paid via Etsy)';
-      else if (a.country === 'Switzerland') tax = 'Swiss VAT paid via Etsy';
+      { // v24.1: Etsy'nin kendi "vergi tahsil edildi" işaretleri (siparişte kırmızı uyarı olarak görünür)
+        const fl = (k) => cb[k] === true, mv = (k) => (cb[k] && cb[k].formatted_value) || '', L = [];
+        if (fl('should_show_canada_tax_paid_notice')) L.push('CANADA PST PAID BY ETSY: write \u201c' + mv('total_canadian_provincial_tax_cost') + ' Provincial Sales Tax Paid\u201d on the package');
+        if (fl('should_show_vat_euro_notice')) L.push('EU VAT PAID BY ETSY: IOSS IM3720000224 on the customs form' + (mv('euro_consignment_cost') ? ' \u00b7 customs value ' + mv('euro_consignment_cost') : ''));
+        if (fl('should_show_vat_uk_notice')) L.push('UK VAT PAID BY ETSY: add the Etsy UK VAT note from the Etsy order page to the customs form');
+        if (fl('should_show_norway_voec_notice')) L.push('NORWAY VOEC PAID BY ETSY: add the Etsy VOEC number from the Etsy order page to the customs form');
+        if (fl('should_show_swiss_vat_notice')) L.push('SWISS VAT PAID BY ETSY: add the Etsy Swiss VAT note from the Etsy order page to the customs form');
+        if (fl('should_show_gst_sg_notice')) L.push('SINGAPORE GST PAID BY ETSY: add the Etsy GST note from the Etsy order page to the package');
+        if (fl('should_show_canada_zero_tax_rated_notice')) L.push('CANADA ZERO-RATED: follow the note on the Etsy order page');
+        if (!L.length) { // işaret yoksa eski ülke kuralı (Etsy sayfasından kontrol et)
+          if (EU.includes(a.country)) L.push('EU VAT PAID BY ETSY (country rule, check Etsy): IOSS IM3720000224' + (mv('euro_consignment_cost') ? ' \u00b7 customs value ' + mv('euro_consignment_cost') : ''));
+          else if (a.country === 'United Kingdom') L.push('UK VAT PAID BY ETSY (country rule, check Etsy order page)');
+          else if (a.country === 'Norway') L.push('NORWAY VOEC PAID BY ETSY (country rule, check Etsy order page)');
+          else if (a.country === 'Switzerland') L.push('SWISS VAT PAID BY ETSY (country rule, check Etsy order page)');
+        }
+        tax = L.join(' | ');
+      }
       const notes = [o.notes && o.notes.note_from_buyer, ...((o.notes && o.notes.private_order_notes) || []).map(n => n.note || n.text || '')].filter(Boolean).join('\n');
       return {
         store, etsyOrderId: String(o.order_id), created: ts(o.order_date),
